@@ -1,0 +1,18 @@
+[versions]
+ktx = "1.12.0"
+runtimeKtx = "2.6.2"
+compose = "1.8.2"
+apollo = "3.8.2"
+hilt = "2.44"
+
+[libraries]
+androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
+androidx-runtimeKtx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "runtimeKtx" }
+activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "compose" }
+apollo-runtime = { group = "com.apollographql.apollo3", name = "apollo-runtime", version.ref = "apollo" }
+hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hiltCompiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+
+[plugins]
+apolloGraphql = { id = "com.apollographql.apollo3", version.ref = "apollo" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
