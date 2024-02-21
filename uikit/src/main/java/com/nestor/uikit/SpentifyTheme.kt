@@ -1,41 +1,35 @@
 package com.nestor.uikit
 
 import android.app.Activity
-import android.os.Build
+import android.content.res.Configuration
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Arrangement.spacedBy
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
-
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
-)
-
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
-)
+import com.nestor.uikit.button.SYButton
+import com.nestor.uikit.color.DarkColorScheme
+import com.nestor.uikit.color.LightColorScheme
+import com.nestor.uikit.color.LocalSYColorScheme
+import com.nestor.uikit.spacing.LocalSYPadding
+import com.nestor.uikit.spacing.SYPadding
+import com.nestor.uikit.typography.getTypo
 
 @Composable
 fun SpentifyTheme(
@@ -45,10 +39,10 @@ fun SpentifyTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+        /*dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
+        }*/
 
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
@@ -61,10 +55,56 @@ fun SpentifyTheme(
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
+    CompositionLocalProvider(
+        LocalSYColorScheme provides colorScheme,
+        LocalSYPadding provides SYPadding.SYPaddingDefault
+    ) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = getTypo(),
+            content = content
+        )
+    }
+}
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
-    )
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+private fun SpentifyThemePreview() {
+    SpentifyTheme {
+        Scaffold {
+            Column(
+                Modifier
+                    .fillMaxHeight()
+                    .padding(it)
+                    .padding(
+                        start = LocalSYPadding.current.screenHorizontalPadding,
+                        end = LocalSYPadding.current.screenHorizontalPadding,
+                        bottom = 30.dp
+                    ),
+                verticalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Column(
+                    modifier = Modifier.padding(top = 70.dp),
+                    verticalArrangement = spacedBy(LocalSYPadding.current.spacingBig2x)
+                ) {
+                    Text(
+                        text = "Hello Spentify!",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                    Text(
+                        text = "This is an example of how the theme principal elements will look on the UI!",
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.widthIn(max = 280.dp)
+                    )
+                }
+                SYButton(
+                    onClick = { },
+                    buttonText = "Change password",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.End)
+                )
+            }
+        }
+    }
 }
