@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.nestor.uikit.button.SYButton
+import com.nestor.uikit.input.SYInputField
 import com.nestor.uikit.statusbar.NavigationIcon
 import com.nestor.uikit.statusbar.SYStatusBar
 import com.nestor.uikit.statusbar.StatusBarType
@@ -95,6 +96,12 @@ private fun SpentifyThemePreview() {
                         text = "This is an example of how the theme principal elements will look on the UI!",
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.widthIn(max = 280.dp)
+                    )
+                    SYInputField(
+                        value = "+ 234 808 762 1236",
+                        onValueChange = {},
+                        label = "Phone number",
+                        modifier = Modifier.fillMaxWidth().padding(top = 36.dp)
                     )
                 }
                 SYButton(
