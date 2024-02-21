@@ -1,25 +1,18 @@
+@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
-    alias(libs.plugins.androidApp)
+    alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlinAndroid)
-    kotlin("kapt")
-    alias(libs.plugins.hilt)
 }
 
 android {
-    namespace = "com.nestor.spentify"
+    namespace = "com.nestor.uikit"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.nestor.spentify"
         minSdk = 29
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -38,30 +31,16 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-    buildFeatures {
+    buildFeatures { // Enables Jetpack Compose for this module
         compose = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
 }
 
 dependencies {
-    //hilt
-    implementation(libs.hilt)
-    kapt(libs.hiltCompiler)
-
-    //schema module
-    implementation(project(":app:lib:schema"))
-
     implementation(libs.androidx.ktx)
-    implementation(libs.androidx.runtimeKtx)
-    implementation(libs.activity.compose)
     implementation(platform(libs.composeBom))
     implementation(libs.compose.ui)
     implementation(libs.compose.graphics)
@@ -70,8 +49,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    androidTestImplementation(platform(libs.composeBom))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation(libs.compose.debug.tooling)
-    debugImplementation(libs.compose.debug.uiTestManifest)
 }

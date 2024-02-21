@@ -1,4 +1,4 @@
-package com.nestor.spentify.ui.theme
+package com.nestor.uikit
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

@@ -1,4 +1,4 @@
-package com.nestor.spentify.ui.theme
+package com.nestor.uikit
 
 import android.app.Activity
 import android.os.Build
