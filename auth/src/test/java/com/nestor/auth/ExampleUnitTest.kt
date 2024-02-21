@@ -1,4 +1,4 @@
-package com.nestor.login
+package com.nestor.auth
 
 import org.junit.Test
 

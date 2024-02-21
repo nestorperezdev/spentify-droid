@@ -56,8 +56,13 @@ dependencies {
     implementation(libs.hilt)
     kapt(libs.hiltCompiler)
 
+    //navigation
+    implementation(libs.navigation.compose)
+
     //schema module
     implementation(project(":app:lib:schema"))
+    implementation(project(":uikit"))
+    implementation(project(":auth"))
 
     implementation(libs.androidx.ktx)
     implementation(libs.androidx.runtimeKtx)

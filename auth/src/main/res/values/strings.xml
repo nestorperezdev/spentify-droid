@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="welcome_to_spentify">Welcome to Spentify</string>
+    <string name="a_expense_tracking_platform">A expense tracking platform.</string>
+    <string name="create_your_free_account">Create your free account</string>
+    <string name="login_into_your_account">Login into your account</string>
+</resources>
