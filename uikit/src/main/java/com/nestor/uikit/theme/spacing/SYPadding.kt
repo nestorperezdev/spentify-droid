@@ -1,4 +1,4 @@
-package com.nestor.uikit.spacing
+package com.nestor.uikit.theme.spacing
 
 import androidx.compose.ui.unit.Dp
 

@@ -24,26 +24,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.nestor.uikit.button.SYButton
-import com.nestor.uikit.color.DarkColorScheme
-import com.nestor.uikit.color.LightColorScheme
-import com.nestor.uikit.color.LocalSYColorScheme
-import com.nestor.uikit.spacing.LocalSYPadding
-import com.nestor.uikit.spacing.SYPadding
-import com.nestor.uikit.typography.getTypo
+import com.nestor.uikit.statusbar.NavigationIcon
+import com.nestor.uikit.statusbar.SYStatusBar
+import com.nestor.uikit.statusbar.StatusBarType
+import com.nestor.uikit.theme.color.DarkColorScheme
+import com.nestor.uikit.theme.color.LightColorScheme
+import com.nestor.uikit.theme.color.LocalSYColorScheme
+import com.nestor.uikit.theme.spacing.LocalSYPadding
+import com.nestor.uikit.theme.spacing.SYPadding
+import com.nestor.uikit.theme.typography.getTypo
 
 @Composable
 fun SpentifyTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-        /*dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }*/
-
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
@@ -71,7 +67,11 @@ fun SpentifyTheme(
 @Composable
 private fun SpentifyThemePreview() {
     SpentifyTheme {
-        Scaffold {
+        Scaffold(
+            topBar = {
+                SYStatusBar(barType = StatusBarType.OnlyNavigation(NavigationIcon.Close { }))
+            }
+        ) {
             Column(
                 Modifier
                     .fillMaxHeight()

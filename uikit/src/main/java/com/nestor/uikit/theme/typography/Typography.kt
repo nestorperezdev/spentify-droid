@@ -1,4 +1,4 @@
-package com.nestor.uikit.typography
+package com.nestor.uikit.theme.typography
 
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
@@ -8,7 +8,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.nestor.uikit.R
-import com.nestor.uikit.color.LocalSYColorScheme
+import com.nestor.uikit.theme.color.LocalSYColorScheme
 
 private val fontFamilyKarla =
     FontFamily(Font(R.font.karla))
@@ -32,6 +32,14 @@ fun getTypo() =
             lineHeight = 43.96.sp,
             letterSpacing = 0.sp,
             color = LocalSYColorScheme.current.primary
+        ),
+        titleSmall = TextStyle(
+            fontFamily = fontFamilyKarla,
+            fontWeight = FontWeight.W700,
+            fontSize = 17.sp,
+            lineHeight = 22.sp,
+            letterSpacing = 0.sp,
+            color = LocalSYColorScheme.current.secondary
         ),
         labelSmall = TextStyle(
             fontFamily = fontFamilyKarla,

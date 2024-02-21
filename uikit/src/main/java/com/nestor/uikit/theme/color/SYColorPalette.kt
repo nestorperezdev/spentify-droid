@@ -1,4 +1,4 @@
-package com.nestor.uikit.color
+package com.nestor.uikit.theme.color
 
 import androidx.compose.ui.graphics.Color
 
