@@ -13,6 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -22,10 +23,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization.Companion.Words
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nestor.login.R
@@ -134,7 +138,19 @@ private fun SignupScreenContent(
                 modifier = Modifier.fillMaxWidth()
             )
             Text(
-                text = "Do you already have a BankMe account? Sign in here",
+                text = buildAnnotatedString {
+                    append(stringResource(R.string.do_you_already_have_a_spentify_account))
+                    withStyle(
+                        LocalTextStyle.current
+                            .copy(
+                                color = MaterialTheme.colorScheme.primary,
+                                fontWeight = FontWeight.W600
+                            )
+                            .toSpanStyle()
+                    ) {
+                        append(stringResource(R.string.sign_in_here))
+                    }
+                },
                 modifier = Modifier
                     .padding(top = 18.dp)
                     .clickable { onLoginClick() }

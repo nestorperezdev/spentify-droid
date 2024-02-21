@@ -7,4 +7,6 @@
     <string name="create_account">Create Account</string>
     <string name="open_a_spentify_account_with_few_details">Open a Spentify account with few details.</string>
     <string name="create_your_account">Create your account</string>
+    <string name="do_you_already_have_a_spentify_account">"Do you already have a Spentify account? "</string>
+    <string name="sign_in_here">Sign in here</string>
 </resources>
