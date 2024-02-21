@@ -4,4 +4,7 @@
     <string name="a_expense_tracking_platform">A expense tracking platform.</string>
     <string name="create_your_free_account">Create your free account</string>
     <string name="login_into_your_account">Login into your account</string>
+    <string name="create_account">Create Account</string>
+    <string name="open_a_spentify_account_with_few_details">Open a Spentify account with few details.</string>
+    <string name="create_your_account">Create your account</string>
 </resources>

@@ -3,10 +3,13 @@ package com.nestor.uikit.input
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nestor.uikit.SpentifyTheme
@@ -17,6 +20,9 @@ fun SYInputField(
     value: String,
     placeholder: String? = null,
     label: String? = null,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     onValueChange: (String) -> Unit
 ) {
     Column(modifier = modifier) {
@@ -31,7 +37,11 @@ fun SYInputField(
             modifier = Modifier.fillMaxWidth(),
             value = value,
             onValueChange = onValueChange,
-            placeholder = placeholder?.let { { Text(it) } })
+            placeholder = placeholder?.let { { Text(it) } },
+            keyboardActions = keyboardActions,
+            keyboardOptions = keyboardOptions,
+            visualTransformation = visualTransformation
+        )
     }
 }
 

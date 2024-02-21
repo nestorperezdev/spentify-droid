@@ -21,8 +21,12 @@ fun NavGraphBuilder.authScreen(navController: NavHostController) {
         }
     }
     composable(AuthGraph.Signup.route) {
-        SignupScreen {
-            navController.popBackStack()
-        }
+        SignupScreen(
+            onLoginClick = {
+                navController.navigate(AuthGraph.Login.route)
+            },
+            onNavigationBackClick = {
+                navController.popBackStack()
+            })
     }
 }

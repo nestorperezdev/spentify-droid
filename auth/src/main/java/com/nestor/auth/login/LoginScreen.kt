@@ -1,6 +1,8 @@
 package com.nestor.auth.login
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
@@ -35,16 +37,16 @@ private fun LoginScreenContent(onNavigationBackClick: () -> Unit) {
         Column(
             modifier = Modifier
                 .padding(it)
-                .padding(bottom = LocalSYPadding.current.screenBottomPadding)
                 .padding(horizontal = LocalSYPadding.current.screenHorizontalPadding)
-                .padding(top = 70.dp)
         ) {
+            Spacer(modifier = Modifier.height(70.dp))
             Text(
                 text = "Sign into your Account",
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.widthIn(max = 240.dp)
             )
             Text(text = "Log into your Spentify account.")
+            Spacer(modifier = Modifier.height(LocalSYPadding.current.screenBottomPadding))
         }
     }
 }
