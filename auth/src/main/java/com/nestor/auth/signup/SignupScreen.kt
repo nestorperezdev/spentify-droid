@@ -26,13 +26,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization.Companion.Words
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,6 +45,8 @@ import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.button.SYButton
 import com.nestor.uikit.input.FormFieldData
 import com.nestor.uikit.input.SYInputField
+import com.nestor.uikit.input.action.Action
+import com.nestor.uikit.input.action.InputFieldAction
 import com.nestor.uikit.statusbar.NavigationIcon
 import com.nestor.uikit.statusbar.SYStatusBar
 import com.nestor.uikit.statusbar.StatusBarType
@@ -59,9 +64,13 @@ fun SignupScreen(
         onNavigationBackClick = onNavigationBackClick,
         onLoginClick = onLoginClick,
         name = uiState.name,
+        onNameChange = viewModel::onNameChanged,
         email = uiState.email,
+        onEmailChange = viewModel::onEmailChanged,
         password = uiState.password,
+        onPasswordChanged = viewModel::onPasswordChange,
         repeatPassword = uiState.repeatPassword,
+        onRepeatPasswordChanged = viewModel::onPasswordRepeatChange,
         onSubmit = viewModel::onSubmit
     )
 }
@@ -71,9 +80,13 @@ private fun SignupScreenContent(
     onNavigationBackClick: () -> Unit,
     onLoginClick: () -> Unit,
     name: FormFieldData,
+    onNameChange: (String) -> Unit,
     email: FormFieldData,
+    onEmailChange: (String) -> Unit,
     password: FormFieldData,
+    onPasswordChanged: (String) -> Unit,
     repeatPassword: FormFieldData,
+    onRepeatPasswordChanged: (String) -> Unit,
     onSubmit: () -> Unit = {}
 ) {
     Scaffold(topBar = {
@@ -107,7 +120,7 @@ private fun SignupScreenContent(
                 val repeatPasswordFocusRequester = remember { FocusRequester() }
                 SYInputField(
                     value = name.value,
-                    onValueChange = name.onValueUpdated,
+                    onValueChange = onNameChange,
                     label = "Full name",
                     placeholder = "John Doe",
                     keyboardActions = KeyboardActions(onNext = { emailFocusRequester.requestFocus() }),
@@ -115,13 +128,13 @@ private fun SignupScreenContent(
                         capitalization = Words,
                         imeAction = ImeAction.Next
                     ),
-                    isError = name.status.isError,
-                    error = stringResourceNullable(name.status.errorResource)
+                    isError = name.hasError,
+                    error = stringResourceNullable(name.errorResource)
                 )
                 SYInputField(
                     modifier = Modifier.focusRequester(emailFocusRequester),
                     value = email.value,
-                    onValueChange = email.onValueUpdated,
+                    onValueChange = onEmailChange,
                     label = "Email",
                     placeholder = "johndoe@email.com",
                     keyboardActions = KeyboardActions(onNext = { passwordFocusRequester.requestFocus() }),
@@ -129,38 +142,46 @@ private fun SignupScreenContent(
                         imeAction = ImeAction.Next,
                         keyboardType = KeyboardType.Email
                     ),
-                    isError = email.status.isError,
-                    error = stringResourceNullable(email.status.errorResource)
+                    isError = email.hasError,
+                    error = stringResourceNullable(email.errorResource)
                 )
+                var passwordVisibility by remember { mutableStateOf(false) }
                 SYInputField(
                     modifier = Modifier.focusRequester(passwordFocusRequester),
                     value = password.value,
-                    onValueChange = password.onValueUpdated,
+                    onValueChange = onPasswordChanged,
                     label = "Password",
                     placeholder = "********",
-                    visualTransformation = PasswordVisualTransformation(),
+                    visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
                     keyboardActions = KeyboardActions(onNext = { repeatPasswordFocusRequester.requestFocus() }),
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Next,
                         keyboardType = KeyboardType.Password
                     ),
-                    isError = password.status.isError,
-                    error = stringResourceNullable(password.status.errorResource)
+                    isError = password.hasError,
+                    error = stringResourceNullable(password.errorResource),
+                    action = InputFieldAction.TrailingAction(Action(ImageVector.vectorResource(R.drawable.baseline_visibility_24)) {
+                        passwordVisibility = !passwordVisibility
+                    })
                 )
+                var repeatPasswordVisibility by remember { mutableStateOf(false) }
                 SYInputField(
                     modifier = Modifier.focusRequester(repeatPasswordFocusRequester),
                     value = repeatPassword.value,
-                    onValueChange = repeatPassword.onValueUpdated,
+                    onValueChange = onRepeatPasswordChanged,
                     label = "Repeat password",
                     placeholder = "********",
-                    visualTransformation = PasswordVisualTransformation(),
+                    visualTransformation = if (repeatPasswordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
                     keyboardActions = KeyboardActions(onDone = { onSubmit() }),
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Done,
                         keyboardType = KeyboardType.Password
                     ),
-                    isError = repeatPassword.status.isError,
-                    error = stringResourceNullable(repeatPassword.status.errorResource)
+                    isError = repeatPassword.hasError,
+                    error = stringResourceNullable(repeatPassword.errorResource),
+                    action = InputFieldAction.TrailingAction(Action(ImageVector.vectorResource(R.drawable.baseline_visibility_24)) {
+                        repeatPasswordVisibility = !repeatPasswordVisibility
+                    })
                 )
             }
             Spacer(modifier = Modifier.heightIn(min = 35.dp))
@@ -205,9 +226,13 @@ fun SignupScreenContentPreview() {
             onLoginClick = {},
             onNavigationBackClick = {},
             name = name,
+            onNameChange = { name = name.copy(value = it) },
             email = email,
+            onEmailChange = { email = email.copy(value = it) },
             password = password,
+            onPasswordChanged = { password = password.copy(value = it) },
             repeatPassword = repeatPassword,
+            onRepeatPasswordChanged = { repeatPassword = repeatPassword.copy(value = it) }
         )
     }
 }
