@@ -40,6 +40,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.compose.forms)
+    implementation(libs.compose.viewmodel)
     implementation(libs.navigation.compose)
     implementation(libs.androidx.ktx)
     implementation(libs.androidx.runtimeKtx)

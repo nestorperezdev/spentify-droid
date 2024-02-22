@@ -18,7 +18,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -32,30 +36,45 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nestor.login.R
 import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.button.SYButton
+import com.nestor.uikit.input.FormFieldData
 import com.nestor.uikit.input.SYInputField
 import com.nestor.uikit.statusbar.NavigationIcon
 import com.nestor.uikit.statusbar.SYStatusBar
 import com.nestor.uikit.statusbar.StatusBarType
 import com.nestor.uikit.theme.spacing.LocalSYPadding
+import com.nestor.uikit.util.stringResourceNullable
 
 @Composable
 fun SignupScreen(
     onNavigationBackClick: () -> Unit,
-    onLoginClick: () -> Unit
+    onLoginClick: () -> Unit,
+    viewModel: SignupViewModel = viewModel()
 ) {
+    val uiState = viewModel.uiState.collectAsState().value
     SignupScreenContent(
         onNavigationBackClick = onNavigationBackClick,
-        onLoginClick = onLoginClick
+        onLoginClick = onLoginClick,
+        name = uiState.name,
+        email = uiState.email,
+        password = uiState.password,
+        repeatPassword = uiState.repeatPassword,
+        onSubmit = viewModel::onSubmit
     )
 }
 
 @Composable
 private fun SignupScreenContent(
     onNavigationBackClick: () -> Unit,
-    onLoginClick: () -> Unit
+    onLoginClick: () -> Unit,
+    name: FormFieldData,
+    email: FormFieldData,
+    password: FormFieldData,
+    repeatPassword: FormFieldData,
+    onSubmit: () -> Unit = {}
 ) {
     Scaffold(topBar = {
         SYStatusBar(
@@ -87,53 +106,67 @@ private fun SignupScreenContent(
                 val passwordFocusRequester = remember { FocusRequester() }
                 val repeatPasswordFocusRequester = remember { FocusRequester() }
                 SYInputField(
-                    value = "",
-                    onValueChange = {},
+                    value = name.value,
+                    onValueChange = name.onValueUpdated,
                     label = "Full name",
                     placeholder = "John Doe",
                     keyboardActions = KeyboardActions(onNext = { emailFocusRequester.requestFocus() }),
                     keyboardOptions = KeyboardOptions(
                         capitalization = Words,
                         imeAction = ImeAction.Next
-                    )
+                    ),
+                    isError = name.status.isError,
+                    error = stringResourceNullable(name.status.errorResource)
                 )
                 SYInputField(
                     modifier = Modifier.focusRequester(emailFocusRequester),
-                    value = "",
-                    onValueChange = {},
+                    value = email.value,
+                    onValueChange = email.onValueUpdated,
                     label = "Email",
                     placeholder = "johndoe@email.com",
                     keyboardActions = KeyboardActions(onNext = { passwordFocusRequester.requestFocus() }),
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Next,
                         keyboardType = KeyboardType.Email
-                    )
+                    ),
+                    isError = email.status.isError,
+                    error = stringResourceNullable(email.status.errorResource)
                 )
                 SYInputField(
                     modifier = Modifier.focusRequester(passwordFocusRequester),
-                    value = "",
-                    onValueChange = {},
+                    value = password.value,
+                    onValueChange = password.onValueUpdated,
                     label = "Password",
                     placeholder = "********",
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardActions = KeyboardActions(onNext = { repeatPasswordFocusRequester.requestFocus() }),
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Password
+                    ),
+                    isError = password.status.isError,
+                    error = stringResourceNullable(password.status.errorResource)
                 )
                 SYInputField(
                     modifier = Modifier.focusRequester(repeatPasswordFocusRequester),
-                    value = "",
-                    onValueChange = {},
+                    value = repeatPassword.value,
+                    onValueChange = repeatPassword.onValueUpdated,
                     label = "Repeat password",
                     placeholder = "********",
                     visualTransformation = PasswordVisualTransformation(),
-                    keyboardActions = KeyboardActions(onDone = { /*TODO*/ }),
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
+                    keyboardActions = KeyboardActions(onDone = { onSubmit() }),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Password
+                    ),
+                    isError = repeatPassword.status.isError,
+                    error = stringResourceNullable(repeatPassword.status.errorResource)
                 )
             }
             Spacer(modifier = Modifier.heightIn(min = 35.dp))
             Spacer(modifier = Modifier.weight(1f))
             SYButton(
-                onClick = { /*TODO*/ },
+                onClick = onSubmit,
                 buttonText = stringResource(R.string.create_your_account),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -164,6 +197,17 @@ private fun SignupScreenContent(
 @Composable
 fun SignupScreenContentPreview() {
     SpentifyTheme {
-        SignupScreenContent(onLoginClick = {}, onNavigationBackClick = {})
+        var name by remember { mutableStateOf(FormFieldData("")) }
+        var email by remember { mutableStateOf(FormFieldData("")) }
+        var password by remember { mutableStateOf(FormFieldData("")) }
+        var repeatPassword by remember { mutableStateOf(FormFieldData("")) }
+        SignupScreenContent(
+            onLoginClick = {},
+            onNavigationBackClick = {},
+            name = name,
+            email = email,
+            password = password,
+            repeatPassword = repeatPassword,
+        )
     }
 }

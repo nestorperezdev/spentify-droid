@@ -9,4 +9,8 @@
     <string name="create_your_account">Create your account</string>
     <string name="do_you_already_have_a_spentify_account">"Do you already have a Spentify account? "</string>
     <string name="sign_in_here">Sign in here</string>
+    <string name="enter_a_valid_email_address">Enter a valid email address</string>
+    <string name="name_max_and_min_chars_error">Minimum 3 characters required. Maximum 50 characters allowed.</string>
+    <string name="password_must_contain_at_least_8_characters_and_1_uppercase_letter">Password must contain at least 8 characters and 1 uppercase letter.</string>
+    <string name="passwords_do_not_match">Passwords do not match.</string>
 </resources>

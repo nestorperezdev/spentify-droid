@@ -5,9 +5,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,6 +26,8 @@ fun SYInputField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
+    isError: Boolean = false,
+    error: String? = null,
     onValueChange: (String) -> Unit
 ) {
     Column(modifier = modifier) {
@@ -40,7 +45,9 @@ fun SYInputField(
             placeholder = placeholder?.let { { Text(it) } },
             keyboardActions = keyboardActions,
             keyboardOptions = keyboardOptions,
-            visualTransformation = visualTransformation
+            visualTransformation = visualTransformation,
+            isError = isError,
+            supportingText = error?.let { { Text(it, color = MaterialTheme.colorScheme.error) } }
         )
     }
 }
@@ -48,12 +55,14 @@ fun SYInputField(
 @Preview("Value and Label", showBackground = true)
 @Composable
 fun SYInputFieldPreview() {
+    val field = remember { mutableStateOf(FormFieldData("")) }
     SpentifyTheme {
         SYInputField(
-            value = "Hello",
-            onValueChange = {},
+            value = field.value.value,
+            onValueChange = { field.value = field.value.copy(value = it) },
             label = "Label",
-            modifier = Modifier.padding(32.dp)
+            modifier = Modifier.padding(32.dp),
+            isError = field.value.status.isError
         )
     }
 }
