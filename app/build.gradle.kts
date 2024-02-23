@@ -53,6 +53,7 @@ android {
 
 dependencies {
     //hilt
+    implementation(libs.androidx.hilt.navigation)
     implementation(libs.hilt)
     kapt(libs.hiltCompiler)
 
