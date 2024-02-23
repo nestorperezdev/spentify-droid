@@ -13,6 +13,8 @@ espresso-core = "3.5.1"
 material = "1.6.2"
 composeBom = "2023.08.00"
 navigation = "2.7.7"
+appcompat = "1.6.1"
+com-google-android-material-material = "1.11.0"
 
 [libraries]
 androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
@@ -34,6 +36,8 @@ compose-debug-uiTestManifest = { group = "androidx.compose.ui", name = "ui-test-
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
 compose-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "runtimeKtx" }
 compose-iconsExtended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "material" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "com-google-android-material-material" }
 
 [plugins]
 apolloGraphql = { id = "com.apollographql.apollo3", version.ref = "apollo" }
