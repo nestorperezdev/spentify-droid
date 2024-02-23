@@ -13,4 +13,9 @@
     <string name="name_max_and_min_chars_error">Minimum 3 characters required. Maximum 50 characters allowed.</string>
     <string name="password_must_contain_at_least_8_characters_and_1_uppercase_letter">Password must contain at least 8 characters and 1 uppercase letter.</string>
     <string name="passwords_do_not_match">Passwords do not match.</string>
+    <string name="unknown_error">Something wrong happened.</string>
+    <string name="oops_looks_like_there_s_a_user_registered">Oops, looks like there’s a user registered with that email</string>
+    <string name="go_to_sign">go to sign</string>
+    <string name="or">or</string>
+    <string name="recover_password">recover password.</string>
 </resources>

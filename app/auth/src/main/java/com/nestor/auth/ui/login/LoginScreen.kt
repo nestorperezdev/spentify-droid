@@ -1,4 +1,4 @@
-package com.nestor.auth.login
+package com.nestor.auth.ui.login
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

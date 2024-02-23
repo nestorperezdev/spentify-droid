@@ -1,13 +1,23 @@
-package com.nestor.auth.signup
+package com.nestor.auth.ui.signup
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.nestor.auth.R
+import com.nestor.auth.data.AuthRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SignupViewModel : ViewModel() {
+@HiltViewModel
+class SignupViewModel @Inject constructor(
+    private val authRepository: AuthRepository
+) : ViewModel() {
     private val _uiState = MutableStateFlow(SignupUiState())
     val uiState: StateFlow<SignupUiState> = _uiState.asStateFlow()
 
@@ -40,6 +50,32 @@ class SignupViewModel : ViewModel() {
     }
 
     fun onSubmit() {
-        TODO("Not yet implemented")
+        _uiState.update { it.copy(isLoading = true) }
+        viewModelScope.launch(Dispatchers.IO) {
+            authRepository.register(
+                _uiState.value.name.value,
+                _uiState.value.email.value,
+                _uiState.value.password.value
+            ).collect {
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        isRegistered = false,
+                        signupErrorResource = null
+                    )
+                }
+                if (it.hasErrors()) {
+                    val codes = it.errors
+                        ?.filter { it.extensions?.containsKey("code") ?: false }
+                        ?.map { it.extensions!!["code"]!! as String } ?: emptyList()
+                    codes.forEach {
+                        when (it) {
+                            "23505" -> _uiState.update { it.copy(isRegistered = true) }
+                            else -> _uiState.update { it.copy(signupErrorResource = R.string.unknown_error) }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

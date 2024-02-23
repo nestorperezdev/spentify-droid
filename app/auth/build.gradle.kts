@@ -2,6 +2,8 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.hilt)
+    kotlin("kapt")
 }
 
 android {
@@ -40,6 +42,9 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.hilt.navigation)
+    implementation(libs.hilt)
+    kapt(libs.hiltCompiler)
     implementation(libs.compose.viewmodel)
     implementation(libs.navigation.compose)
     implementation(libs.androidx.ktx)
@@ -47,6 +52,7 @@ dependencies {
     implementation(libs.activity.compose)
     implementation(platform(libs.composeBom))
     implementation(project(":app:uikit"))
+    implementation(project(":app:lib:schema"))
     implementation(libs.compose.ui)
     implementation(libs.compose.graphics)
     implementation(libs.compose.material3)

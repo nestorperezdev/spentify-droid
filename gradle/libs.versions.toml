@@ -4,17 +4,17 @@ runtimeKtx = "2.6.2"
 compose = "1.8.2"
 compose-compiler = "1.5.1"
 apollo = "3.8.2"
-hilt = "2.44"
+hilt = "2.48"
 agp = "8.2.0"
 kotlin = "1.9.0"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
-material = "1.6.2"
 composeBom = "2023.08.00"
 navigation = "2.7.7"
 appcompat = "1.6.1"
 com-google-android-material-material = "1.11.0"
+navigationHilt = "1.2.0"
 
 [libraries]
 androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
@@ -35,9 +35,9 @@ composeBom = { group = "androidx.compose", name = "compose-bom", version.ref = "
 compose-debug-uiTestManifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
 compose-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "runtimeKtx" }
-compose-iconsExtended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "material" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "com-google-android-material-material" }
+androidx-hilt-navigation = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "navigationHilt" }
 
 [plugins]
 apolloGraphql = { id = "com.apollographql.apollo3", version.ref = "apollo" }

@@ -1,8 +1,9 @@
-package com.nestor.auth.signup
+package com.nestor.auth.ui.signup
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -29,6 +31,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -36,9 +39,11 @@ import androidx.compose.ui.text.input.KeyboardCapitalization.Companion.Words
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.withAnnotation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nestor.auth.R
 import com.nestor.uikit.SpentifyTheme
@@ -56,29 +61,38 @@ import com.nestor.uikit.util.stringResourceNullable
 @Composable
 fun SignupScreen(
     onNavigationBackClick: () -> Unit,
-    onLoginClick: () -> Unit,
-    viewModel: SignupViewModel = viewModel()
+    onLoginClick: (String?) -> Unit,
+    onRecoverPassword: (String?) -> Unit,
+    viewModel: SignupViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsState().value
-    SignupScreenContent(
-        onNavigationBackClick = onNavigationBackClick,
-        onLoginClick = onLoginClick,
-        name = uiState.name,
-        onNameChange = viewModel::onNameChanged,
-        email = uiState.email,
-        onEmailChange = viewModel::onEmailChanged,
-        password = uiState.password,
-        onPasswordChanged = viewModel::onPasswordChange,
-        repeatPassword = uiState.repeatPassword,
-        onRepeatPasswordChanged = viewModel::onPasswordRepeatChange,
-        onSubmit = viewModel::onSubmit
-    )
+    if (uiState.isLoading) {
+        Text(text = "Loading...")
+    } else {
+        SignupScreenContent(
+            onNavigationBackClick = onNavigationBackClick,
+            onLoginClick = onLoginClick,
+            onRecoverPasswordClick = onRecoverPassword,
+            name = uiState.name,
+            onNameChange = viewModel::onNameChanged,
+            email = uiState.email,
+            onEmailChange = viewModel::onEmailChanged,
+            password = uiState.password,
+            onPasswordChanged = viewModel::onPasswordChange,
+            repeatPassword = uiState.repeatPassword,
+            onRepeatPasswordChanged = viewModel::onPasswordRepeatChange,
+            alreadyRegistered = uiState.isRegistered,
+            onSubmit = viewModel::onSubmit
+        )
+    }
 }
 
 @Composable
 private fun SignupScreenContent(
     onNavigationBackClick: () -> Unit,
-    onLoginClick: () -> Unit,
+    onLoginClick: (String?) -> Unit,
+    onRecoverPasswordClick: (String?) -> Unit,
+    alreadyRegistered: Boolean,
     name: FormFieldData,
     onNameChange: (String) -> Unit,
     email: FormFieldData,
@@ -108,7 +122,21 @@ private fun SignupScreenContent(
                 text = stringResource(R.string.create_account),
                 style = MaterialTheme.typography.titleLarge
             )
-            Text(text = stringResource(R.string.open_a_spentify_account_with_few_details))
+            /**
+             * Should take a max of 75% of the screen
+             */
+            Column(
+                modifier = Modifier.fillMaxWidth(0.80f),
+            ) {
+                Text(text = stringResource(R.string.open_a_spentify_account_with_few_details))
+                if (alreadyRegistered) {
+                    AlreadyRegisteredUserView(
+                        modifier = Modifier.padding(top = 13.dp),
+                        onLoginClick = { onLoginClick(email.value) },
+                        onRecoverPasswordClick = { onRecoverPasswordClick(email.value) }
+                    )
+                }
+            }
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -207,9 +235,55 @@ private fun SignupScreenContent(
                 },
                 modifier = Modifier
                     .padding(top = 18.dp)
-                    .clickable { onLoginClick() }
+                    .clickable { onLoginClick(null) }
             )
             Spacer(modifier = Modifier.height(LocalSYPadding.current.screenBottomPadding))
+        }
+    }
+}
+
+@OptIn(ExperimentalTextApi::class)
+@Composable
+private fun AlreadyRegisteredUserView(
+    modifier: Modifier = Modifier,
+    onLoginClick: () -> Unit,
+    onRecoverPasswordClick: () -> Unit,
+) {
+    val hyperlink = LocalTextStyle.current
+        .copy(
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.W600
+        )
+        .toSpanStyle()
+    val signInText = " " + stringResource(R.string.go_to_sign)
+    val recoverPasswordText = " " + stringResource(R.string.recover_password)
+    val text = buildAnnotatedString {
+        withStyle(
+            LocalTextStyle.current
+                .copy(color = MaterialTheme.colorScheme.error)
+                .toSpanStyle()
+        ) {
+            append(stringResource(R.string.oops_looks_like_there_s_a_user_registered))
+            withAnnotation("signin", "signin") {
+                withStyle(hyperlink) {
+                    append(signInText)
+                }
+            }
+            append(" " + stringResource(R.string.or))
+            withAnnotation("recover", "recover") {
+                withStyle(hyperlink) {
+                    append(recoverPasswordText)
+                }
+            }
+        }
+    }
+    ClickableText(text, modifier = modifier) { offset ->
+        text.getStringAnnotations(offset, offset).firstOrNull()?.tag.let { tag ->
+            if (tag == "signin") {
+                onLoginClick()
+            } else if (tag == "recover") {
+                onRecoverPasswordClick()
+            }
         }
     }
 }
@@ -232,6 +306,8 @@ fun SignupScreenContentPreview() {
             password = password,
             onPasswordChanged = { password = password.copy(value = it) },
             repeatPassword = repeatPassword,
+            onRecoverPasswordClick = {},
+            alreadyRegistered = true,
             onRepeatPasswordChanged = { repeatPassword = repeatPassword.copy(value = it) }
         )
     }

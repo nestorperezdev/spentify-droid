@@ -1,0 +1,4 @@
+fragment loginToken on LoginToken {
+    token
+    name
+}

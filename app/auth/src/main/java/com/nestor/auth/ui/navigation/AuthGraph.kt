@@ -1,4 +1,4 @@
-package com.nestor.auth.navigation
+package com.nestor.auth.ui.navigation
 
 sealed class AuthGraph(val route: String) {
     object Welcome : AuthGraph("welcome")

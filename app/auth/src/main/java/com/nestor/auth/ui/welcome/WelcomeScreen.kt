@@ -1,4 +1,4 @@
-package com.nestor.auth.welcome
+package com.nestor.auth.ui.welcome
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
