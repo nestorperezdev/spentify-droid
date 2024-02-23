@@ -1,5 +1,6 @@
 package com.nestor.auth.ui.signup
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
@@ -18,8 +19,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,6 +56,7 @@ import com.nestor.uikit.input.FormFieldData
 import com.nestor.uikit.input.SYInputField
 import com.nestor.uikit.input.action.Action
 import com.nestor.uikit.input.action.InputFieldAction
+import com.nestor.uikit.snackbar.SYSnackbar
 import com.nestor.uikit.statusbar.NavigationIcon
 import com.nestor.uikit.statusbar.SYStatusBar
 import com.nestor.uikit.statusbar.StatusBarType
@@ -82,6 +87,8 @@ fun SignupScreen(
             repeatPassword = uiState.repeatPassword,
             onRepeatPasswordChanged = viewModel::onPasswordRepeatChange,
             alreadyRegistered = uiState.isRegistered,
+            showFormInvalidToast = uiState.showFormInvalidToast,
+            onShowFormInvalidToastDismissed = viewModel::onShowFormInvalidToastDismissed,
             onSubmit = viewModel::onSubmit
         )
     }
@@ -101,15 +108,24 @@ private fun SignupScreenContent(
     onPasswordChanged: (String) -> Unit,
     repeatPassword: FormFieldData,
     onRepeatPasswordChanged: (String) -> Unit,
+    showFormInvalidToast: Boolean,
+    onShowFormInvalidToastDismissed: () -> Unit,
     onSubmit: () -> Unit = {}
 ) {
-    Scaffold(topBar = {
-        SYStatusBar(
-            barType = StatusBarType.OnlyNavigation(navigationIcon = NavigationIcon.Close {
-                onNavigationBackClick()
-            })
-        )
-    }) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(snackbarHostState) {
+                SYSnackbar(it)
+            }
+        },
+        topBar = {
+            SYStatusBar(
+                barType = StatusBarType.OnlyNavigation(navigationIcon = NavigationIcon.Close {
+                    onNavigationBackClick()
+                })
+            )
+        }) {
         Column(
             modifier = Modifier
                 .padding(it)
@@ -240,6 +256,13 @@ private fun SignupScreenContent(
             Spacer(modifier = Modifier.height(LocalSYPadding.current.screenBottomPadding))
         }
     }
+    val message = stringResource(R.string.form_is_invalid_please_check_the_fields_and_try_again)
+    LaunchedEffect(showFormInvalidToast) {
+        if (showFormInvalidToast) {
+            snackbarHostState.showSnackbar(message)
+            onShowFormInvalidToastDismissed()
+        }
+    }
 }
 
 @OptIn(ExperimentalTextApi::class)
@@ -308,6 +331,8 @@ fun SignupScreenContentPreview() {
             repeatPassword = repeatPassword,
             onRecoverPasswordClick = {},
             alreadyRegistered = true,
+            showFormInvalidToast = false,
+            onShowFormInvalidToastDismissed = {},
             onRepeatPasswordChanged = { repeatPassword = repeatPassword.copy(value = it) }
         )
     }

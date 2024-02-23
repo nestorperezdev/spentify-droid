@@ -49,7 +49,26 @@ class SignupViewModel @Inject constructor(
         _uiState.update { it.copy(repeatPassword = it.repeatPassword.copy(value, errorResource)) }
     }
 
+    fun triggerValidation() {
+        this.onNameChanged(_uiState.value.name.value)
+        this.onEmailChanged(_uiState.value.email.value)
+        this.onPasswordChange(_uiState.value.password.value)
+        this.onPasswordRepeatChange(_uiState.value.repeatPassword.value)
+    }
+
+    fun isFormValid(): Boolean {
+        this.triggerValidation()
+        return _uiState.value.name.hasError.not() &&
+                _uiState.value.email.hasError.not() &&
+                _uiState.value.password.hasError.not() &&
+                _uiState.value.repeatPassword.hasError.not()
+    }
+
     fun onSubmit() {
+        if (this.isFormValid().not()) {
+            _uiState.update { it.copy(showFormInvalidToast = true) }
+            return
+        }
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch(Dispatchers.IO) {
             authRepository.register(
@@ -77,5 +96,9 @@ class SignupViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun onShowFormInvalidToastDismissed() {
+        _uiState.update { it.copy(showFormInvalidToast = false) }
     }
 }

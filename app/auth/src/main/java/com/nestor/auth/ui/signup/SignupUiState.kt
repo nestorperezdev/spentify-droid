@@ -1,5 +1,6 @@
 package com.nestor.auth.ui.signup
 
+import android.widget.Toast
 import com.nestor.uikit.input.FormFieldData
 
 data class SignupUiState(
@@ -9,5 +10,6 @@ data class SignupUiState(
     val repeatPassword: FormFieldData = FormFieldData(""),
     val isLoading: Boolean = false,
     val signupErrorResource: Int? = null,
-    val isRegistered: Boolean = false
+    val isRegistered: Boolean = false,
+    val showFormInvalidToast: Boolean = false
 )
