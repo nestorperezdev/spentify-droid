@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nestor.auth.R
 import com.nestor.auth.data.AuthRepository
+import com.nestor.schema.utils.unwrapErrors
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -72,21 +73,13 @@ class SignupViewModel @Inject constructor(
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch(Dispatchers.IO) {
             authRepository.register(
-                _uiState.value.name.value,
-                _uiState.value.email.value,
-                _uiState.value.password.value
+                name = _uiState.value.name.value,
+                username = _uiState.value.email.value,
+                password = _uiState.value.password.value
             ).collect {
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        isRegistered = false,
-                        signupErrorResource = null
-                    )
-                }
                 if (it.hasErrors()) {
-                    val codes = it.errors
-                        ?.filter { it.extensions?.containsKey("code") ?: false }
-                        ?.map { it.extensions!!["code"]!! as String } ?: emptyList()
+                    _uiState.update { it.copy(isLoading = false) }
+                    val codes = it.unwrapErrors()
                     codes.forEach {
                         when (it) {
                             "23505" -> _uiState.update { it.copy(isRegistered = true) }

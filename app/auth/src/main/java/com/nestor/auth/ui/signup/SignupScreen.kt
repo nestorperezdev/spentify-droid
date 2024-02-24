@@ -53,6 +53,7 @@ import com.nestor.uikit.input.FormFieldData
 import com.nestor.uikit.input.SYInputField
 import com.nestor.uikit.input.action.Action
 import com.nestor.uikit.input.action.InputFieldAction
+import com.nestor.uikit.loading.LoadingScreen
 import com.nestor.uikit.snackbar.SYSnackbar
 import com.nestor.uikit.statusbar.NavigationIcon
 import com.nestor.uikit.statusbar.SYStatusBar
@@ -69,7 +70,7 @@ fun SignupScreen(
 ) {
     val uiState = viewModel.uiState.collectAsState().value
     if (uiState.isLoading) {
-        Text(text = "Loading...")
+        LoadingScreen(text = stringResource(R.string.creating_account))
     } else {
         SignupScreenContent(
             onNavigationBackClick = onNavigationBackClick,
