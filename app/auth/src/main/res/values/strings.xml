@@ -28,4 +28,5 @@
     <string name="creating_account">Creating account...</string>
     <string name="logging_in">Logging in...</string>
     <string name="password_must_be_at_least_6_characters">Password must be at least 6 characters</string>
+    <string name="network_error">Something failed with the network communication, please verify your internet connectivity.</string>
 </resources>

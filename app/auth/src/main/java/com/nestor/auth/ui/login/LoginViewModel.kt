@@ -6,7 +6,10 @@ import com.nestor.auth.R
 import com.nestor.auth.data.AuthRepository
 import com.nestor.schema.errors.AuthExceptionCodes
 import com.nestor.schema.utils.unwrapErrors
+import com.nestor.uikit.util.CoroutineContextProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val coroutineContextProvider: CoroutineContextProvider
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
@@ -57,7 +61,16 @@ class LoginViewModel @Inject constructor(
             return
         }
         _uiState.update { it.copy(loginErrorResource = null, isLoading = true) }
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(
+            coroutineContextProvider.network {
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        loginErrorResource = R.string.network_error
+                    )
+                }
+            }
+        ) {
             val loginResult =
                 authRepository.login(_uiState.value.email.value, _uiState.value.password.value)
             if (loginResult.hasErrors()) {
