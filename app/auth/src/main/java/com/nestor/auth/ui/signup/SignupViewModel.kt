@@ -5,19 +5,19 @@ import androidx.lifecycle.viewModelScope
 import com.nestor.auth.R
 import com.nestor.auth.data.AuthRepository
 import com.nestor.schema.utils.unwrapErrors
+import com.nestor.uikit.util.CoroutineContextProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SignupViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val coroutineContextProvider: CoroutineContextProvider
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(SignupUiState())
     val uiState: StateFlow<SignupUiState> = _uiState.asStateFlow()
@@ -71,7 +71,14 @@ class SignupViewModel @Inject constructor(
             return
         }
         _uiState.update { it.copy(isLoading = true) }
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(coroutineContextProvider.network {
+            this._uiState.update {
+                it.copy(
+                    isLoading = false,
+                    signupErrorResource = R.string.network_error
+                )
+            }
+        }) {
             authRepository.register(
                 name = _uiState.value.name.value,
                 username = _uiState.value.email.value,

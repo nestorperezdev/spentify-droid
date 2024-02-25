@@ -60,10 +60,16 @@ import com.nestor.uikit.util.stringResourceNullable
 @Composable
 fun LoginScreen(
     loginViewModel: LoginViewModel = hiltViewModel(),
+    initialEmailValue: String? = null,
     onNavigationBackClick: () -> Unit = {},
     onSignupClick: () -> Unit = {}
 ) {
     val uiState = loginViewModel.uiState.collectAsState().value
+    LaunchedEffect(initialEmailValue) {
+        initialEmailValue?.let {
+            loginViewModel.onEmailChanged(it)
+        }
+    }
     if (uiState.isLoading) {
         LoadingScreen(text = stringResource(R.string.logging_in))
     } else {
@@ -176,7 +182,7 @@ private fun LoginScreenContent(
             )
             Text(
                 text = buildAnnotatedString {
-                    append(stringResource(R.string.do_you_not_have_a_bankme_account))
+                    append(stringResource(R.string.do_you_not_have_a_spentify_account))
                     withStyle(
                         LocalTextStyle.current
                             .copy(

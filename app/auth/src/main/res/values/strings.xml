@@ -22,7 +22,7 @@
     <string name="sign_into_your_account">Sign into your Account</string>
     <string name="log_into_your_spentify_account">Log into your Spentify account</string>
     <string name="log_in">Log in</string>
-    <string name="do_you_not_have_a_bankme_account">"Do you not have a BankMe account? "</string>
+    <string name="do_you_not_have_a_spentify_account">"Do you not have a Spentify account? "</string>
     <string name="sign_up_here">Sign up here</string>
     <string name="incorrect_password_or_email">Your email or password is wrong, please check again.</string>
     <string name="creating_account">Creating account...</string>
