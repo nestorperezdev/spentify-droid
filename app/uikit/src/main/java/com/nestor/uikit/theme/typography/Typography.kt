@@ -41,6 +41,14 @@ fun getTypo() =
             letterSpacing = 0.sp,
             color = LocalSYColorScheme.current.primary
         ),
+        titleMedium = TextStyle(
+            fontFamily = fontFamilyKarla,
+            fontWeight = FontWeight.W700,
+            fontSize = 30.sp,
+            lineHeight = 42.3.sp,
+            letterSpacing = 0.sp,
+            color = LocalSYColorScheme.current.secondary
+        ),
         titleSmall = TextStyle(
             fontFamily = fontFamilyKarla,
             fontWeight = FontWeight.W700,

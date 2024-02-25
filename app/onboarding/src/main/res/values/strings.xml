@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="skip">Skip</string>
+    <string name="next">Next</string>
+    <string name="register_your_expenses">Register your expenses</string>
+    <string name="spentify_is_a_simple_and_easy_way_to_track_your_monthly_expenses">Spentify is a simple and easy way to track your monthly expenses</string>
+    <string name="get_a_summary_of_your_expenses">Get a summary of your expenses</string>
+    <string name="about_spentify">About Spentify</string>
+</resources>
