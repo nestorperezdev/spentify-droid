@@ -1,5 +1,7 @@
 package com.nestor.spentify.ui
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,12 +40,16 @@ fun MainScreen(mainViewModel: MainViewModel = hiltViewModel()) {
     ) {
         navigation(
             route = AppNavigationGraph.AuthGraph.route,
-            startDestination = AuthGraph.Welcome.route
+            startDestination = AuthGraph.Welcome.route,
         ) {
             authScreen(navController)
         }
         composable(
-            route = AppNavigationGraph.Onboarding.route
+            route = AppNavigationGraph.Onboarding.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+            popEnterTransition = null,
+            popExitTransition = null
         ) {
             OnboardingScreen(
                 onSkipClick = {
