@@ -34,4 +34,15 @@
     <string name="have_you_forgotten_your_password">Have you forgotten your password?,</string>
     <string name="click_here_to_recover_it">click here to recover it</string>
     <string name="we_ve_sent_recover_password_instructions">We\'ve sent you instructions to recover your password at your email address. Please follow that instructions to change your password.</string>
+    <string name="change_password">Change password</string>
+    <string name="recover_password_2">Recover password</string>
+    <string name="please_enter_your_new_password_to_continue">Please enter your new password to continue</string>
+    <string name="new_password">New Password</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="password">Password</string>
+    <string name="done">Done!</string>
+    <string name="start_using_spentify">Start using spentify</string>
+    <string name="your_new_password_has_been_stored">Your new password has been stored. Tap below button to get started!</string>
+    <string name="password_changed">Password Changed!</string>
+    <string name="open_my_email">Open my email</string>
 </resources>

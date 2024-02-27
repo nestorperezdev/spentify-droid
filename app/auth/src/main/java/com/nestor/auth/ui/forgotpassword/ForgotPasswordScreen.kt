@@ -23,14 +23,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.integerArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -163,7 +160,7 @@ private fun ForgotPasswordEmailSent() {
         ) {
             Spacer(modifier = Modifier.height(70.dp))
             Text(
-                text = "Done!",
+                text = stringResource(R.string.done),
                 style = MaterialTheme.typography.titleLarge
             )
             Text(
@@ -180,7 +177,7 @@ private fun ForgotPasswordEmailSent() {
                     intent.addCategory(Intent.CATEGORY_APP_EMAIL)
                     context.startActivity(intent)
                 },
-                buttonText = "Open my email",
+                buttonText = stringResource(R.string.open_my_email),
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(LocalSYPadding.current.screenBottomPadding))

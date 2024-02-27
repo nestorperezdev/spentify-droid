@@ -5,4 +5,5 @@ sealed class AuthGraph(val route: String) {
     object Login : AuthGraph("login")
     object Signup : AuthGraph("signup")
     object ForgotPassword : AuthGraph("forgot-password")
+    object RecoverPassword : AuthGraph("recover-password")
 }

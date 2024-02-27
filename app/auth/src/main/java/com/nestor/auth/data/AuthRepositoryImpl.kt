@@ -6,6 +6,7 @@ import com.nestor.auth.data.datasource.AuthRemoteDataSource
 import com.nestor.auth.data.model.AuthState
 import com.nestor.schema.ForgotPasswordMutation
 import com.nestor.schema.LoginMutation
+import com.nestor.schema.RecoverPasswordMutation
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -51,5 +52,9 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun forgotPassword(username: String): ApolloResponse<ForgotPasswordMutation.Data> {
         return this.remoteDataSource.forgotPassword(username)
+    }
+
+    override suspend fun recoverPassword(newPassword: String): ApolloResponse<RecoverPasswordMutation.Data> {
+        return this.remoteDataSource.recoverPassword(newPassword)
     }
 }

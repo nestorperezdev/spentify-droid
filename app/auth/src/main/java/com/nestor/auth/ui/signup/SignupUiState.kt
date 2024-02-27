@@ -1,6 +1,5 @@
 package com.nestor.auth.ui.signup
 
-import android.widget.Toast
 import com.nestor.uikit.input.FormFieldData
 
 data class SignupUiState(

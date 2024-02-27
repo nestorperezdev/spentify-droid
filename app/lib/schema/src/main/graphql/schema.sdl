@@ -14,6 +14,8 @@ type Mutation {
 
   login(password: String!, username: String!): LoginToken!
 
+  recoverPassword(newPassword: String!): LoginToken!
+
   register(name: String!, password: String!, username: String!): LoginToken!
 }
 

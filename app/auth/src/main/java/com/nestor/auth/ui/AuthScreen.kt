@@ -8,6 +8,7 @@ import androidx.navigation.navArgument
 import com.nestor.auth.ui.forgotpassword.ForgotPasswordScreen
 import com.nestor.auth.ui.login.LoginScreen
 import com.nestor.auth.ui.navigation.AuthGraph
+import com.nestor.auth.ui.recoverpassword.RecoverPasswordScreen
 import com.nestor.auth.ui.signup.SignupScreen
 import com.nestor.auth.ui.welcome.WelcomeScreen
 import com.nestor.uikit.animation.syEnterTransition
@@ -75,6 +76,7 @@ fun NavGraphBuilder.authScreen(navController: NavHostController) {
                 navController.popBackStack()
             })
     }
+
     composable(
         AuthGraph.ForgotPassword.route,
         enterTransition = { syEnterTransition },
@@ -85,5 +87,15 @@ fun NavGraphBuilder.authScreen(navController: NavHostController) {
         ForgotPasswordScreen(
             onNavigationBackClick = { navController.popBackStack() }
         )
+    }
+
+    composable(
+        AuthGraph.RecoverPassword.route,
+        enterTransition = { syEnterTransition },
+        exitTransition = { syExitTransition },
+        popExitTransition = { syPopExitTransition },
+        popEnterTransition = { syPopEnterTransition }
+    ) {
+        RecoverPasswordScreen(onNavigationBackClick = { })
     }
 }

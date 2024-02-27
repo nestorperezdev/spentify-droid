@@ -3,6 +3,7 @@ package com.nestor.auth.data.datasource
 import com.apollographql.apollo3.api.ApolloResponse
 import com.nestor.schema.ForgotPasswordMutation
 import com.nestor.schema.LoginMutation
+import com.nestor.schema.RecoverPasswordMutation
 import com.nestor.schema.RegisterMutation
 
 interface AuthRemoteDataSource {
@@ -14,4 +15,5 @@ interface AuthRemoteDataSource {
 
     suspend fun login(username: String, password: String): ApolloResponse<LoginMutation.Data>
     suspend fun forgotPassword(username: String): ApolloResponse<ForgotPasswordMutation.Data>
+    suspend fun recoverPassword(newPassword: String): ApolloResponse<RecoverPasswordMutation.Data>
 }
