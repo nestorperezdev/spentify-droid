@@ -29,4 +29,9 @@
     <string name="logging_in">Logging in...</string>
     <string name="password_must_be_at_least_6_characters">Password must be at least 6 characters</string>
     <string name="network_error">Something failed with the network communication, please verify your internet connectivity.</string>
+    <string name="recover_password_action">Recover password</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="have_you_forgotten_your_password">Have you forgotten your password?,</string>
+    <string name="click_here_to_recover_it">click here to recover it</string>
+    <string name="we_ve_sent_recover_password_instructions">We\'ve sent you instructions to recover your password at your email address. Please follow that instructions to change your password.</string>
 </resources>

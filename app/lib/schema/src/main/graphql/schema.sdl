@@ -10,6 +10,8 @@ type LoginToken {
 }
 
 type Mutation {
+  forgotPassword(username: String!): RecoverPasswordStatus!
+
   login(password: String!, username: String!): LoginToken!
 
   register(name: String!, password: String!, username: String!): LoginToken!
@@ -17,6 +19,10 @@ type Mutation {
 
 type Query {
   userDetails: User!
+}
+
+type RecoverPasswordStatus {
+  success: Boolean!
 }
 
 """

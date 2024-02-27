@@ -61,6 +61,7 @@ import com.nestor.uikit.util.stringResourceNullable
 fun LoginScreen(
     loginViewModel: LoginViewModel = hiltViewModel(),
     initialEmailValue: String? = null,
+    onForgotPasswordClick: () -> Unit = {},
     onNavigationBackClick: () -> Unit = {},
     onSignupClick: () -> Unit = {}
 ) {
@@ -82,7 +83,8 @@ fun LoginScreen(
             errorResource = uiState.loginErrorResource,
             onShowFormInvalidToastDismissed = loginViewModel::onErrorToastDismissed,
             onSubmit = loginViewModel::onSubmit,
-            onSignupClick = onSignupClick
+            onSignupClick = onSignupClick,
+            onForgotPasswordClick = onForgotPasswordClick
         )
     }
 }
@@ -95,6 +97,7 @@ private fun LoginScreenContent(
     onPasswordChanged: (String) -> Unit = {},
     onNavigationBackClick: () -> Unit = {},
     errorResource: Int? = null,
+    onForgotPasswordClick: () -> Unit = {},
     onShowFormInvalidToastDismissed: () -> Unit = {},
     onSignupClick: () -> Unit = {},
     onSubmit: () -> Unit = {}
@@ -172,6 +175,14 @@ private fun LoginScreenContent(
                         passwordVisibility = !passwordVisibility
                     })
                 )
+                Column {
+                    Text(text = stringResource(R.string.have_you_forgotten_your_password))
+                    Text(
+                        text = stringResource(R.string.click_here_to_recover_it),
+                        modifier = Modifier.clickable { onForgotPasswordClick() },
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
             Spacer(modifier = Modifier.heightIn(min = 35.dp))
             Spacer(modifier = Modifier.weight(1f))
