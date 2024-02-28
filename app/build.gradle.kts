@@ -52,6 +52,9 @@ android {
 }
 
 dependencies {
+    //  datastore
+    implementation(libs.data.store)
+
     //hilt
     implementation(libs.androidx.hilt.navigation)
     implementation(libs.hilt)

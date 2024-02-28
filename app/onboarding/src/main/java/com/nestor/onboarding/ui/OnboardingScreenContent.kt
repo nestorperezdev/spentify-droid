@@ -1,4 +1,4 @@
-package com.nestor.onboarding
+package com.nestor.onboarding.ui
 
 data class OnboardingScreenContent(
     val title: Int,

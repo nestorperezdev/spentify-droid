@@ -42,6 +42,8 @@ android {
 }
 
 dependencies {
+    //  datastore
+    implementation(libs.data.store)
     //  coil
     implementation(libs.compose.coil)
     implementation(libs.hilt)

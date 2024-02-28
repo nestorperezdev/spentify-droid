@@ -15,7 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.nestor.auth.data.model.AuthState
 import com.nestor.auth.ui.authScreen
 import com.nestor.auth.ui.navigation.AuthGraph
-import com.nestor.onboarding.OnboardingScreen
+import com.nestor.onboarding.ui.OnboardingScreen
 import com.nestor.spentify.navigation.AppNavigationGraph
 
 @Composable

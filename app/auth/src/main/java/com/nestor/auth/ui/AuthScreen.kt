@@ -1,10 +1,13 @@
 package com.nestor.auth.ui
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.util.Log
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.nestor.auth.ui.forgotpassword.ForgotPasswordScreen
 import com.nestor.auth.ui.login.LoginScreen
 import com.nestor.auth.ui.navigation.AuthGraph
@@ -17,6 +20,7 @@ import com.nestor.uikit.animation.syPopEnterTransition
 import com.nestor.uikit.animation.syPopExitTransition
 import com.nestor.uikit.util.isRouteOnPreviousStack
 
+private const val TAG = "AuthScreen"
 @SuppressLint("RestrictedApi")
 fun NavGraphBuilder.authScreen(navController: NavHostController) {
     composable(AuthGraph.Welcome.route) {
@@ -94,8 +98,14 @@ fun NavGraphBuilder.authScreen(navController: NavHostController) {
         enterTransition = { syEnterTransition },
         exitTransition = { syExitTransition },
         popExitTransition = { syPopExitTransition },
-        popEnterTransition = { syPopEnterTransition }
+        popEnterTransition = { syPopEnterTransition },
+        deepLinks = listOf(navDeepLink {
+            uriPattern = "spentify://${AuthGraph.RecoverPassword.route}"
+            action = Intent.ACTION_VIEW
+        })
     ) {
+        val token = it.arguments?.getString("token")
+        Log.i(TAG, "authScreen: $token")
         RecoverPasswordScreen(onNavigationBackClick = { })
     }
 }
