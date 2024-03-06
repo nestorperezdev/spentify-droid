@@ -103,3 +103,13 @@ fun SYStatusBarPreviewTitleNSubtitle() {
         )
     }
 }
+
+@Preview("Title")
+@Composable
+fun SYStatusBarPreviewTitle() {
+    SpentifyTheme {
+        SYStatusBar(
+            StatusBarType.LeftTitle("Hello Joseph")
+        )
+    }
+}

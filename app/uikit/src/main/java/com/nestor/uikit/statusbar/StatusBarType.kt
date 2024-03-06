@@ -26,6 +26,11 @@ sealed class StatusBarType(
             title = StatusBarTitle.MediumTitle(title),
             subtitle = StatusBarTitle.SubtitleSmall(subtitle)
         )
+
+    class LeftTitle(title: String) :
+        StatusBarType(
+            title = StatusBarTitle.LeftBig(title)
+        )
 }
 
 sealed class NavigationIcon(val icon: ImageVector, val onClick: () -> Unit) {
@@ -41,6 +46,7 @@ sealed class StatusBarTitle(
     val style: StatusBarTextStyle
 ) {
     class LeftSmall(text: String) : StatusBarTitle(text, TextAlign.Start, StatusBarTextStyle.Small)
+    class LeftBig(text: String) : StatusBarTitle(text, TextAlign.Start, StatusBarTextStyle.Big)
     class SmallCenterTitle(text: String) :
         StatusBarTitle(text, TextAlign.Center, StatusBarTextStyle.Small)
     class MediumTitle(text: String) :
