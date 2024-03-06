@@ -1,0 +1,6 @@
+query Dashboard {
+    dashboard {
+        dailyPhrase,
+        firstName
+    }
+}

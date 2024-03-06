@@ -17,6 +17,7 @@ com-google-android-material-material = "1.11.0"
 navigationHilt = "1.2.0"
 composeCoil = "2.6.0"
 dataStore = "1.0.0"
+room = "2.6.1"
 
 [libraries]
 androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
@@ -42,6 +43,9 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-hilt-navigation = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "navigationHilt" }
 compose-coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "composeCoil" }
 data-store = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStore" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 
 [plugins]
 apolloGraphql = { id = "com.apollographql.apollo3", version.ref = "apollo" }

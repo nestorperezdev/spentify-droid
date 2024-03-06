@@ -3,6 +3,12 @@ The `Boolean` scalar type represents `true` or `false`.
 """
 scalar Boolean
 
+type Dashboard {
+  dailyPhrase: String
+
+  firstName: String!
+}
+
 type LoginToken {
   name: String!
 
@@ -20,6 +26,8 @@ type Mutation {
 }
 
 type Query {
+  dashboard: Dashboard!
+
   userDetails: User!
 }
 
