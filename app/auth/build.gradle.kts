@@ -42,6 +42,9 @@ android {
 }
 
 dependencies {
+    //jwt
+    implementation(libs.auth0.jwt.decode)
+
     implementation(libs.androidx.hilt.navigation)
     implementation(libs.hilt)
     kapt(libs.hiltCompiler)
@@ -52,6 +55,7 @@ dependencies {
     implementation(libs.activity.compose)
     implementation(platform(libs.composeBom))
     implementation(project(":app:uikit"))
+    implementation(project(":app:database"))
     implementation(project(":app:lib:schema"))
     implementation(libs.compose.ui)
     implementation(libs.compose.graphics)

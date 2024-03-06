@@ -46,6 +46,9 @@ dependencies {
     annotationProcessor(libs.room.compiler)
     kapt(libs.room.compiler)
 
+    //encrypted shared prefs
+    implementation(libs.androidx.security.crypto)
+
     implementation(libs.androidx.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)
