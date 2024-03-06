@@ -15,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.nestor.auth.data.model.AuthState
 import com.nestor.auth.ui.authScreen
 import com.nestor.auth.ui.navigation.AuthGraph
+import com.nestor.dashboard.ui.DashboardScreen
 import com.nestor.onboarding.ui.OnboardingScreen
 import com.nestor.spentify.navigation.AppNavigationGraph
 
@@ -63,7 +64,7 @@ fun MainScreen(mainViewModel: MainViewModel = hiltViewModel()) {
             )
         }
         composable(route = AppNavigationGraph.Home.route) {
-            Text(text = "Home")
+            DashboardScreen()
         }
     }
 }

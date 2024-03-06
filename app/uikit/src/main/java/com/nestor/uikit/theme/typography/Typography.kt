@@ -33,6 +33,14 @@ fun getTypo() =
             letterSpacing = 0.sp,
             color = LocalSYColorScheme.current.secondary
         ),
+        headlineMedium = TextStyle(
+            fontFamily = fontFamilyKarla,
+            fontWeight = FontWeight.W700,
+            fontSize = 25.sp,
+            lineHeight = 25.15.sp,
+            letterSpacing = 0.sp,
+            color = LocalSYColorScheme.current.secondary
+        ),
         titleLarge = TextStyle(
             fontFamily = fontFamilyKarla,
             fontWeight = FontWeight.W700,
@@ -63,5 +71,12 @@ fun getTypo() =
             fontSize = 11.sp,
             lineHeight = 16.sp,
             letterSpacing = 0.5.sp
+        ),
+        labelMedium = TextStyle(
+            fontFamily = fontFamilyKarla,
+            fontWeight = FontWeight.W300,
+            fontSize = 13.sp,
+            lineHeight = 18.28.sp,
+            color = LocalSYColorScheme.current.secondary
         )
     )

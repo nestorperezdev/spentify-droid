@@ -1,5 +1,7 @@
 package com.nestor.uikit.statusbar
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,15 +21,27 @@ import com.nestor.uikit.button.SYTextButton
 fun SYStatusBar(barType: StatusBarType) {
     TopAppBar(
         title = {
-            barType.title?.let {
-                Text(
-                    text = it.title,
-                    textAlign = it.alignment,
-                    style = it.style.getStyleFromStatusBarTextStyle(),
-                    modifier = Modifier
-                        .padding(start = 12.dp)
-                        .fillMaxWidth()
-                )
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                barType.title?.let {
+                    Text(
+                        text = it.title,
+                        textAlign = it.alignment,
+                        style = it.style.getStyleFromStatusBarTextStyle(),
+                        modifier = Modifier
+                            .padding(start = 12.dp)
+                            .fillMaxWidth()
+                    )
+                }
+                barType.subtitle?.let {
+                    Text(
+                        text = it.title,
+                        textAlign = it.alignment,
+                        style = it.style.getStyleFromStatusBarTextStyle(),
+                        modifier = Modifier
+                            .padding(start = 12.dp)
+                            .fillMaxWidth()
+                    )
+                }
             }
         },
         navigationIcon = {
@@ -74,5 +88,18 @@ fun SYStatusBarPreviewLeftAndNavigation() {
 fun SYStatusBarPreviewCenterTitle() {
     SpentifyTheme {
         SYStatusBar(StatusBarType.CenterTitle("My Portfolio"))
+    }
+}
+
+@Preview("Title and Subtitle")
+@Composable
+fun SYStatusBarPreviewTitleNSubtitle() {
+    SpentifyTheme {
+        SYStatusBar(
+            StatusBarType.TitleAndSubtitle(
+                "Hello Joseph",
+                "Good morning remember to save today"
+            )
+        )
     }
 }
