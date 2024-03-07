@@ -4,9 +4,11 @@ import com.apollographql.apollo3.api.ApolloResponse
 import com.nestor.auth.data.datasource.AuthLocalDataSource
 import com.nestor.auth.data.datasource.AuthRemoteDataSource
 import com.nestor.auth.data.model.AuthState
+import com.nestor.auth.data.model.TokenPayload
 import com.nestor.schema.ForgotPasswordMutation
 import com.nestor.schema.LoginMutation
 import com.nestor.schema.RecoverPasswordMutation
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -30,6 +32,10 @@ class AuthRepositoryImpl @Inject constructor(
             }
         }
         emit(result)
+    }
+
+    override fun userLoginData(): Flow<TokenPayload?> {
+        return this.authLocalDataSource.userDetails()
     }
 
     override suspend fun login(

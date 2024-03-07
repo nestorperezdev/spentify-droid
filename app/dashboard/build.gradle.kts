@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.activity.compose)
     implementation(platform(libs.composeBom))
     implementation(project(":app:uikit"))
+    implementation(project(":app:auth"))
     implementation(project(":app:lib:schema"))
     implementation(project(":app:database"))
     implementation(libs.compose.graphics)

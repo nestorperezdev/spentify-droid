@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import com.nestor.database.SpentifyDatabase
+import com.nestor.database.data.dashboard.DashboardDao
 import com.nestor.database.data.encryptedpreferences.EncryptedPreferences
 import dagger.Module
 import dagger.Provides
@@ -43,6 +44,12 @@ abstract class SpentifyDatabaseModule {
                 EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             )
+        }
+
+        @Singleton
+        @Provides
+        fun providesDashboardDao(database: SpentifyDatabase): DashboardDao {
+            return database.dashboardDao()
         }
     }
 }

@@ -4,5 +4,6 @@ import com.nestor.database.data.dashboard.DashboardEntity
 import kotlinx.coroutines.flow.Flow
 
 interface DashboardRepository {
-    fun fetchDashboardInfo(): Flow<DashboardEntity>
+    fun fetchDashboardInfo(userUuid: String): Flow<DashboardEntity?>
+    fun refreshDashboardData()
 }

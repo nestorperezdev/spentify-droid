@@ -1,8 +1,8 @@
 package com.nestor.dashboard.data
 
-import com.nestor.database.data.dashboard.DashboardDao
-import javax.inject.Inject
+import com.nestor.database.data.dashboard.DashboardEntity
+import kotlinx.coroutines.flow.Flow
 
-internal class LocalDashboardDataSource @Inject constructor(private val dashboardDao: DashboardDao) {
-    fun getCurrentDashboard(userUuid: String) = dashboardDao.getDashboard(userUuid)
+interface LocalDashboardDataSource {
+    fun getCurrentDashboard(userUuid: String): Flow<DashboardEntity?>
 }
