@@ -6,6 +6,8 @@ import com.nestor.auth.data.datasource.AuthLocalDataSource
 import com.nestor.auth.data.datasource.AuthLocalDataSourceImpl
 import com.nestor.auth.data.datasource.AuthRemoteDataSource
 import com.nestor.auth.data.datasource.AuthRemoteDataSourceImpl
+import com.nestor.auth.data.datasource.AuthTokenInterceptor
+import com.nestor.auth.data.datasource.AuthTokenInterceptorImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -32,4 +34,10 @@ interface AuthModule {
     fun bindAuthRemoteDataSource(
         authRemoteDataSource: AuthRemoteDataSourceImpl
     ): AuthRemoteDataSource
+
+    @Binds
+    @Singleton
+    fun bindAuthTokenInterceptor(
+        impl: AuthTokenInterceptorImpl
+    ): AuthTokenInterceptor
 }

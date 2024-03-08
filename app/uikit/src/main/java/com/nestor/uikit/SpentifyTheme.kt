@@ -101,7 +101,9 @@ private fun SpentifyThemePreview() {
                         value = "+ 234 808 762 1236",
                         onValueChange = {},
                         label = "Phone number",
-                        modifier = Modifier.fillMaxWidth().padding(top = 36.dp)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 36.dp)
                     )
                 }
                 SYButton(

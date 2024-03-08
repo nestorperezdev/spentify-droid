@@ -42,6 +42,9 @@ android {
 }
 
 dependencies {
+    //shimmer loading
+    api(libs.compose.shimmerLoading)
+
     implementation(libs.navigation.compose)
     implementation(libs.hilt)
     kapt(libs.hiltCompiler)

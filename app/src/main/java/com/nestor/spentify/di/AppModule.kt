@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.apollographql.apollo3.ApolloClient
+import com.nestor.auth.data.datasource.AuthTokenInterceptor
 import com.nestor.onboarding.data.datasource.OnboardingLocalDataSource
 import com.nestor.onboarding.data.datasource.OnboardingLocalDataSourceImpl
 import com.nestor.spentify.R
@@ -37,9 +38,13 @@ abstract class AppModule {
     companion object {
         @Provides
         @Singleton
-        fun providesApolloClient(@ApplicationContext context: Context): ApolloClient {
+        fun providesApolloClient(
+            @ApplicationContext context: Context,
+            authTokenInterceptor: AuthTokenInterceptor,
+        ): ApolloClient {
             return ApolloClient.Builder()
                 .serverUrl(context.getString(R.string.graphql_server_url))
+                .addHttpInterceptor(authTokenInterceptor)
                 .build()
         }
 

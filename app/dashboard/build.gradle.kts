@@ -42,8 +42,11 @@ android {
 }
 
 dependencies {
+    //  hilt
+    implementation(libs.androidx.hilt.navigation)
     implementation(libs.hilt)
     kapt(libs.hiltCompiler)
+
     implementation(libs.compose.viewmodel)
     implementation(libs.navigation.compose)
     implementation(libs.androidx.ktx)

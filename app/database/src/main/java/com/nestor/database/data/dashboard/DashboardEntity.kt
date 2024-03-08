@@ -7,9 +7,9 @@ import java.util.Date
 
 @Entity
 data class DashboardEntity(
-    @PrimaryKey val id: Int,
+    @PrimaryKey val id: Int? = null,
     @ColumnInfo("user_uuid") val userUuid: String,
     @ColumnInfo("name") val userName: String,
     @ColumnInfo("daily_phrase") val dailyPhrase: String?,
-    @ColumnInfo("created_at", defaultValue = "CURRENT_TIMESTAMP") val createdAt: Date
+    @ColumnInfo("created_at") val createdAt: Date = Date()
 )

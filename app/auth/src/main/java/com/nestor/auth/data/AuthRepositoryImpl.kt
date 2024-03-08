@@ -35,7 +35,7 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override fun userLoginData(): Flow<TokenPayload?> {
-        return this.authLocalDataSource.userDetails()
+        return this.authLocalDataSource.userDetailsFlow()
     }
 
     override suspend fun login(

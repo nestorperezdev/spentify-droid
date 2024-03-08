@@ -6,7 +6,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 interface AuthLocalDataSource {
-    fun userDetails(): Flow<TokenPayload?>
+    fun userDetailsFlow(): Flow<TokenPayload?>
+    fun userDetails(): TokenPayload?
     fun isUserLoggedIn(): StateFlow<AuthState>
+    fun getRawToken(): String?
     suspend fun storeUserToken(token: String, name: String, email: String)
 }
