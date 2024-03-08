@@ -7,7 +7,7 @@ import com.nestor.database.data.dashboard.DashboardDao
 import com.nestor.database.data.dashboard.DashboardEntity
 import com.nestor.database.util.DateConverter
 
-@Database(entities = [DashboardEntity::class], version = 1)
+@Database(entities = [DashboardEntity::class], version = 2)
 @TypeConverters(DateConverter::class)
 abstract class SpentifyDatabase : RoomDatabase() {
     abstract fun dashboardDao(): DashboardDao

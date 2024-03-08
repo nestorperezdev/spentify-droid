@@ -2,4 +2,5 @@
 <resources>
     <string name="hello">Hello %1$s</string>
     <string name="total_expenses_this_month">Total expenses this month</string>
+    <string name="currency_format">$ %.2f</string>
 </resources>

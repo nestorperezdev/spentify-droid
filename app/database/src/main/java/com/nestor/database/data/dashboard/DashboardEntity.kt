@@ -11,5 +11,6 @@ data class DashboardEntity(
     @ColumnInfo("user_uuid") val userUuid: String,
     @ColumnInfo("name") val userName: String,
     @ColumnInfo("daily_phrase") val dailyPhrase: String?,
-    @ColumnInfo("created_at") val createdAt: Date = Date()
+    @ColumnInfo("created_at") val createdAt: Date = Date(),
+    @ColumnInfo("total_expenses") val totalExpenses: Double,
 )

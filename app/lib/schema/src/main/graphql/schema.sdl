@@ -7,7 +7,24 @@ type Dashboard {
   dailyPhrase: String
 
   firstName: String!
+
+  summary(summaryContext: SummaryDashboardInput!): DashboardMonthlySummary!
 }
+
+type DashboardMonthlySummary {
+  dailyAverageExpense: Float!
+
+  maximalExpense: Float!
+
+  minimalExpense: Float!
+
+  totalExpenses: Float!
+}
+
+"""
+The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point).
+"""
+scalar Float
 
 type LoginToken {
   name: String!
@@ -40,12 +57,28 @@ The `String` scalar type represents textual data, represented as UTF-8 character
 """
 scalar String
 
+input SummaryDashboardInput {
+  timeZoneData: UserTimeZoneInput!
+}
+
 type User {
   id: String!
 
   name: String!
 
   username: String!
+}
+
+input UserTimeZoneInput {
+  """
+  User time in ISO 8601 format. Ex: 2021-08-01T12:00:00Z
+  """
+  userTime: String!
+
+  """
+  User zoneId. ex: UTC-6
+  """
+  zoneFixedOffsetId: String!
 }
 
 """

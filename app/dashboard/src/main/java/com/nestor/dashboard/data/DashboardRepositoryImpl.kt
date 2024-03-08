@@ -30,14 +30,15 @@ class DashboardRepositoryImpl @Inject constructor(
     override fun refreshDashboardData() {
         runBlocking(coroutineProvider.io()) {
             try {
-                val dashboardResponse = remoteDataSource.fetchDashboardInfo()
+                val dashboardResponse = remoteDataSource.fetchDashboardInfo(localDataSource.getSummaryContext())
                 dashboardResponse.data?.dashboard?.let { response ->
                     authLocalDataSource.userDetails()?.let {
                         localDataSource.insertDashboard(
                             DashboardEntity(
                                 userUuid = it.sub,
                                 userName = response.firstName,
-                                dailyPhrase = response.dailyPhrase
+                                dailyPhrase = response.dailyPhrase,
+                                totalExpenses = response.summary.totalExpenses
                             )
                         )
                     }

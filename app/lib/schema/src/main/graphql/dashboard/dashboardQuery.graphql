@@ -1,6 +1,12 @@
-query Dashboard {
+query Dashboard($summaryContext: SummaryDashboardInput!) {
     dashboard {
         dailyPhrase,
-        firstName
+        firstName,
+        summary(summaryContext: $summaryContext) {
+            totalExpenses,
+            dailyAverageExpense,
+            maximalExpense,
+            minimalExpense
+        }
     }
 }

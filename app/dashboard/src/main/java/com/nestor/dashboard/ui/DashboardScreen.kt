@@ -3,7 +3,6 @@ package com.nestor.dashboard.ui
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -18,7 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,7 +33,6 @@ import com.nestor.uikit.loading.ShimmerSkeletonDoubleLine
 import com.nestor.uikit.statusbar.SYStatusBar
 import com.nestor.uikit.statusbar.StatusBarType
 import com.nestor.uikit.stepperdot.SYStepperDot
-import com.nestor.uikit.stepperdot.StepperDotState
 import com.nestor.uikit.stepperdot.rememberStepperDotState
 import com.nestor.uikit.theme.spacing.LocalSYPadding
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -100,33 +97,38 @@ private fun DashboardScreenContent(
                         .clip(MaterialTheme.shapes.large)
                         .background(MaterialTheme.colorScheme.primary)
                 ) {
-                    val stepperState = rememberStepperDotState(size = 3)
-                    val pagerState = rememberPagerState { 3 }
-                    LaunchedEffect(pagerState.currentPage) {
-                        stepperState.moveToDotNumber(pagerState.currentPage)
-                    }
-                    HorizontalPager(state = pagerState) {
-                        Column(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                text = stringResource(R.string.total_expenses_this_month),
-                                style = MaterialTheme.typography.titleSmall,
-                                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f)
-                            )
-                            Spacer(modifier = Modifier.height(20.dp))
-                            Text(
-                                text = "$50,0000.10",
-                                style = MaterialTheme.typography.titleLarge,
-                                color = MaterialTheme.colorScheme.onPrimary,
-                            )
+                    dashboard.body?.let { dash ->
+                        val stepperState = rememberStepperDotState(size = 3)
+                        val pagerState = rememberPagerState { 3 }
+                        LaunchedEffect(pagerState.currentPage) {
+                            stepperState.moveToDotNumber(pagerState.currentPage)
                         }
+                        HorizontalPager(state = pagerState) {
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.total_expenses_this_month),
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f)
+                                )
+                                Spacer(modifier = Modifier.height(20.dp))
+                                Text(
+                                    text = stringResource(
+                                        R.string.currency_format,
+                                        dash.totalExpenses
+                                    ),
+                                    style = MaterialTheme.typography.titleLarge,
+                                    color = MaterialTheme.colorScheme.onPrimary,
+                                )
+                            }
+                        }
+                        SYStepperDot(
+                            state = stepperState,
+                            dotColor = MaterialTheme.colorScheme.onPrimary
+                        )
                     }
-                    SYStepperDot(
-                        state = stepperState,
-                        dotColor = MaterialTheme.colorScheme.onPrimary
-                    )
                 }
             }
         }
@@ -143,7 +145,8 @@ private fun DashboardScreenContentPrev() {
                     body = DashboardEntity(
                         userName = "Nestor",
                         dailyPhrase = "Good morning remmeber to save! 💸",
-                        userUuid = ""
+                        userUuid = "",
+                        totalExpenses = 50_000.0
                     )
                 )
             )

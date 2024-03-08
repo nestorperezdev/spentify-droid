@@ -23,7 +23,9 @@ abstract class SpentifyDatabaseModule {
         @Singleton
         @Provides
         fun providesDatabase(@ApplicationContext context: Context): SpentifyDatabase =
-            Room.databaseBuilder(context, SpentifyDatabase::class.java, "spentify-db").build()
+            Room.databaseBuilder(context, SpentifyDatabase::class.java, "spentify-db")
+                .fallbackToDestructiveMigration()
+                .build()
 
         @Provides
         @Singleton
