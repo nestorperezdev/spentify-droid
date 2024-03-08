@@ -3,8 +3,10 @@ package com.nestor.dashboard.data
 import com.apollographql.apollo3.exception.ApolloNetworkException
 import com.nestor.auth.data.datasource.AuthLocalDataSource
 import com.nestor.database.data.dashboard.DashboardEntity
+import com.nestor.schema.utils.ResponseWrapper
 import com.nestor.uikit.util.CoroutineContextProvider
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
@@ -14,8 +16,15 @@ class DashboardRepositoryImpl @Inject constructor(
     private val coroutineProvider: CoroutineContextProvider,
     private val authLocalDataSource: AuthLocalDataSource
 ) : DashboardRepository {
-    override fun fetchDashboardInfo(userUuid: String): Flow<DashboardEntity?> {
-        return localDataSource.getCurrentDashboard(userUuid)
+    override fun fetchDashboardInfo(userUuid: String): Flow<ResponseWrapper<DashboardEntity>> = flow {
+        localDataSource.getCurrentDashboard(userUuid).collect {
+            it?.let {
+                emit(ResponseWrapper(body = it))
+            } ?: run {
+                emit(ResponseWrapper(isLoading = true))
+                refreshDashboardData()
+            }
+        }
     }
 
     override fun refreshDashboardData() {

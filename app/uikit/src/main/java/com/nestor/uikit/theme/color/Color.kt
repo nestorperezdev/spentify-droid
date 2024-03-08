@@ -16,6 +16,7 @@ val inactive = Color(0xFFC4C4C4)
 
 internal val DarkColorScheme = darkColorScheme(
     primary = Blue80,
+    onPrimary = Color.White,
     secondary = PurpleGrey80,
     tertiary = Pink80,
     error = warningLight,
