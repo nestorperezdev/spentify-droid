@@ -1,15 +1,10 @@
 package com.nestor.common.data
 
 import com.nestor.common.util.parseISODate
-import com.nestor.common.util.peak
 import com.nestor.database.data.currency.CurrencyEntity
-import com.nestor.schema.CurrencyInfoQuery
 import com.nestor.schema.utils.ResponseWrapper
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.Date
 import javax.inject.Inject
 
@@ -28,6 +23,21 @@ class CurrencyRepositoryImpl @Inject constructor(
                 }
             } else {
                 emit(ResponseWrapper.success(currencies))
+            }
+        }
+    }
+
+    override fun fetchCurrencyByCode(code: String): Flow<ResponseWrapper<CurrencyEntity>> = flow {
+        localDataSource.fetchCurrencyByCode(code).collect { currency ->
+            currency?.let {
+                emit(ResponseWrapper.success(it))
+            } ?: run {
+                emit(ResponseWrapper.loading())
+                try {
+                    updateCurrencies()
+                } catch (e: Exception) {
+                    emit(ResponseWrapper.error(e.message ?: "Unknown error"))
+                }
             }
         }
     }

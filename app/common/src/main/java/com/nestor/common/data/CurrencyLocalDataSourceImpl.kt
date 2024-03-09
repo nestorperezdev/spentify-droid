@@ -18,4 +18,8 @@ class CurrencyLocalDataSourceImpl @Inject constructor(private val dao: CurrencyD
     override suspend fun saveCurrencies(currencies: List<CurrencyEntity>) {
         dao.insertCurrency(currencies)
     }
+
+    override suspend fun fetchCurrencyByCode(code: String): Flow<CurrencyEntity?> {
+        return dao.fetchCurrencyByCode(code)
+    }
 }

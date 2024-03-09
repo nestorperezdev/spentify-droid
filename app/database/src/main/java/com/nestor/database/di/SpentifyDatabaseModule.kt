@@ -6,8 +6,10 @@ import androidx.room.Room
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import com.nestor.database.SpentifyDatabase
+import com.nestor.database.data.currency.CurrencyDao
 import com.nestor.database.data.dashboard.DashboardDao
 import com.nestor.database.data.encryptedpreferences.EncryptedPreferences
+import com.nestor.database.data.user.UserDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -52,6 +54,18 @@ abstract class SpentifyDatabaseModule {
         @Provides
         fun providesDashboardDao(database: SpentifyDatabase): DashboardDao {
             return database.dashboardDao()
+        }
+
+        @Singleton
+        @Provides
+        fun providesUserDao(database: SpentifyDatabase): UserDao {
+            return database.userDao()
+        }
+
+        @Singleton
+        @Provides
+        fun providesCurrencyDao(database: SpentifyDatabase): CurrencyDao {
+            return database.currencyDao()
         }
     }
 }

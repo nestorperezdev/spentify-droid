@@ -24,7 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nestor.dashboard.R
-import com.nestor.database.data.dashboard.DashboardEntity
+import com.nestor.dashboard.ui.DashboardUiState
 import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.stepperdot.SYStepperDot
 import com.nestor.uikit.stepperdot.rememberStepperDotState
@@ -34,7 +34,7 @@ import com.nestor.uikit.util.formatMoneyAmount
 @Composable
 fun SummaryTilesScreen(
     modifier: Modifier = Modifier,
-    dash: DashboardEntity
+    dash: DashboardUiState
 ) {
     Box(
         modifier = modifier
@@ -66,7 +66,7 @@ fun SummaryTilesScreen(
     }
 }
 
-val summaryTileScreen1 = @Composable { dash: DashboardEntity ->
+val summaryTileScreen1 = @Composable { dash: DashboardUiState ->
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -81,6 +81,7 @@ val summaryTileScreen1 = @Composable { dash: DashboardEntity ->
         Text(
             text = stringResource(
                 R.string.currency_format,
+                dash.userCurrency.symbol,
                 dash.totalExpenses.formatMoneyAmount()
             ),
             style = MaterialTheme.typography.titleLarge,
@@ -89,7 +90,7 @@ val summaryTileScreen1 = @Composable { dash: DashboardEntity ->
     }
 }
 
-val summaryTileScreen2 = @Composable { dash: DashboardEntity ->
+val summaryTileScreen2 = @Composable { dash: DashboardUiState ->
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -105,6 +106,7 @@ val summaryTileScreen2 = @Composable { dash: DashboardEntity ->
         Text(
             text = stringResource(
                 R.string.currency_format,
+                dash.userCurrency.symbol,
                 dash.dailyAverageExpense.formatMoneyAmount()
             ),
             style = MaterialTheme.typography.titleLarge,
@@ -114,7 +116,7 @@ val summaryTileScreen2 = @Composable { dash: DashboardEntity ->
 }
 
 
-val summaryTileScreen3 = @Composable { dash: DashboardEntity ->
+val summaryTileScreen3 = @Composable { dash: DashboardUiState ->
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -130,6 +132,7 @@ val summaryTileScreen3 = @Composable { dash: DashboardEntity ->
         Text(
             text = stringResource(
                 R.string.currency_format,
+                dash.userCurrency.symbol,
                 dash.maximalExpense.formatMoneyAmount()
             ),
             style = MaterialTheme.typography.titleLarge,
@@ -145,6 +148,7 @@ val summaryTileScreen3 = @Composable { dash: DashboardEntity ->
         Text(
             text = stringResource(
                 R.string.currency_format,
+                dash.userCurrency.symbol,
                 dash.minimalExpense.formatMoneyAmount()
             ),
             style = MaterialTheme.typography.titleLarge,
@@ -165,14 +169,13 @@ val tileList = listOf(
 fun SummaryTilesScreenPrev() {
     SpentifyTheme {
         SummaryTilesScreen(
-            dash = DashboardEntity(
+            dash = DashboardUiState(
                 totalExpenses = 100.0,
-                userUuid = "",
                 dailyPhrase = "",
                 userName = "",
                 maximalExpense = 20.0,
                 minimalExpense = 10.0,
-                dailyAverageExpense = 12.0
+                dailyAverageExpense = 12.0,
             )
         )
     }

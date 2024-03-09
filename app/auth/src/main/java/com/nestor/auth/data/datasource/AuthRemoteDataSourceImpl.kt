@@ -6,6 +6,7 @@ import com.nestor.schema.ForgotPasswordMutation
 import com.nestor.schema.LoginMutation
 import com.nestor.schema.RecoverPasswordMutation
 import com.nestor.schema.RegisterMutation
+import com.nestor.schema.UserDetailsQuery
 import javax.inject.Inject
 
 class AuthRemoteDataSourceImpl @Inject constructor(val apolloClient: ApolloClient) :
@@ -30,5 +31,9 @@ class AuthRemoteDataSourceImpl @Inject constructor(val apolloClient: ApolloClien
 
     override suspend fun recoverPassword(newPassword: String): ApolloResponse<RecoverPasswordMutation.Data> {
         return this.apolloClient.mutation(RecoverPasswordMutation(newPassword)).execute()
+    }
+
+    override suspend fun fetchUserDetails(): ApolloResponse<UserDetailsQuery.Data> {
+        return this.apolloClient.query(UserDetailsQuery()).execute()
     }
 }

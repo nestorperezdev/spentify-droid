@@ -5,9 +5,11 @@ import com.nestor.auth.data.datasource.AuthLocalDataSource
 import com.nestor.auth.data.datasource.AuthRemoteDataSource
 import com.nestor.auth.data.model.AuthState
 import com.nestor.auth.data.model.TokenPayload
+import com.nestor.database.data.user.UserEntity
 import com.nestor.schema.ForgotPasswordMutation
 import com.nestor.schema.LoginMutation
 import com.nestor.schema.RecoverPasswordMutation
+import com.nestor.schema.utils.ResponseWrapper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
@@ -62,5 +64,32 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun recoverPassword(newPassword: String): ApolloResponse<RecoverPasswordMutation.Data> {
         return this.remoteDataSource.recoverPassword(newPassword)
+    }
+
+    override fun userDetails(): Flow<ResponseWrapper<UserEntity?>> = flow {
+        userLoginData().collect { loginDetails ->
+            loginDetails?.let {
+                val user = authLocalDataSource.getUserDetails(it.sub)
+                user?.let { emit(ResponseWrapper.success(it)) } ?: run {
+                    emit(ResponseWrapper.loading())
+                    val response = remoteDataSource.fetchUserDetails()
+                    if (response.hasErrors().not()) {
+                        response.data?.userDetails?.user?.let { data ->
+                            val userEntity = UserEntity(
+                                email = data.username,
+                                name = data.name,
+                                uuid = data.id,
+                                currencyCode = data.currencyCode
+                            )
+                            authLocalDataSource.storeUser(userEntity)
+                            emit(ResponseWrapper.success(userEntity))
+                        }
+                    }
+                }
+            } ?: run {
+                authLocalDataSource.clearUsers()
+                emit(ResponseWrapper.success(null))
+            }
+        }
     }
 }

@@ -6,6 +6,8 @@ import com.nestor.auth.data.model.AuthState
 import com.nestor.auth.data.model.TokenPayload
 import com.nestor.auth.data.model.toUserClaim
 import com.nestor.database.data.encryptedpreferences.EncryptedPreferences
+import com.nestor.database.data.user.UserDao
+import com.nestor.database.data.user.UserEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +19,8 @@ import javax.inject.Named
 private const val TOKEN_KEY = "TOKEN_KEY"
 
 class AuthLocalDataSourceImpl @Inject constructor(
-    @Named(EncryptedPreferences.ENCRYPTED_PREFERENCES) private val encryptedPreferences: SharedPreferences
+    @Named(EncryptedPreferences.ENCRYPTED_PREFERENCES) private val encryptedPreferences: SharedPreferences,
+    private val userDao: UserDao
 ) : AuthLocalDataSource {
     private val _authState = MutableStateFlow(this.getAuthStatus())
     private val _rawToken = MutableStateFlow(this.retrieveToken())
@@ -36,6 +39,18 @@ class AuthLocalDataSourceImpl @Inject constructor(
         encryptedPreferences.edit().putString(TOKEN_KEY, token).apply()
         _authState.update { AuthState.AUTHENTICATED }
         _rawToken.update { token }
+    }
+
+    override suspend fun getUserDetails(uuid: String): UserEntity? {
+        return userDao.getUser(uuid)
+    }
+
+    override suspend fun storeUser(userEntity: UserEntity) {
+        userDao.insertUser(userEntity)
+    }
+
+    override suspend fun clearUsers() {
+        userDao.clearUsers()
     }
 
     private fun retrieveToken(): String? {

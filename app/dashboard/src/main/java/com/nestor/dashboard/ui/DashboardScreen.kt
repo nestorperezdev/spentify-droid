@@ -1,6 +1,5 @@
 package com.nestor.dashboard.ui
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -15,8 +14,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nestor.dashboard.R
 import com.nestor.dashboard.ui.summarytiles.SummaryTilesScreen
-import com.nestor.database.data.dashboard.DashboardEntity
-import com.nestor.schema.utils.ResponseWrapper
 import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.loading.ShimmerSkeletonBox
 import com.nestor.uikit.loading.ShimmerSkeletonDoubleLine
@@ -35,7 +32,7 @@ fun DashboardScreen(viewModel: DashboardViewModel = hiltViewModel()) {
 
 @Composable
 private fun DashboardScreenContent(
-    dashboardState: StateFlow<ResponseWrapper<DashboardEntity>>,
+    dashboardState: StateFlow<DashboardUiState>,
 ) {
     val dashboard = dashboardState.collectAsState().value
     val isLoading = dashboard.isLoading
@@ -51,17 +48,15 @@ private fun DashboardScreenContent(
                         )
                     )
                 } else {
-                    dashboard.body?.let { dash ->
-                        val toolbarType = if (dash.dailyPhrase != null) {
-                            StatusBarType.TitleAndSubtitle(
-                                stringResource(R.string.hello, dash.userName),
-                                dash.dailyPhrase!!
-                            )
-                        } else {
-                            StatusBarType.LeftTitle(stringResource(R.string.hello, dash.userName))
-                        }
-                        SYStatusBar(toolbarType)
+                    val toolbarType = if (dashboard.dailyPhrase != null) {
+                        StatusBarType.TitleAndSubtitle(
+                            stringResource(R.string.hello, dashboard.userName),
+                            dashboard.dailyPhrase
+                        )
+                    } else {
+                        StatusBarType.LeftTitle(stringResource(R.string.hello, dashboard.userName))
                     }
+                    SYStatusBar(toolbarType)
                 }
             }
         }
@@ -75,9 +70,7 @@ private fun DashboardScreenContent(
             if (isLoading) {
                 ShimmerSkeletonBox()
             } else {
-                dashboard.body?.let { dash ->
-                    SummaryTilesScreen(dash = dash)
-                }
+                SummaryTilesScreen(dash = dashboard)
             }
         }
     }
@@ -89,16 +82,13 @@ private fun DashboardScreenContentPrev() {
     SpentifyTheme {
         DashboardScreenContent(
             dashboardState = MutableStateFlow(
-                ResponseWrapper(
-                    body = DashboardEntity(
-                        userName = "Nestor",
-                        dailyPhrase = "Good morning remmeber to save! 💸",
-                        userUuid = "",
-                        totalExpenses = 50_000.0,
-                        maximalExpense = 20.0,
-                        minimalExpense = 10.0,
-                        dailyAverageExpense = 12.0
-                    )
+                DashboardUiState(
+                    userName = "Nestor",
+                    totalExpenses = 1723.50,
+                    minimalExpense = 500.0,
+                    maximalExpense = 501.76,
+                    dailyPhrase = "Good morning, Remember to save today 💸",
+                    dailyAverageExpense = 123.10
                 )
             )
         )
@@ -110,7 +100,7 @@ private fun DashboardScreenContentPrev() {
 private fun DashboardScreenContentLoadingPrev() {
     SpentifyTheme {
         DashboardScreenContent(
-            dashboardState = MutableStateFlow(ResponseWrapper(isLoading = true))
+            dashboardState = MutableStateFlow(DashboardUiState(isLoading = true))
         )
     }
 }
