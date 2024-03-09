@@ -1,0 +1,7 @@
+fragment currencyInfo on CurrencyInfo {
+    code,
+    name,
+    lastUpdate,
+    symbol,
+    usdRate
+}

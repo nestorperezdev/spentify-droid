@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.nestor.dashboard"
+    namespace = "com.nestor.common"
     compileSdk = 34
 
     defaultConfig {
@@ -33,12 +33,6 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-    buildFeatures { // Enables Jetpack Compose for this module
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
 }
 
 dependencies {
@@ -47,20 +41,10 @@ dependencies {
     implementation(libs.hilt)
     kapt(libs.hiltCompiler)
 
-    implementation(libs.compose.viewmodel)
-    implementation(libs.navigation.compose)
-    implementation(libs.androidx.ktx)
-    implementation(libs.androidx.runtimeKtx)
-    implementation(libs.activity.compose)
-    implementation(platform(libs.composeBom))
-    implementation(project(":app:uikit"))
-    implementation(project(":app:auth"))
     implementation(project(":app:lib:schema"))
     implementation(project(":app:database"))
-    implementation(project(":app:common"))
-    implementation(libs.compose.graphics)
-    implementation(libs.compose.material3)
-    implementation(libs.compose.toolingPreview)
+
+    implementation(libs.androidx.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)

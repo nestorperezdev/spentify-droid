@@ -1,4 +1,4 @@
-package com.nestor.uikit.util
+package com.nestor.common.util
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector

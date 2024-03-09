@@ -3,6 +3,25 @@ The `Boolean` scalar type represents `true` or `false`.
 """
 scalar Boolean
 
+type Currency {
+  info: [CurrencyInfo!]!
+}
+
+type CurrencyInfo {
+  code: String!
+
+  """
+  iso 8601
+  """
+  lastUpdate: String!
+
+  name: String!
+
+  symbol: String!
+
+  usdRate: Float!
+}
+
 type Dashboard {
   dailyPhrase: String
 
@@ -43,6 +62,8 @@ type Mutation {
 }
 
 type Query {
+  currencyInfo: Currency!
+
   dashboard: Dashboard!
 
   userDetails: User!
