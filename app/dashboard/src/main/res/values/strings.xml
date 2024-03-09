@@ -2,5 +2,7 @@
 <resources>
     <string name="hello">Hello %1$s</string>
     <string name="total_expenses_this_month">Total expenses this month</string>
-    <string name="currency_format">$ %.2f</string>
+    <string name="currency_format">$ %1s</string>
+    <string name="your_highest_expense">Your highest expense</string>
+    <string name="your_lowest_expense">Your lowest expense</string>
 </resources>

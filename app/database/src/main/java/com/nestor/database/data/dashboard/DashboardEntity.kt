@@ -13,4 +13,7 @@ data class DashboardEntity(
     @ColumnInfo("daily_phrase") val dailyPhrase: String?,
     @ColumnInfo("created_at") val createdAt: Date = Date(),
     @ColumnInfo("total_expenses") val totalExpenses: Double,
+    @ColumnInfo("daily_average_expense") val dailyAverageExpense: Double,
+    @ColumnInfo("maximal_expense") val maximalExpense: Double,
+    @ColumnInfo("minimal_expense") val minimalExpense: Double,
 )

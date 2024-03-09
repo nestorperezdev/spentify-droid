@@ -16,21 +16,23 @@ class DashboardRepositoryImpl @Inject constructor(
     private val coroutineProvider: CoroutineContextProvider,
     private val authLocalDataSource: AuthLocalDataSource
 ) : DashboardRepository {
-    override fun fetchDashboardInfo(userUuid: String): Flow<ResponseWrapper<DashboardEntity>> = flow {
-        localDataSource.getCurrentDashboard(userUuid).collect {
-            it?.let {
-                emit(ResponseWrapper(body = it))
-            } ?: run {
-                emit(ResponseWrapper(isLoading = true))
-                refreshDashboardData()
+    override fun fetchDashboardInfo(userUuid: String): Flow<ResponseWrapper<DashboardEntity>> =
+        flow {
+            localDataSource.getCurrentDashboard(userUuid).collect {
+                it?.let {
+                    emit(ResponseWrapper(body = it))
+                } ?: run {
+                    emit(ResponseWrapper(isLoading = true))
+                    refreshDashboardData()
+                }
             }
         }
-    }
 
     override fun refreshDashboardData() {
         runBlocking(coroutineProvider.io()) {
             try {
-                val dashboardResponse = remoteDataSource.fetchDashboardInfo(localDataSource.getSummaryContext())
+                val dashboardResponse =
+                    remoteDataSource.fetchDashboardInfo(localDataSource.getSummaryContext())
                 dashboardResponse.data?.dashboard?.let { response ->
                     authLocalDataSource.userDetails()?.let {
                         localDataSource.insertDashboard(
@@ -38,7 +40,10 @@ class DashboardRepositoryImpl @Inject constructor(
                                 userUuid = it.sub,
                                 userName = response.firstName,
                                 dailyPhrase = response.dailyPhrase,
-                                totalExpenses = response.summary.totalExpenses
+                                totalExpenses = response.summary.totalExpenses,
+                                dailyAverageExpense = response.summary.dailyAverageExpense,
+                                minimalExpense = response.summary.minimalExpense,
+                                maximalExpense = response.summary.maximalExpense
                             )
                         )
                     }
