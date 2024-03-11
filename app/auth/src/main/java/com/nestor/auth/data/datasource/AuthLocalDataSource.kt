@@ -15,4 +15,6 @@ interface AuthLocalDataSource {
     suspend fun getUserDetails(uuid: String): UserEntity?
     suspend fun storeUser(userEntity: UserEntity)
     suspend fun clearUsers()
+    suspend fun updateUserCurrency(currencyCode: String)
+    suspend fun getUserDetailsFlow(): Flow<UserEntity?>
 }

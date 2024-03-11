@@ -6,6 +6,10 @@ import com.nestor.database.data.dashboard.DashboardEntity
 import com.nestor.schema.utils.ResponseWrapper
 import com.nestor.uikit.util.CoroutineContextProvider
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -18,14 +22,17 @@ class DashboardRepositoryImpl @Inject constructor(
 ) : DashboardRepository {
     override fun fetchDashboardInfo(userUuid: String): Flow<ResponseWrapper<DashboardEntity>> =
         flow {
-            localDataSource.getCurrentDashboard(userUuid).collect {
-                it?.let {
+            combine(
+                authLocalDataSource.userDetailsFlow().filterNotNull(),
+                localDataSource.getCurrentDashboard(userUuid)
+            ) { details, dashboard ->
+                dashboard?.let {
                     emit(ResponseWrapper(body = it))
                 } ?: run {
                     emit(ResponseWrapper(isLoading = true))
                     refreshDashboardData()
                 }
-            }
+            }.collect()
         }
 
     override fun refreshDashboardData() {

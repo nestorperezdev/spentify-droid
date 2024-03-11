@@ -20,4 +20,5 @@ interface AuthRepository {
     suspend fun forgotPassword(username: String): ApolloResponse<ForgotPasswordMutation.Data>
     suspend fun recoverPassword(newPassword: String): ApolloResponse<RecoverPasswordMutation.Data>
     fun userDetails(): Flow<ResponseWrapper<UserEntity?>>
+    suspend fun updateUserCurrency(code: String)
 }

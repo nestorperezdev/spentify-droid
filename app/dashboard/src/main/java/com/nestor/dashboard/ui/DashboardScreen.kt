@@ -15,6 +15,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.nestor.dashboard.R
 import com.nestor.dashboard.ui.summarytiles.SummaryTilesScreen
 import com.nestor.uikit.SpentifyTheme
+import com.nestor.uikit.button.SYButton
 import com.nestor.uikit.loading.ShimmerSkeletonBox
 import com.nestor.uikit.loading.ShimmerSkeletonDoubleLine
 import com.nestor.uikit.statusbar.SYStatusBar
@@ -27,12 +28,14 @@ import kotlinx.coroutines.flow.StateFlow
 fun DashboardScreen(viewModel: DashboardViewModel = hiltViewModel()) {
     DashboardScreenContent(
         dashboardState = viewModel.dashboardInfo,
+        onDifferentCurrencySelect = viewModel::onDifferentCurrencySelect
     )
 }
 
 @Composable
 private fun DashboardScreenContent(
     dashboardState: StateFlow<DashboardUiState>,
+    onDifferentCurrencySelect: () -> Unit = {}
 ) {
     val dashboard = dashboardState.collectAsState().value
     val isLoading = dashboard.isLoading
@@ -72,6 +75,7 @@ private fun DashboardScreenContent(
             } else {
                 SummaryTilesScreen(dash = dashboard)
             }
+            SYButton(onClick = onDifferentCurrencySelect, buttonText = "Toggle different currency")
         }
     }
 }

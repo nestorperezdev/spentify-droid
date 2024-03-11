@@ -18,4 +18,5 @@ interface AuthRemoteDataSource {
     suspend fun forgotPassword(username: String): ApolloResponse<ForgotPasswordMutation.Data>
     suspend fun recoverPassword(newPassword: String): ApolloResponse<RecoverPasswordMutation.Data>
     suspend fun fetchUserDetails(): ApolloResponse<UserDetailsQuery.Data>
+    suspend fun updateUserCurrency(currencyCode: String)
 }

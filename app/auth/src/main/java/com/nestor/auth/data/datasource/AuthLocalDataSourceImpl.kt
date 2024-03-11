@@ -53,6 +53,10 @@ class AuthLocalDataSourceImpl @Inject constructor(
         userDao.clearUsers()
     }
 
+    override suspend fun updateUserCurrency(currencyCode: String) {
+        userDao.updateCurrency(currencyCode)
+    }
+
     private fun retrieveToken(): String? {
         return this.encryptedPreferences.getString(TOKEN_KEY, null)
     }

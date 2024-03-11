@@ -3,6 +3,7 @@ package com.nestor.database.data.user
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface UserDao {
@@ -12,4 +13,7 @@ interface UserDao {
     fun insertUser(user: UserEntity)
     @Query("DELETE FROM user")
     fun clearUsers(): Int
+
+    @Query("UPDATE user SET currency_code = :currencyCode")
+    fun updateCurrency(currencyCode: String)
 }

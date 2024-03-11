@@ -50,6 +50,7 @@ class DashboardViewModel @Inject constructor(
                                 userCurrency = DashboardUiState.UserCurrency(
                                     symbol = currency.symbol,
                                     usdValue = currency.usdRate,
+                                    code = currency.code
                                 ),
                                 totalExpenses = dashboard.totalExpenses * currency.usdRate,
                                 dailyAverageExpense = dashboard.dailyAverageExpense * currency.usdRate,
@@ -63,6 +64,26 @@ class DashboardViewModel @Inject constructor(
                     }.collect()
                 }
             }
+        }
+    }
+
+    fun onDifferentCurrencySelect() {
+        viewModelScope.launch(coroutineContextProvider.io()) {
+            currencyRepository.fetchCurrencies()
+                .map { it.body }
+                .filterNotNull()
+                .collect { currencies ->
+                    val currentCurrency = _dashboardUiState.value.userCurrency.code
+                    var currencyIndex =
+                        currencies.indexOfFirst { current -> current.code == currentCurrency }
+                    if (currencyIndex + 1 >= currencies.size) {
+                        currencyIndex = 0
+                    } else {
+                        currencyIndex++
+                    }
+                    val selectedCurrency = currencies[currencyIndex]
+                    authRepository.updateUserCurrency(selectedCurrency.code)
+                }
         }
     }
 }

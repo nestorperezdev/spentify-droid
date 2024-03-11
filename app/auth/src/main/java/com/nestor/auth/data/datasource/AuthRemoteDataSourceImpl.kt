@@ -36,4 +36,8 @@ class AuthRemoteDataSourceImpl @Inject constructor(val apolloClient: ApolloClien
     override suspend fun fetchUserDetails(): ApolloResponse<UserDetailsQuery.Data> {
         return this.apolloClient.query(UserDetailsQuery()).execute()
     }
+
+    override suspend fun updateUserCurrency(currencyCode: String) {
+        //
+    }
 }

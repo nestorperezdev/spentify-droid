@@ -10,6 +10,10 @@ data class DashboardUiState(
     val isLoading: Boolean = true,
     val userCurrency: UserCurrency = UserCurrency()
 ) {
-    data class UserCurrency(val symbol: String = "$", val usdValue: Double = 1.0)
+    data class UserCurrency(
+        val symbol: String = "$",
+        val usdValue: Double = 1.0,
+        val code: String = "USD"
+    )
 }
 

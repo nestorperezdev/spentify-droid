@@ -92,4 +92,9 @@ class AuthRepositoryImpl @Inject constructor(
             }
         }
     }
+
+    override suspend fun updateUserCurrency(code: String) {
+        this.authLocalDataSource.updateUserCurrency(code)
+        this.remoteDataSource.updateUserCurrency(code)
+    }
 }
