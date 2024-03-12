@@ -56,6 +56,7 @@ dependencies {
     implementation(platform(libs.composeBom))
     implementation(project(":app:uikit"))
     implementation(project(":app:database"))
+    implementation(project(":app:common"))
     implementation(project(":app:lib:schema"))
     implementation(libs.compose.ui)
     implementation(libs.compose.graphics)

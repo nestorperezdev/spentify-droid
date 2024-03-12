@@ -5,6 +5,6 @@ import com.nestor.schema.utils.ResponseWrapper
 import kotlinx.coroutines.flow.Flow
 
 interface DashboardRepository {
-    fun fetchDashboardInfo(userUuid: String): Flow<ResponseWrapper<DashboardEntity>>
-    fun refreshDashboardData()
+    fun fetchDashboardInfo(): Flow<ResponseWrapper<DashboardEntity>>
+    suspend fun refreshDashboardData()
 }

@@ -4,40 +4,25 @@ import com.apollographql.apollo3.api.ApolloResponse
 import com.nestor.auth.data.datasource.AuthLocalDataSource
 import com.nestor.auth.data.datasource.AuthRemoteDataSource
 import com.nestor.auth.data.model.AuthState
-import com.nestor.auth.data.model.TokenPayload
 import com.nestor.database.data.user.UserEntity
 import com.nestor.schema.ForgotPasswordMutation
 import com.nestor.schema.LoginMutation
 import com.nestor.schema.RecoverPasswordMutation
 import com.nestor.schema.utils.ResponseWrapper
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
-    private val authLocalDataSource: AuthLocalDataSource,
+    private val localDatasource: AuthLocalDataSource,
     private val remoteDataSource: AuthRemoteDataSource
 ) : AuthRepository {
-    override val authState: StateFlow<AuthState> = authLocalDataSource.isUserLoggedIn()
 
     override fun register(username: String, name: String, password: String) = flow {
         val result =
             remoteDataSource.register(username = username, name = name, password = password)
-        if (result.hasErrors().not()) {
-            with(result.data!!.register.loginToken) {
-                authLocalDataSource.storeUserToken(
-                    this.token,
-                    this.name,
-                    username
-                )
-            }
-        }
+        result.data?.register?.loginToken?.token?.let { token -> localDatasource.storeToken(token) }
         emit(result)
-    }
-
-    override fun userLoginData(): Flow<TokenPayload?> {
-        return this.authLocalDataSource.userDetailsFlow()
     }
 
     override suspend fun login(
@@ -45,16 +30,7 @@ class AuthRepositoryImpl @Inject constructor(
         password: String
     ): ApolloResponse<LoginMutation.Data> {
         val loginResult = remoteDataSource.login(username, password)
-        if (loginResult.hasErrors().not()) {
-            loginResult.data?.let {
-                authLocalDataSource.storeUserToken(
-                    it.login.loginToken.token,
-                    it.login.loginToken.name,
-                    username
-                )
-
-            }
-        }
+        loginResult.data?.login?.loginToken?.token?.let { token -> localDatasource.storeToken(token) }
         return loginResult
     }
 
@@ -66,35 +42,44 @@ class AuthRepositoryImpl @Inject constructor(
         return this.remoteDataSource.recoverPassword(newPassword)
     }
 
-    override fun userDetails(): Flow<ResponseWrapper<UserEntity?>> = flow {
-        userLoginData().collect { loginDetails ->
-            loginDetails?.let {
-                val user = authLocalDataSource.getUserDetails(it.sub)
-                user?.let { emit(ResponseWrapper.success(it)) } ?: run {
-                    emit(ResponseWrapper.loading())
-                    val response = remoteDataSource.fetchUserDetails()
-                    if (response.hasErrors().not()) {
-                        response.data?.userDetails?.user?.let { data ->
-                            val userEntity = UserEntity(
-                                email = data.username,
-                                name = data.name,
-                                uuid = data.id,
-                                currencyCode = data.currencyCode
+    override suspend fun updateUserCurrency(code: String) {
+        this.localDatasource.updateUserCurrency(code)
+        this.remoteDataSource.updateUserCurrency(code)
+    }
+
+    override fun userDetails(): Flow<ResponseWrapper<AuthState>> = flow {
+        localDatasource.tokenContents().collect {
+            it?.let { _ ->
+                localDatasource.userDetails().collect {
+                    it?.let { details ->
+                        emit(ResponseWrapper.success(AuthState.Authenticated(details)))
+                    } ?: run {
+                        val response = remoteDataSource.fetchUserDetails()
+                        if (response.hasErrors()) {
+                            emit(
+                                ResponseWrapper.error(
+                                    response.errors?.firstOrNull()?.message ?: "Unknown error"
+                                )
                             )
-                            authLocalDataSource.storeUser(userEntity)
-                            emit(ResponseWrapper.success(userEntity))
+                        } else {
+                            response.data?.userDetails?.user?.let { user ->
+                                localDatasource.storeUser(
+                                    UserEntity(
+                                        uuid = user.id,
+                                        email = user.username,
+                                        name = user.name,
+                                        currencyCode = user.currencyCode
+                                    )
+                                )
+                            }
                         }
                     }
                 }
-            } ?: run {
-                authLocalDataSource.clearUsers()
-                emit(ResponseWrapper.success(null))
-            }
+            } ?: run { emit(ResponseWrapper.success(AuthState.Anonymous)) }
         }
     }
 
-    override suspend fun updateUserCurrency(code: String) {
-        this.authLocalDataSource.updateUserCurrency(code)
-        this.remoteDataSource.updateUserCurrency(code)
+    override fun getRawToken(): String? {
+        return localDatasource.rawToken()
     }
 }

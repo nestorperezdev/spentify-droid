@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.network.okHttpClient
 import com.nestor.auth.data.datasource.AuthTokenInterceptor
 import com.nestor.onboarding.data.datasource.OnboardingLocalDataSource
 import com.nestor.onboarding.data.datasource.OnboardingLocalDataSourceImpl
@@ -22,6 +23,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
+import okhttp3.OkHttpClient
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -45,6 +48,12 @@ abstract class AppModule {
             return ApolloClient.Builder()
                 .serverUrl(context.getString(R.string.graphql_server_url))
                 .addHttpInterceptor(authTokenInterceptor)
+                .okHttpClient(
+                    OkHttpClient.Builder()
+                        .connectTimeout(10, TimeUnit.SECONDS)
+                        .readTimeout(10, TimeUnit.SECONDS)
+                        .build()
+                )
                 .build()
         }
 

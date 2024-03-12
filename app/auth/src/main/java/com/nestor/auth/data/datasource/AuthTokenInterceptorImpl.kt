@@ -13,7 +13,7 @@ class AuthTokenInterceptorImpl @Inject constructor(
         request: HttpRequest,
         chain: HttpInterceptorChain
     ): HttpResponse {
-        val token = authRepository.getRawToken()
+        val token = authRepository.rawToken()
         val newRequest = request.newBuilder()
         token?.let {
             newRequest.addHeader("Authorization", "Bearer $it")

@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
@@ -20,31 +21,32 @@ class DashboardRepositoryImpl @Inject constructor(
     private val coroutineProvider: CoroutineContextProvider,
     private val authLocalDataSource: AuthLocalDataSource
 ) : DashboardRepository {
-    override fun fetchDashboardInfo(userUuid: String): Flow<ResponseWrapper<DashboardEntity>> =
+    override fun fetchDashboardInfo(): Flow<ResponseWrapper<DashboardEntity>> =
         flow {
-            combine(
-                authLocalDataSource.userDetailsFlow().filterNotNull(),
-                localDataSource.getCurrentDashboard(userUuid)
-            ) { details, dashboard ->
-                dashboard?.let {
-                    emit(ResponseWrapper(body = it))
-                } ?: run {
-                    emit(ResponseWrapper(isLoading = true))
-                    refreshDashboardData()
+            authLocalDataSource.userDetails().filterNotNull().collect { details ->
+                localDataSource.getCurrentDashboard(details.uuid).collect { dashboard ->
+                    dashboard?.let {
+                        emit(ResponseWrapper(body = it))
+                    } ?: run {
+                        emit(ResponseWrapper(isLoading = true))
+                        refreshDashboardData()
+                    }
                 }
-            }.collect()
+            }
         }
 
-    override fun refreshDashboardData() {
-        runBlocking(coroutineProvider.io()) {
-            try {
-                val dashboardResponse =
-                    remoteDataSource.fetchDashboardInfo(localDataSource.getSummaryContext())
-                dashboardResponse.data?.dashboard?.let { response ->
-                    authLocalDataSource.userDetails()?.let {
+    override suspend fun refreshDashboardData() {
+        try {
+            val dashboardResponse =
+                remoteDataSource.fetchDashboardInfo(localDataSource.getSummaryContext())
+            dashboardResponse.data?.dashboard?.let { response ->
+                authLocalDataSource.userDetails()
+                    .filterNotNull()
+                    .take(1)
+                    .collect { details ->
                         localDataSource.insertDashboard(
                             DashboardEntity(
-                                userUuid = it.sub,
+                                userUuid = details.uuid,
                                 userName = response.firstName,
                                 dailyPhrase = response.dailyPhrase,
                                 totalExpenses = response.summary.totalExpenses,
@@ -54,10 +56,9 @@ class DashboardRepositoryImpl @Inject constructor(
                             )
                         )
                     }
-                }
-            } catch (e: ApolloNetworkException) {
-                e.printStackTrace()
             }
+        } catch (e: ApolloNetworkException) {
+            e.printStackTrace()
         }
     }
 }

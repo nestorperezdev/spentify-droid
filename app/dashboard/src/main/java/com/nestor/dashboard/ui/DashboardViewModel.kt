@@ -3,6 +3,7 @@ package com.nestor.dashboard.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nestor.auth.data.AuthRepository
+import com.nestor.auth.data.model.AuthState
 import com.nestor.common.data.CurrencyRepository
 import com.nestor.dashboard.data.DashboardRepository
 import com.nestor.uikit.util.CoroutineContextProvider
@@ -34,34 +35,35 @@ class DashboardViewModel @Inject constructor(
                 if (details.isLoading) {
                     _dashboardUiState.update { it.copy(isLoading = true) }
                 } else if (details.body != null) {
-                    val currencyCode = details.body?.currencyCode ?: "USD"
-                    val uuid = details.body?.uuid ?: ""
-                    combine(
-                        currencyRepository
-                            .fetchCurrencyByCode(currencyCode)
-                            .map { it.body }
-                            .filterNotNull(),
-                        dashboardRepository.fetchDashboardInfo(uuid)
-                            .map { it.body }
-                            .filterNotNull()
-                    ) { currency, dashboard ->
-                        _dashboardUiState.update {
-                            it.copy(
-                                userCurrency = DashboardUiState.UserCurrency(
-                                    symbol = currency.symbol,
-                                    usdValue = currency.usdRate,
-                                    code = currency.code
-                                ),
-                                totalExpenses = dashboard.totalExpenses * currency.usdRate,
-                                dailyAverageExpense = dashboard.dailyAverageExpense * currency.usdRate,
-                                dailyPhrase = dashboard.dailyPhrase,
-                                maximalExpense = dashboard.maximalExpense * currency.usdRate,
-                                isLoading = false,
-                                userName = dashboard.userName,
-                                minimalExpense = dashboard.minimalExpense * currency.usdRate,
-                            )
-                        }
-                    }.collect()
+                    (details.body as? AuthState.Authenticated)?.details?.let { user ->
+                        val currencyCode = user.currencyCode
+                        combine(
+                            currencyRepository
+                                .fetchCurrencyByCode(currencyCode)
+                                .map { it.body }
+                                .filterNotNull(),
+                            dashboardRepository.fetchDashboardInfo()
+                                .map { it.body }
+                                .filterNotNull()
+                        ) { currency, dashboard ->
+                            _dashboardUiState.update {
+                                it.copy(
+                                    userCurrency = DashboardUiState.UserCurrency(
+                                        symbol = currency.symbol,
+                                        usdValue = currency.usdRate,
+                                        code = currency.code
+                                    ),
+                                    totalExpenses = dashboard.totalExpenses * currency.usdRate,
+                                    dailyAverageExpense = dashboard.dailyAverageExpense * currency.usdRate,
+                                    dailyPhrase = dashboard.dailyPhrase,
+                                    maximalExpense = dashboard.maximalExpense * currency.usdRate,
+                                    isLoading = false,
+                                    userName = dashboard.userName,
+                                    minimalExpense = dashboard.minimalExpense * currency.usdRate,
+                                )
+                            }
+                        }.collect()
+                    }
                 }
             }
         }

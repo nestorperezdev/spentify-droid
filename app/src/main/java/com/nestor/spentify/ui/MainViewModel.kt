@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.nestor.auth.data.AuthRepository
 import com.nestor.auth.data.model.AuthState
 import com.nestor.onboarding.data.datasource.OnboardingLocalDataSource
+import com.nestor.schema.utils.ResponseWrapper
 import com.nestor.uikit.util.CoroutineContextProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +23,8 @@ class MainViewModel @Inject constructor(
     private val onboardingLocalDataSource: OnboardingLocalDataSource,
     private val dispatcherProvider: CoroutineContextProvider
 ) : ViewModel() {
-    val authState: StateFlow<AuthState> = authRepository.authState
+    val authState: StateFlow<ResponseWrapper<AuthState>> = authRepository.userDetails()
+        .stateIn(viewModelScope, SharingStarted.Lazily, ResponseWrapper.loading())
     val tookOnboarding: StateFlow<Boolean> = onboardingLocalDataSource.isOnboardingComplete()
         .stateIn(viewModelScope, SharingStarted.Lazily, true)
 

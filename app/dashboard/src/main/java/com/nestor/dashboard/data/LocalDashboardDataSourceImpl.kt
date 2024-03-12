@@ -12,7 +12,7 @@ import javax.inject.Inject
 class LocalDashboardDataSourceImpl @Inject constructor(private val dashboardDao: DashboardDao) :
     LocalDashboardDataSource {
     override fun getCurrentDashboard(userUuid: String) = dashboardDao.getDashboard(userUuid)
-    override fun insertDashboard(dashboardEntity: DashboardEntity) =
+    override suspend fun insertDashboard(dashboardEntity: DashboardEntity) =
         dashboardDao.insertDashboard(dashboardEntity)
 
     override fun getSummaryContext(): SummaryDashboardInput {

@@ -6,6 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface LocalDashboardDataSource {
     fun getCurrentDashboard(userUuid: String): Flow<DashboardEntity?>
-    fun insertDashboard(dashboardEntity: DashboardEntity)
+    suspend fun insertDashboard(dashboardEntity: DashboardEntity)
     fun getSummaryContext(): SummaryDashboardInput
 }

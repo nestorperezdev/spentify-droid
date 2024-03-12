@@ -15,5 +15,5 @@ interface DashboardDao {
     ): Flow<DashboardEntity?>
 
     @Insert
-    fun insertDashboard(dashboardEntity: DashboardEntity)
+    suspend fun insertDashboard(dashboardEntity: DashboardEntity)
 }

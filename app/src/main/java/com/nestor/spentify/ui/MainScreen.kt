@@ -18,6 +18,7 @@ import com.nestor.auth.ui.navigation.AuthGraph
 import com.nestor.dashboard.ui.DashboardScreen
 import com.nestor.onboarding.ui.OnboardingScreen
 import com.nestor.spentify.navigation.AppNavigationGraph
+import com.nestor.uikit.SpentifyTheme
 
 @Composable
 fun MainScreen(mainViewModel: MainViewModel = hiltViewModel()) {
@@ -25,9 +26,10 @@ fun MainScreen(mainViewModel: MainViewModel = hiltViewModel()) {
     val authState = mainViewModel.authState.collectAsState()
     val tookOnboarding = mainViewModel.tookOnboarding.collectAsState().value
     val initialRoute = remember(authState.value) {
-        when (authState.value) {
-            AuthState.AUTHENTICATED -> AppNavigationGraph.Home.route
-            AuthState.ANONYMOUS -> AppNavigationGraph.AuthGraph.route
+        when (authState.value.body) {
+            is AuthState.Authenticated -> AppNavigationGraph.Home.route
+            is AuthState.Anonymous -> AppNavigationGraph.AuthGraph.route
+            else -> AppNavigationGraph.Splash.route
         }
     }
     LaunchedEffect(tookOnboarding) {
@@ -39,6 +41,9 @@ fun MainScreen(mainViewModel: MainViewModel = hiltViewModel()) {
         navController,
         startDestination = initialRoute
     ) {
+        composable(AppNavigationGraph.Splash.route) {
+            Text(text = "Splash!")
+        }
         navigation(
             route = AppNavigationGraph.AuthGraph.route,
             startDestination = AuthGraph.Welcome.route,

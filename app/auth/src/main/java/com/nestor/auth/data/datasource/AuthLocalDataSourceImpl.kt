@@ -22,31 +22,18 @@ class AuthLocalDataSourceImpl @Inject constructor(
     @Named(EncryptedPreferences.ENCRYPTED_PREFERENCES) private val encryptedPreferences: SharedPreferences,
     private val userDao: UserDao
 ) : AuthLocalDataSource {
-    private val _authState = MutableStateFlow(this.getAuthStatus())
     private val _rawToken = MutableStateFlow(this.retrieveToken())
     private val _tokenPayload = _rawToken.transform { emit(it.decryptToken()) }
-    override fun userDetailsFlow(): Flow<TokenPayload?> = _tokenPayload
-    override fun userDetails(): TokenPayload? {
-        return _rawToken.value?.decryptToken()
-    }
-
-    override fun isUserLoggedIn(): StateFlow<AuthState> = _authState
-    override fun getRawToken(): String? {
-        return _rawToken.value
-    }
-
-    override suspend fun storeUserToken(token: String, name: String, email: String) {
-        encryptedPreferences.edit().putString(TOKEN_KEY, token).apply()
-        _authState.update { AuthState.AUTHENTICATED }
-        _rawToken.update { token }
-    }
-
-    override suspend fun getUserDetails(uuid: String): UserEntity? {
-        return userDao.getUser(uuid)
-    }
 
     override suspend fun storeUser(userEntity: UserEntity) {
         userDao.insertUser(userEntity)
+    }
+
+    override fun tokenContents(): Flow<TokenPayload?> = _tokenPayload
+
+    override fun userDetails(): Flow<UserEntity?> = userDao.getUser()
+    override fun rawToken(): String? {
+        return _rawToken.value
     }
 
     override suspend fun clearUsers() {
@@ -55,6 +42,11 @@ class AuthLocalDataSourceImpl @Inject constructor(
 
     override suspend fun updateUserCurrency(currencyCode: String) {
         userDao.updateCurrency(currencyCode)
+    }
+
+    override suspend fun storeToken(token: String) {
+        encryptedPreferences.edit().putString(TOKEN_KEY, token).apply()
+        _rawToken.update { token }
     }
 
     private fun retrieveToken(): String? {
@@ -69,13 +61,5 @@ class AuthLocalDataSourceImpl @Inject constructor(
         val claims = jwt.getClaim("claims").asList(String::class.java)
         if (name == null || sub == null || claims.isNullOrEmpty()) return null
         return TokenPayload(sub, name, claims.map { it.toUserClaim() })
-    }
-
-    private fun getAuthStatus(): AuthState {
-        return if (this.retrieveToken() != null) {
-            AuthState.AUTHENTICATED
-        } else {
-            AuthState.ANONYMOUS
-        }
     }
 }
