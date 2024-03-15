@@ -2,7 +2,9 @@ package com.nestor.dashboard.data
 
 import com.apollographql.apollo3.exception.ApolloNetworkException
 import com.nestor.auth.data.datasource.AuthLocalDataSource
+import com.nestor.dashboard.ui.UserDetails
 import com.nestor.database.data.dashboard.DashboardEntity
+import com.nestor.database.data.user.UserEntity
 import com.nestor.schema.utils.ResponseWrapper
 import com.nestor.uikit.util.CoroutineContextProvider
 import kotlinx.coroutines.flow.Flow
@@ -29,33 +31,28 @@ class DashboardRepositoryImpl @Inject constructor(
                         emit(ResponseWrapper(body = it))
                     } ?: run {
                         emit(ResponseWrapper(isLoading = true))
-                        refreshDashboardData()
+                        refreshDashboardData(details)
                     }
                 }
             }
         }
 
-    override suspend fun refreshDashboardData() {
+    override suspend fun refreshDashboardData(userEntity: UserEntity) {
         try {
             val dashboardResponse =
                 remoteDataSource.fetchDashboardInfo(localDataSource.getSummaryContext())
             dashboardResponse.data?.dashboard?.let { response ->
-                authLocalDataSource.userDetails()
-                    .filterNotNull()
-                    .take(1)
-                    .collect { details ->
-                        localDataSource.insertDashboard(
-                            DashboardEntity(
-                                userUuid = details.uuid,
-                                userName = response.firstName,
-                                dailyPhrase = response.dailyPhrase,
-                                totalExpenses = response.summary.totalExpenses,
-                                dailyAverageExpense = response.summary.dailyAverageExpense,
-                                minimalExpense = response.summary.minimalExpense,
-                                maximalExpense = response.summary.maximalExpense
-                            )
-                        )
-                    }
+                localDataSource.insertDashboard(
+                    DashboardEntity(
+                        userUuid = userEntity.uuid,
+                        userName = response.firstName,
+                        dailyPhrase = response.dailyPhrase,
+                        totalExpenses = response.summary.totalExpenses,
+                        dailyAverageExpense = response.summary.dailyAverageExpense,
+                        minimalExpense = response.summary.minimalExpense,
+                        maximalExpense = response.summary.maximalExpense
+                    )
+                )
             }
         } catch (e: ApolloNetworkException) {
             e.printStackTrace()

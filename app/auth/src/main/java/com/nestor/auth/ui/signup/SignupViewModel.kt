@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nestor.auth.R
 import com.nestor.auth.data.AuthRepository
-import com.nestor.schema.utils.unwrapErrors
 import com.nestor.uikit.util.CoroutineContextProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -71,29 +70,17 @@ class SignupViewModel @Inject constructor(
             return
         }
         _uiState.update { it.copy(isLoading = true) }
-        viewModelScope.launch(coroutineContextProvider.network {
-            this._uiState.update {
-                it.copy(
-                    isLoading = false,
-                    signupErrorResource = R.string.network_error
-                )
-            }
-        }) {
-            authRepository.register(
+        viewModelScope.launch(coroutineContextProvider.io()) {
+            val result = authRepository.register(
                 name = _uiState.value.name.value,
                 username = _uiState.value.email.value,
                 password = _uiState.value.password.value
-            ).collect {
-                if (it.hasErrors()) {
-                    _uiState.update { it.copy(isLoading = false) }
-                    val codes = it.unwrapErrors()
-                    codes.forEach {
-                        when (it) {
-                            "23505" -> _uiState.update { it.copy(isRegistered = true) }
-                            else -> _uiState.update { it.copy(signupErrorResource = R.string.unknown_error) }
-                        }
-                    }
-                }
+            )
+            if (result.error != null) {
+                _uiState.update { it.copy(signupErrorResource = R.string.unknown_error) }
+            }
+            result.body?.register?.loginToken?.token?.let {
+                authRepository.setRawToken(it)
             }
         }
     }

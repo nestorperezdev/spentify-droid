@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nestor.auth.R
 import com.nestor.auth.data.AuthRepository
-import com.nestor.schema.utils.unwrapErrors
 import com.nestor.uikit.util.CoroutineContextProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,25 +46,11 @@ class ForgotPasswordViewModel @Inject constructor(
             return
         }
         _uiState.update { it.copy(loginErrorResource = null, isLoading = true) }
-        viewModelScope.launch(
-            coroutineContextProvider.network {
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        loginErrorResource = R.string.network_error
-                    )
-                }
-            }
-        ) {
-            val forgotPasswordResponse =
-                authRepository.forgotPassword(_uiState.value.email.value)
+        viewModelScope.launch(coroutineContextProvider.io()) {
+            val forgotPasswordResponse = authRepository.forgotPassword(_uiState.value.email.value)
             _uiState.update { it.copy(isLoading = false) }
-            if (forgotPasswordResponse.hasErrors()) {
-                forgotPasswordResponse.unwrapErrors().forEach {
-                    when (it) {
-                        else -> _uiState.update { it.copy(loginErrorResource = R.string.unknown_error) }
-                    }
-                }
+            if (forgotPasswordResponse.error != null) {
+                _uiState.update { it.copy(loginErrorResource = R.string.unknown_error) }
             } else {
                 _uiState.update { it.copy(successResponse = true) }
             }

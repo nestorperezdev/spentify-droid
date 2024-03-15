@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nestor.dashboard.R
 import com.nestor.dashboard.ui.summarytiles.SummaryTilesScreen
+import com.nestor.schema.utils.ResponseWrapper
 import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.button.SYButton
 import com.nestor.uikit.loading.ShimmerSkeletonBox
@@ -38,12 +39,11 @@ private fun DashboardScreenContent(
     onDifferentCurrencySelect: () -> Unit = {}
 ) {
     val dashboard = dashboardState.collectAsState().value
-    val isLoading = dashboard.isLoading
     Scaffold(
         topBar = {
             Column {
                 Spacer(modifier = Modifier.height(40.dp))
-                if (isLoading) {
+                if (dashboard.userDetails.isLoading) {
                     ShimmerSkeletonDoubleLine(
                         modifier = Modifier.padding(
                             horizontal = LocalSYPadding.current.screenHorizontalPadding,
@@ -51,15 +51,22 @@ private fun DashboardScreenContent(
                         )
                     )
                 } else {
-                    val toolbarType = if (dashboard.dailyPhrase != null) {
-                        StatusBarType.TitleAndSubtitle(
-                            stringResource(R.string.hello, dashboard.userName),
-                            dashboard.dailyPhrase
-                        )
-                    } else {
-                        StatusBarType.LeftTitle(stringResource(R.string.hello, dashboard.userName))
+                    dashboard.userDetails.body?.let { userDetails ->
+                        val toolbarType = if (userDetails.dailyPhrase != null) {
+                            StatusBarType.TitleAndSubtitle(
+                                stringResource(R.string.hello, userDetails.userName),
+                                userDetails.dailyPhrase
+                            )
+                        } else {
+                            StatusBarType.LeftTitle(
+                                stringResource(
+                                    R.string.hello,
+                                    userDetails.userName
+                                )
+                            )
+                        }
+                        SYStatusBar(toolbarType)
                     }
-                    SYStatusBar(toolbarType)
                 }
             }
         }
@@ -70,12 +77,21 @@ private fun DashboardScreenContent(
                 .padding(horizontal = LocalSYPadding.current.screenHorizontalPadding)
         ) {
             Spacer(modifier = Modifier.height(16.dp))
-            if (isLoading) {
+            if (dashboard.summary.isLoading || dashboard.userCurrency.isLoading) {
                 ShimmerSkeletonBox()
             } else {
-                SummaryTilesScreen(dash = dashboard)
+                dashboard.summary.body?.let { summary ->
+                    dashboard.userCurrency.body?.let { currency ->
+                        SummaryTilesScreen(summary = summary, currency = currency)
+                    }
+                }
             }
-            SYButton(onClick = onDifferentCurrencySelect, buttonText = "Toggle different currency")
+            dashboard.userCurrency.body?.let {
+                SYButton(
+                    onClick = onDifferentCurrencySelect,
+                    buttonText = "Toggle different currency"
+                )
+            }
         }
     }
 }
@@ -87,12 +103,27 @@ private fun DashboardScreenContentPrev() {
         DashboardScreenContent(
             dashboardState = MutableStateFlow(
                 DashboardUiState(
-                    userName = "Nestor",
-                    totalExpenses = 1723.50,
-                    minimalExpense = 500.0,
-                    maximalExpense = 501.76,
-                    dailyPhrase = "Good morning, Remember to save today 💸",
-                    dailyAverageExpense = 123.10
+                    userDetails = ResponseWrapper.success(
+                        UserDetails(
+                            userName = "Nestor",
+                            dailyPhrase = "Good morning, Remember to save today 💸",
+                        )
+                    ),
+                    userCurrency = ResponseWrapper.success(
+                        UserCurrency(
+                            usdValue = 1.0,
+                            code = "USD",
+                            symbol = "$"
+                        )
+                    ),
+                    summary = ResponseWrapper.success(
+                        DailySummary(
+                            totalExpenses = 1723.50,
+                            minimalExpense = 500.0,
+                            maximalExpense = 501.76,
+                            dailyAverageExpense = 123.10,
+                        )
+                    ),
                 )
             )
         )
@@ -104,7 +135,7 @@ private fun DashboardScreenContentPrev() {
 private fun DashboardScreenContentLoadingPrev() {
     SpentifyTheme {
         DashboardScreenContent(
-            dashboardState = MutableStateFlow(DashboardUiState(isLoading = true))
+            dashboardState = MutableStateFlow(DashboardUiState())
         )
     }
 }

@@ -12,10 +12,4 @@ class CoroutineContextProviderImpl @Inject constructor() : CoroutineContextProvi
     override fun main() = Dispatchers.Main
 
     override fun unconfined() = Dispatchers.Unconfined
-
-    override fun network(networkError: (Throwable) -> Unit) =
-        io() + CoroutineExceptionHandler { _, throwable ->
-            throwable.printStackTrace()
-            networkError(throwable)
-        }
 }

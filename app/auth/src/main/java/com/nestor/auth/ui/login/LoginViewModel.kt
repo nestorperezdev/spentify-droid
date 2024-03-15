@@ -4,13 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nestor.auth.R
 import com.nestor.auth.data.AuthRepository
-import com.nestor.schema.errors.AuthExceptionCodes
-import com.nestor.schema.utils.unwrapErrors
 import com.nestor.uikit.util.CoroutineContextProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -61,27 +56,15 @@ class LoginViewModel @Inject constructor(
             return
         }
         _uiState.update { it.copy(loginErrorResource = null, isLoading = true) }
-        viewModelScope.launch(
-            coroutineContextProvider.network {
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        loginErrorResource = R.string.network_error
-                    )
-                }
-            }
-        ) {
+        viewModelScope.launch(coroutineContextProvider.io()) {
             val loginResult =
                 authRepository.login(_uiState.value.email.value, _uiState.value.password.value)
-            if (loginResult.hasErrors()) {
-                loginResult.unwrapErrors().forEach {
-                    _uiState.update { it.copy(isLoading = false) }
-                    when (it) {
-                        AuthExceptionCodes.INCORRECT_PASSWORD_OR_EMAIL.name ->
-                            _uiState.update { it.copy(loginErrorResource = R.string.incorrect_password_or_email) }
-
-                        else -> _uiState.update { it.copy(loginErrorResource = R.string.unknown_error) }
-                    }
+            if (loginResult.error != null) {
+                _uiState.update { it.copy(isLoading = false) }
+                _uiState.update { it.copy(loginErrorResource = R.string.incorrect_password_or_email) }
+            } else {
+                loginResult.body?.login?.loginToken?.token?.let {
+                    authRepository.setRawToken(it)
                 }
             }
         }

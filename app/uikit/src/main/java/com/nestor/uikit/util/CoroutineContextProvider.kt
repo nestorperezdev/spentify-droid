@@ -7,5 +7,4 @@ interface CoroutineContextProvider {
     fun io(): CoroutineContext
     fun main(): CoroutineContext
     fun unconfined(): CoroutineContext
-    fun network(networkError: (Throwable) -> Unit = {}): CoroutineContext
 }

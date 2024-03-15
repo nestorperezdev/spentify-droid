@@ -58,24 +58,16 @@ class RecoverPasswordViewModel @Inject constructor(
             return
         }
         _uiState.update { it.copy(isLoading = true, signupErrorResource = null) }
-        viewModelScope.launch(coroutineContextProvider.network {
-            this._uiState.update {
-                it.copy(
-                    isLoading = false,
-                    signupErrorResource = R.string.network_error
-                )
-            }
-        }) {
+        viewModelScope.launch(coroutineContextProvider.io()) {
             val result = authRepository.recoverPassword(newPassword = _uiState.value.password.value)
             _uiState.update { it.copy(isLoading = false) }
-            if (result.hasErrors()) {
-                result.unwrapErrors().forEach { error ->
-                    when (error) {
-                        else -> _uiState.update { it.copy(signupErrorResource = R.string.unknown_error) }
-                    }
-                }
+            if (result.error != null) {
+                _uiState.update { it.copy(signupErrorResource = R.string.unknown_error) }
             } else {
                 _uiState.update { it.copy(isDone = true) }
+                result.body?.recoverPassword?.loginToken?.token?.let {
+                    authRepository.setRawToken(it)
+                }
             }
         }
     }

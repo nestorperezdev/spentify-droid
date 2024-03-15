@@ -24,7 +24,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nestor.dashboard.R
+import com.nestor.dashboard.ui.DailySummary
 import com.nestor.dashboard.ui.DashboardUiState
+import com.nestor.dashboard.ui.UserCurrency
+import com.nestor.schema.type.User
 import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.stepperdot.SYStepperDot
 import com.nestor.uikit.stepperdot.rememberStepperDotState
@@ -34,7 +37,8 @@ import com.nestor.uikit.util.formatMoneyAmount
 @Composable
 fun SummaryTilesScreen(
     modifier: Modifier = Modifier,
-    dash: DashboardUiState
+    summary: DailySummary,
+    currency: UserCurrency
 ) {
     Box(
         modifier = modifier
@@ -57,7 +61,7 @@ fun SummaryTilesScreen(
                 .fillMaxHeight()
                 .padding(bottom = 24.dp)
         ) {
-            tileList.getOrNull(it)?.invoke(dash)
+            tileList.getOrNull(it)?.invoke(summary, currency)
         }
         SYStepperDot(
             state = stepperState,
@@ -66,7 +70,7 @@ fun SummaryTilesScreen(
     }
 }
 
-val summaryTileScreen1 = @Composable { dash: DashboardUiState ->
+val summaryTileScreen1 = @Composable { summary: DailySummary, currency: UserCurrency ->
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -81,8 +85,8 @@ val summaryTileScreen1 = @Composable { dash: DashboardUiState ->
         Text(
             text = stringResource(
                 R.string.currency_format,
-                dash.userCurrency.symbol,
-                dash.totalExpenses.formatMoneyAmount()
+                currency.symbol,
+                summary.totalExpenses.formatMoneyAmount()
             ),
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onPrimary,
@@ -90,7 +94,7 @@ val summaryTileScreen1 = @Composable { dash: DashboardUiState ->
     }
 }
 
-val summaryTileScreen2 = @Composable { dash: DashboardUiState ->
+val summaryTileScreen2 = @Composable { summary: DailySummary, currency: UserCurrency ->
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -106,8 +110,8 @@ val summaryTileScreen2 = @Composable { dash: DashboardUiState ->
         Text(
             text = stringResource(
                 R.string.currency_format,
-                dash.userCurrency.symbol,
-                dash.dailyAverageExpense.formatMoneyAmount()
+                currency.symbol,
+                summary.dailyAverageExpense.formatMoneyAmount()
             ),
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onPrimary,
@@ -116,7 +120,7 @@ val summaryTileScreen2 = @Composable { dash: DashboardUiState ->
 }
 
 
-val summaryTileScreen3 = @Composable { dash: DashboardUiState ->
+val summaryTileScreen3 = @Composable { summary: DailySummary, currency: UserCurrency ->
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -132,8 +136,8 @@ val summaryTileScreen3 = @Composable { dash: DashboardUiState ->
         Text(
             text = stringResource(
                 R.string.currency_format,
-                dash.userCurrency.symbol,
-                dash.maximalExpense.formatMoneyAmount()
+                currency.symbol,
+                summary.maximalExpense.formatMoneyAmount()
             ),
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onPrimary,
@@ -148,8 +152,8 @@ val summaryTileScreen3 = @Composable { dash: DashboardUiState ->
         Text(
             text = stringResource(
                 R.string.currency_format,
-                dash.userCurrency.symbol,
-                dash.minimalExpense.formatMoneyAmount()
+                currency.symbol,
+                summary.minimalExpense.formatMoneyAmount()
             ),
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onPrimary,
@@ -169,13 +173,16 @@ val tileList = listOf(
 fun SummaryTilesScreenPrev() {
     SpentifyTheme {
         SummaryTilesScreen(
-            dash = DashboardUiState(
-                totalExpenses = 100.0,
-                dailyPhrase = "",
-                userName = "",
-                maximalExpense = 20.0,
+            summary = DailySummary(
+                maximalExpense = 100.0,
+                dailyAverageExpense = 20.0,
                 minimalExpense = 10.0,
-                dailyAverageExpense = 12.0,
+                totalExpenses = 155.0
+            ),
+            currency = UserCurrency(
+                symbol = "$",
+                code = "USD",
+                usdValue = 1.0
             )
         )
     }

@@ -1,16 +1,21 @@
 package com.nestor.auth.data.datasource
 
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import com.auth0.android.jwt.JWT
-import com.nestor.auth.data.model.AuthState
 import com.nestor.auth.data.model.TokenPayload
 import com.nestor.auth.data.model.toUserClaim
 import com.nestor.database.data.encryptedpreferences.EncryptedPreferences
 import com.nestor.database.data.user.UserDao
 import com.nestor.database.data.user.UserEntity
+import com.nestor.uikit.util.CoroutineContextProvider
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
@@ -20,8 +25,11 @@ private const val TOKEN_KEY = "TOKEN_KEY"
 
 class AuthLocalDataSourceImpl @Inject constructor(
     @Named(EncryptedPreferences.ENCRYPTED_PREFERENCES) private val encryptedPreferences: SharedPreferences,
-    private val userDao: UserDao
+    private val userDao: UserDao,
+    private val contextProvider: CoroutineContextProvider
 ) : AuthLocalDataSource {
+    private val _coroutineScope = CoroutineScope(contextProvider.io() + SupervisorJob())
+    private val _user = MutableStateFlow<UserEntity?>(null)
     private val _rawToken = MutableStateFlow(this.retrieveToken())
     private val _tokenPayload = _rawToken.transform { emit(it.decryptToken()) }
 
@@ -31,7 +39,13 @@ class AuthLocalDataSourceImpl @Inject constructor(
 
     override fun tokenContents(): Flow<TokenPayload?> = _tokenPayload
 
-    override fun userDetails(): Flow<UserEntity?> = userDao.getUser()
+    override fun userDetails(): SharedFlow<UserEntity?> =
+        userDao.getUser().shareIn(
+            _coroutineScope,
+            SharingStarted.Lazily,
+            1
+        )
+
     override fun rawToken(): String? {
         return _rawToken.value
     }
