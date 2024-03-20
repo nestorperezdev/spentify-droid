@@ -7,5 +7,5 @@ interface CurrencyLocalDataSource {
     fun fetchCurrencies(): Flow<List<CurrencyEntity>>
     suspend fun clearCurrencies()
     suspend fun saveCurrencies(currencies: List<CurrencyEntity>)
-    suspend fun fetchCurrencyByCode(code: String): Flow<CurrencyEntity?>
+    fun fetchCurrencyByCode(code: String): Flow<CurrencyEntity?>
 }

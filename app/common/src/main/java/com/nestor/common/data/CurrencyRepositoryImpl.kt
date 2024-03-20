@@ -5,6 +5,7 @@ import com.nestor.database.data.currency.CurrencyEntity
 import com.nestor.schema.utils.ResponseWrapper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import java.util.Date
 import javax.inject.Inject
 
@@ -12,39 +13,29 @@ class CurrencyRepositoryImpl @Inject constructor(
     private val localDataSource: CurrencyLocalDataSource,
     private val remoteDataSource: CurrencyRemoteDataSource
 ) : CurrencyRepository {
-    override fun fetchCurrencies(): Flow<ResponseWrapper<List<CurrencyEntity>>> = flow {
-        localDataSource.fetchCurrencies().collect { currencies ->
-            if (currencies.isEmpty()) {
-                emit(ResponseWrapper.loading())
-                try {
-                    updateCurrencies()
-                } catch (e: Exception) {
-                    emit(ResponseWrapper.error(e.message ?: "Unknown error"))
-                }
-            } else {
-                emit(ResponseWrapper.success(currencies))
-            }
-        }
-    }
-
-    override fun fetchCurrencyByCode(code: String): Flow<ResponseWrapper<CurrencyEntity>> = flow {
-        localDataSource.fetchCurrencyByCode(code).collect { currency ->
-            currency?.let {
-                emit(ResponseWrapper.success(it))
+    override fun fetchCurrencies(): Flow<ResponseWrapper<List<CurrencyEntity>>> =
+        localDataSource.fetchCurrencies().map { currencies ->
+            currencies.ifEmpty { null }?.let {
+                ResponseWrapper.success(it)
             } ?: run {
-                emit(ResponseWrapper.loading())
-                try {
-                    updateCurrencies()
-                } catch (e: Exception) {
-                    emit(ResponseWrapper.error(e.message ?: "Unknown error"))
-                }
+                updateCurrencies()
+                ResponseWrapper.loading()
             }
         }
-    }
+
+    override fun fetchCurrencyByCode(code: String): Flow<ResponseWrapper<CurrencyEntity>> =
+        localDataSource.fetchCurrencyByCode(code).map { currency ->
+            currency?.let {
+                ResponseWrapper.success(it)
+            } ?: run {
+                updateCurrencies()
+                ResponseWrapper.loading()
+            }
+        }
 
     private suspend fun updateCurrencies() {
         val currencies = remoteDataSource.fetchCurrencies()
-        currencies.data?.let {
+        currencies.body?.let {
             localDataSource.clearCurrencies()
             localDataSource.saveCurrencies(it.currencyInfo.info.map { currencyExchange ->
                 CurrencyEntity(
@@ -55,8 +46,6 @@ class CurrencyRepositoryImpl @Inject constructor(
                     usdRate = currencyExchange.currencyInfo.usdRate
                 )
             })
-        } ?: {
-            throw Exception("Failed to fetch currencies")
         }
     }
 }

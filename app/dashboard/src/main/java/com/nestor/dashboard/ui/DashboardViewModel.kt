@@ -15,10 +15,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,27 +36,31 @@ class DashboardViewModel @Inject constructor(
         }.stateIn(viewModelScope, SharingStarted.Lazily, ResponseWrapper.loading())
     private val _userCurrency: StateFlow<ResponseWrapper<UserCurrency>> =
         authRepository.userDetails()
-            .map { userDetails -> userDetails.mapBody { it?.currencyCode ?: "USD" } }
-            .transform { currencyCode ->
-                if (currencyCode.isLoading) {
-                    emit(ResponseWrapper.loading())
-                } else {
-                    emitAll(currencyRepository.fetchCurrencyByCode(currencyCode.body!!))
+            .flatMapLatest { details ->
+                withContext(coroutineContextProvider.io()) {
+                    currencyRepository.fetchCurrencyByCode(details.body?.currencyCode ?: "USD")
+                        .map {
+                            it.combineTransform(details) { currency, _ ->
+                                UserCurrency(
+                                    code = currency.code,
+                                    usdValue = currency.usdRate,
+                                    symbol = currency.symbol
+                                )
+                            }
+                        }
                 }
             }
-            .map { currencyEntity ->
-                currencyEntity.mapBody { UserCurrency(it.code, it.usdRate) }
-            }
             .stateIn(viewModelScope, SharingStarted.Lazily, ResponseWrapper.loading())
+
     val summary: StateFlow<ResponseWrapper<DailySummary>> =
         dashboardRepository.fetchDashboardInfo()
             .combine(_userCurrency) { dash, currencyResponseWrapper ->
                 dash.combineTransform(currencyResponseWrapper) { summary, currency ->
                     DailySummary(
-                        totalExpenses = summary.totalExpenses,
-                        minimalExpense = summary.minimalExpense,
-                        dailyAverageExpense = summary.dailyAverageExpense,
-                        maximalExpense = summary.maximalExpense,
+                        totalExpenses = summary.totalExpenses * currency.usdValue,
+                        minimalExpense = summary.minimalExpense * currency.usdValue,
+                        dailyAverageExpense = summary.dailyAverageExpense * currency.usdValue,
+                        maximalExpense = summary.maximalExpense * currency.usdValue,
                         userCurrency = currency
                     )
                 }

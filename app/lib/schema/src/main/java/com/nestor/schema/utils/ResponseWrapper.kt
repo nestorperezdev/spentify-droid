@@ -26,6 +26,7 @@ fun <R, T, Z> ResponseWrapper<T>.combineTransform(
         isLoading || other.isLoading -> ResponseWrapper.loading()
         error != null -> ResponseWrapper.error(error)
         other.error != null -> ResponseWrapper.error(other.error)
-        else -> ResponseWrapper.success(transform(body!!, other.body!!))
+        body == null || other.body == null -> ResponseWrapper.error("Null body")
+        else -> ResponseWrapper.success(transform(body, other.body))
     }
 }

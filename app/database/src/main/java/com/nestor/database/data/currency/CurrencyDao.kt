@@ -14,7 +14,7 @@ interface CurrencyDao {
     suspend fun insertCurrency(currencyEntity: List<CurrencyEntity>)
 
     @Query("DELETE FROM currency")
-    fun deleteAll(): Int
+    suspend fun deleteAll(): Int
 
     @Query("SELECT * FROM currency WHERE code = :code")
     fun fetchCurrencyByCode(code: String): Flow<CurrencyEntity?>
