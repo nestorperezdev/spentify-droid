@@ -4,7 +4,6 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)
 
@@ -14,13 +13,19 @@ val Pink40 = Color(0xFF7D5260)
 val warningLight = Color(0xFFFF647C)
 val inactive = Color(0xFFC4C4C4)
 
+val GreenLight = Color(0xFFD5F6EE)
+val Green = Color(0xFF16BE81)
+val Gray = Color(0xFF5E5E5E)
+
 internal val DarkColorScheme = darkColorScheme(
     primary = Blue80,
     onPrimary = Color.White,
     secondary = PurpleGrey80,
     tertiary = Pink80,
     error = warningLight,
-    scrim = inactive
+    scrim = inactive,
+    tertiaryContainer = GreenLight,
+    onTertiary = Green
 )
 
 internal val LightColorScheme = lightColorScheme(
@@ -29,7 +34,9 @@ internal val LightColorScheme = lightColorScheme(
     tertiary = Pink40,
     onPrimary = Color.White,
     error = warningLight,
-    scrim = inactive
+    scrim = inactive,
+    tertiaryContainer = GreenLight,
+    onTertiary = Green
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
