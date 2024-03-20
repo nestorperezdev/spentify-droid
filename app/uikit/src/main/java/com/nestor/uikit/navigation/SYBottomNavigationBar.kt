@@ -21,11 +21,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nestor.uikit.SpentifyTheme
-import com.nestor.uikit.theme.color.Gray
 
 @Composable
 fun SYBottomNavigationBar(
@@ -47,8 +47,9 @@ fun SYBottomNavigationBar(
                 )
             }
         },
-        modifier = modifier,
-        tonalElevation = 16.dp
+        modifier = modifier.shadow(8.dp),
+        containerColor = MaterialTheme.colorScheme.background,
+        tonalElevation = 0.dp
     )
 }
 
@@ -60,13 +61,17 @@ private fun SYBottomNavBarItem(
     onNavItemClicked: (SYBottomNavBarData) -> Unit
 ) {
     val animatedColor =
-        animateColorAsState(targetValue = if (isSelected) MaterialTheme.colorScheme.primary else Gray)
+        animateColorAsState(targetValue = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface)
     Column(
         modifier = modifier.clickable { onNavItemClicked(item) },
         horizontalAlignment = CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Icon(painter = painterResource(item.iconResource), contentDescription = null, tint = animatedColor.value)
+        Icon(
+            painter = painterResource(item.iconResource),
+            contentDescription = null,
+            tint = animatedColor.value
+        )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = item.text, style = MaterialTheme.typography.labelMedium,
@@ -102,15 +107,16 @@ private fun SYBottomNavigationBarPreview() {
     )
     var activeItem by remember { mutableStateOf(items.first()) }
     SpentifyTheme {
-        Scaffold(bottomBar = {
-            SYBottomNavigationBar(
-                items = items,
-                currentActiveItem = activeItem,
-                onNavItemClicked = {
-                    activeItem = it
-                }
-            )
-        }) {
+        Scaffold(
+            bottomBar = {
+                SYBottomNavigationBar(
+                    items = items,
+                    currentActiveItem = activeItem,
+                    onNavItemClicked = {
+                        activeItem = it
+                    }
+                )
+            }) {
             Box(modifier = Modifier.padding(it)) {
                 Text(text = "Content")
             }

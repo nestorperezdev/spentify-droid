@@ -26,11 +26,6 @@ object NavItems {
         text = "Expenses",
         route = ""
     )
-    val MonthlyReport = SYBottomNavBarData(
-        iconResource = R.drawable.baseline_calendar_month_24,
-        text = "Monthly Report",
-        route = ""
-    )
     val Account = SYBottomNavBarData(
         iconResource = R.drawable.baseline_manage_accounts_24,
         text = "Account",
@@ -38,7 +33,7 @@ object NavItems {
     )
 }
 
-val itemList = listOf(NavItems.Home, NavItems.Expenses, NavItems.MonthlyReport, NavItems.Account)
+val itemList = listOf(NavItems.Home, NavItems.Expenses, NavItems.Account)
 
 @Composable
 fun BottomNavBar(
