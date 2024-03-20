@@ -25,9 +25,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nestor.dashboard.R
 import com.nestor.dashboard.ui.DailySummary
-import com.nestor.dashboard.ui.DashboardUiState
-import com.nestor.dashboard.ui.UserCurrency
-import com.nestor.schema.type.User
 import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.stepperdot.SYStepperDot
 import com.nestor.uikit.stepperdot.rememberStepperDotState
@@ -37,8 +34,7 @@ import com.nestor.uikit.util.formatMoneyAmount
 @Composable
 fun SummaryTilesScreen(
     modifier: Modifier = Modifier,
-    summary: DailySummary,
-    currency: UserCurrency
+    summary: DailySummary
 ) {
     Box(
         modifier = modifier
@@ -61,7 +57,7 @@ fun SummaryTilesScreen(
                 .fillMaxHeight()
                 .padding(bottom = 24.dp)
         ) {
-            tileList.getOrNull(it)?.invoke(summary, currency)
+            tileList.getOrNull(it)?.invoke(summary)
         }
         SYStepperDot(
             state = stepperState,
@@ -70,7 +66,7 @@ fun SummaryTilesScreen(
     }
 }
 
-val summaryTileScreen1 = @Composable { summary: DailySummary, currency: UserCurrency ->
+val summaryTileScreen1 = @Composable { summary: DailySummary ->
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -85,7 +81,7 @@ val summaryTileScreen1 = @Composable { summary: DailySummary, currency: UserCurr
         Text(
             text = stringResource(
                 R.string.currency_format,
-                currency.symbol,
+                summary.userCurrency.symbol,
                 summary.totalExpenses.formatMoneyAmount()
             ),
             style = MaterialTheme.typography.titleLarge,
@@ -94,7 +90,7 @@ val summaryTileScreen1 = @Composable { summary: DailySummary, currency: UserCurr
     }
 }
 
-val summaryTileScreen2 = @Composable { summary: DailySummary, currency: UserCurrency ->
+val summaryTileScreen2 = @Composable { summary: DailySummary ->
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -110,7 +106,7 @@ val summaryTileScreen2 = @Composable { summary: DailySummary, currency: UserCurr
         Text(
             text = stringResource(
                 R.string.currency_format,
-                currency.symbol,
+                summary.userCurrency.symbol,
                 summary.dailyAverageExpense.formatMoneyAmount()
             ),
             style = MaterialTheme.typography.titleLarge,
@@ -120,7 +116,7 @@ val summaryTileScreen2 = @Composable { summary: DailySummary, currency: UserCurr
 }
 
 
-val summaryTileScreen3 = @Composable { summary: DailySummary, currency: UserCurrency ->
+val summaryTileScreen3 = @Composable { summary: DailySummary ->
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -136,7 +132,7 @@ val summaryTileScreen3 = @Composable { summary: DailySummary, currency: UserCurr
         Text(
             text = stringResource(
                 R.string.currency_format,
-                currency.symbol,
+                summary.userCurrency.symbol,
                 summary.maximalExpense.formatMoneyAmount()
             ),
             style = MaterialTheme.typography.titleLarge,
@@ -152,7 +148,7 @@ val summaryTileScreen3 = @Composable { summary: DailySummary, currency: UserCurr
         Text(
             text = stringResource(
                 R.string.currency_format,
-                currency.symbol,
+                summary.userCurrency.symbol,
                 summary.minimalExpense.formatMoneyAmount()
             ),
             style = MaterialTheme.typography.titleLarge,
@@ -178,11 +174,6 @@ fun SummaryTilesScreenPrev() {
                 dailyAverageExpense = 20.0,
                 minimalExpense = 10.0,
                 totalExpenses = 155.0
-            ),
-            currency = UserCurrency(
-                symbol = "$",
-                code = "USD",
-                usdValue = 1.0
             )
         )
     }

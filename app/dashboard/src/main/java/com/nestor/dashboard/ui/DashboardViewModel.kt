@@ -6,15 +6,18 @@ import com.nestor.auth.data.AuthRepository
 import com.nestor.common.data.CurrencyRepository
 import com.nestor.dashboard.data.DashboardRepository
 import com.nestor.schema.utils.ResponseWrapper
+import com.nestor.schema.utils.combineTransform
+import com.nestor.schema.utils.mapBody
 import com.nestor.uikit.util.CoroutineContextProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,60 +28,37 @@ class DashboardViewModel @Inject constructor(
     private val coroutineContextProvider: CoroutineContextProvider,
     private val currencyRepository: CurrencyRepository,
 ) : ViewModel() {
-    private val _dashboardUiState = MutableStateFlow(DashboardUiState())
-    val dashboardInfo: StateFlow<DashboardUiState> = _dashboardUiState
-
-    init {
-        viewModelScope.launch(coroutineContextProvider.io()) {
-            dashboardRepository.fetchDashboardInfo()
-                .combine(
-                    authRepository.userDetails().filterNotNull()
-                ) { dashboardInfoResponse, userDetailsResponse ->
-                    if (dashboardInfoResponse.isLoading) {
-                        _dashboardUiState.update { it.copy(summary = ResponseWrapper.loading()) }
-                    }
-                    if (userDetailsResponse.isLoading) {
-                        _dashboardUiState.update { it.copy(userDetails = ResponseWrapper.loading()) }
-                    }
-                    dashboardInfoResponse.body?.let { dashboardInfo ->
-                        _dashboardUiState.update {
-                            it.copy(
-                                userDetails = ResponseWrapper.success(
-                                    UserDetails(
-                                        userName = dashboardInfo.userName,
-                                        dailyPhrase = dashboardInfo.dailyPhrase
-                                    )
-                                )
-                            )
-                        }
-                        userDetailsResponse.body?.let { userDetails ->
-                            currencyRepository
-                                .fetchCurrencyByCode(userDetails.currencyCode)
-                                .collect { currencyResponse ->
-                                    if (currencyResponse.isLoading) {
-                                        _dashboardUiState.update { it.copy(userCurrency = ResponseWrapper.loading()) }
-                                    }
-                                    currencyResponse.body?.let { currency ->
-                                        _dashboardUiState.update {
-                                            it.copy(
-                                                summary = ResponseWrapper.success(
-                                                    DailySummary(
-                                                        totalExpenses = dashboardInfo.totalExpenses * currency.usdRate,
-                                                        minimalExpense = dashboardInfo.minimalExpense * currency.usdRate,
-                                                        dailyAverageExpense = dashboardInfo.dailyAverageExpense * currency.usdRate,
-                                                        maximalExpense = dashboardInfo.maximalExpense * currency.usdRate
-                                                    )
-                                                )
-                                            )
-                                        }
-                                    }
-                                }
-                        }
-                    }
+    val userDetails: StateFlow<ResponseWrapper<UserDetails>> =
+        dashboardRepository.fetchDashboardInfo().map {
+            it.mapBody { UserDetails(it.userName, it.dailyPhrase) }
+        }.stateIn(viewModelScope, SharingStarted.Lazily, ResponseWrapper.loading())
+    private val _userCurrency: StateFlow<ResponseWrapper<UserCurrency>> =
+        authRepository.userDetails()
+            .map { userDetails -> userDetails.mapBody { it?.currencyCode ?: "USD" } }
+            .transform { currencyCode ->
+                if (currencyCode.isLoading) {
+                    emit(ResponseWrapper.loading())
+                } else {
+                    emitAll(currencyRepository.fetchCurrencyByCode(currencyCode.body!!))
                 }
-                .collect()
-        }
-    }
+            }
+            .map { currencyEntity ->
+                currencyEntity.mapBody { UserCurrency(it.code, it.usdRate) }
+            }
+            .stateIn(viewModelScope, SharingStarted.Lazily, ResponseWrapper.loading())
+    val summary: StateFlow<ResponseWrapper<DailySummary>> =
+        dashboardRepository.fetchDashboardInfo()
+            .combine(_userCurrency) { dash, currencyResponseWrapper ->
+                dash.combineTransform(currencyResponseWrapper) { summary, currency ->
+                    DailySummary(
+                        totalExpenses = summary.totalExpenses,
+                        minimalExpense = summary.minimalExpense,
+                        dailyAverageExpense = summary.dailyAverageExpense,
+                        maximalExpense = summary.maximalExpense,
+                        userCurrency = currency
+                    )
+                }
+            }.stateIn(viewModelScope, SharingStarted.Lazily, ResponseWrapper.loading())
 
     fun onDifferentCurrencySelect() {
         viewModelScope.launch(coroutineContextProvider.io()) {
@@ -86,7 +66,7 @@ class DashboardViewModel @Inject constructor(
                 .map { it.body }
                 .filterNotNull()
                 .collect { currencies ->
-                    val currentCurrency = _dashboardUiState.value.userCurrency.body?.code ?: "USD"
+                    val currentCurrency = _userCurrency.value.body?.code ?: "USD"
                     var currencyIndex =
                         currencies.indexOfFirst { current -> current.code == currentCurrency }
                     if (currencyIndex + 1 >= currencies.size) {

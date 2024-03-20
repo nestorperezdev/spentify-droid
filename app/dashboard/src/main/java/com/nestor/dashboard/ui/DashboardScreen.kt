@@ -28,102 +28,118 @@ import kotlinx.coroutines.flow.StateFlow
 @Composable
 fun DashboardScreen(viewModel: DashboardViewModel = hiltViewModel()) {
     DashboardScreenContent(
-        dashboardState = viewModel.dashboardInfo,
+        userDetails = viewModel.userDetails,
+        summary = viewModel.summary,
         onDifferentCurrencySelect = viewModel::onDifferentCurrencySelect
     )
 }
 
 @Composable
 private fun DashboardScreenContent(
-    dashboardState: StateFlow<DashboardUiState>,
+    userDetails: StateFlow<ResponseWrapper<UserDetails>>,
+    summary: StateFlow<ResponseWrapper<DailySummary>>,
     onDifferentCurrencySelect: () -> Unit = {}
 ) {
-    val dashboard = dashboardState.collectAsState().value
     Scaffold(
         topBar = {
-            Column {
-                Spacer(modifier = Modifier.height(40.dp))
-                if (dashboard.userDetails.isLoading) {
-                    ShimmerSkeletonDoubleLine(
-                        modifier = Modifier.padding(
-                            horizontal = LocalSYPadding.current.screenHorizontalPadding,
-                            vertical = 18.dp
-                        )
-                    )
-                } else {
-                    dashboard.userDetails.body?.let { userDetails ->
-                        val toolbarType = if (userDetails.dailyPhrase != null) {
-                            StatusBarType.TitleAndSubtitle(
-                                stringResource(R.string.hello, userDetails.userName),
-                                userDetails.dailyPhrase
-                            )
-                        } else {
-                            StatusBarType.LeftTitle(
-                                stringResource(
-                                    R.string.hello,
-                                    userDetails.userName
-                                )
-                            )
-                        }
-                        SYStatusBar(toolbarType)
-                    }
-                }
-            }
+            DashboardScreenToolbar(userDetails = userDetails)
         }
     ) {
-        Column(
+        DashboardScreenSummaryContent(
             modifier = Modifier
                 .padding(it)
-                .padding(horizontal = LocalSYPadding.current.screenHorizontalPadding)
-        ) {
-            Spacer(modifier = Modifier.height(16.dp))
-            if (dashboard.summary.isLoading || dashboard.userCurrency.isLoading) {
-                ShimmerSkeletonBox()
-            } else {
-                dashboard.summary.body?.let { summary ->
-                    dashboard.userCurrency.body?.let { currency ->
-                        SummaryTilesScreen(summary = summary, currency = currency)
-                    }
-                }
+                .padding(horizontal = LocalSYPadding.current.screenHorizontalPadding),
+            summaryState = summary,
+            onDifferentCurrencySelect = onDifferentCurrencySelect
+        )
+    }
+}
+
+@Composable
+private fun DashboardScreenSummaryContent(
+    modifier: Modifier = Modifier,
+    summaryState: StateFlow<ResponseWrapper<DailySummary>>,
+    onDifferentCurrencySelect: () -> Unit = {}
+) {
+    val summaryWrapper = summaryState.collectAsState().value
+    Column(
+        modifier = modifier
+    ) {
+        Spacer(modifier = Modifier.height(16.dp))
+        if (summaryWrapper.isLoading) {
+            ShimmerSkeletonBox()
+        } else {
+            summaryWrapper.body?.let { summary ->
+                SummaryTilesScreen(summary = summary)
             }
-            dashboard.userCurrency.body?.let {
-                SYButton(
-                    onClick = onDifferentCurrencySelect,
-                    buttonText = "Toggle different currency"
+        }
+        summaryWrapper.body?.userCurrency?.let {
+            SYButton(
+                onClick = onDifferentCurrencySelect,
+                buttonText = "Toggle different currency"
+            )
+        }
+    }
+}
+
+@Composable
+private fun DashboardScreenToolbar(
+    modifier: Modifier = Modifier,
+    userDetails: StateFlow<ResponseWrapper<UserDetails>>
+) {
+    val responseWrapper = userDetails.collectAsState().value
+    Column {
+        Spacer(modifier = modifier.height(40.dp))
+        if (responseWrapper.isLoading) {
+            ShimmerSkeletonDoubleLine(
+                modifier = Modifier.padding(
+                    horizontal = LocalSYPadding.current.screenHorizontalPadding,
+                    vertical = 18.dp
                 )
+            )
+        } else {
+            responseWrapper.body?.let { userDetails ->
+                val toolbarType = if (userDetails.dailyPhrase != null) {
+                    StatusBarType.TitleAndSubtitle(
+                        stringResource(R.string.hello, userDetails.userName),
+                        userDetails.dailyPhrase
+                    )
+                } else {
+                    StatusBarType.LeftTitle(
+                        stringResource(
+                            R.string.hello,
+                            userDetails.userName
+                        )
+                    )
+                }
+                SYStatusBar(toolbarType)
             }
         }
     }
 }
+
 
 @Preview
 @Composable
 private fun DashboardScreenContentPrev() {
     SpentifyTheme {
         DashboardScreenContent(
-            dashboardState = MutableStateFlow(
-                DashboardUiState(
-                    userDetails = ResponseWrapper.success(
-                        UserDetails(
-                            userName = "Nestor",
-                            dailyPhrase = "Good morning, Remember to save today 💸",
-                        )
-                    ),
-                    userCurrency = ResponseWrapper.success(
-                        UserCurrency(
-                            usdValue = 1.0,
-                            code = "USD",
-                            symbol = "$"
-                        )
-                    ),
-                    summary = ResponseWrapper.success(
-                        DailySummary(
-                            totalExpenses = 1723.50,
-                            minimalExpense = 500.0,
-                            maximalExpense = 501.76,
-                            dailyAverageExpense = 123.10,
-                        )
-                    ),
+            userDetails = MutableStateFlow(
+                ResponseWrapper.success(
+                    UserDetails(
+                        userName = "Nestor",
+                        dailyPhrase = "Good morning, Remember to save today 💸",
+                    )
+                )
+            ),
+            summary = MutableStateFlow(
+                ResponseWrapper.success(
+                    DailySummary(
+                        totalExpenses = 1723.50,
+                        minimalExpense = 500.0,
+                        maximalExpense = 501.76,
+                        dailyAverageExpense = 123.10,
+                    )
                 )
             )
         )
@@ -135,7 +151,8 @@ private fun DashboardScreenContentPrev() {
 private fun DashboardScreenContentLoadingPrev() {
     SpentifyTheme {
         DashboardScreenContent(
-            dashboardState = MutableStateFlow(DashboardUiState())
+            userDetails = MutableStateFlow(ResponseWrapper.loading()),
+            summary = MutableStateFlow(ResponseWrapper.loading())
         )
     }
 }
