@@ -1,12 +1,17 @@
 package com.nestor.dashboard.ui
 
+import androidx.compose.foundation.layout.Arrangement.Absolute.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -20,6 +25,7 @@ import com.nestor.dashboard.ui.summarytiles.SummaryTilesScreen
 import com.nestor.schema.utils.ResponseWrapper
 import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.button.SYAlternativeButton
+import com.nestor.uikit.list.SYListItem
 import com.nestor.uikit.loading.ShimmerSkeletonBox
 import com.nestor.uikit.loading.ShimmerSkeletonDoubleLine
 import com.nestor.uikit.statusbar.SYStatusBar
@@ -46,7 +52,7 @@ private fun DashboardScreenContent(
 ) {
     val summaryWrapper = summaryState.collectAsState().value
     Column(
-        modifier = modifier
+        modifier = modifier.verticalScroll(rememberScrollState())
     ) {
         Spacer(modifier = Modifier.height(16.dp))
         if (summaryWrapper.isLoading) {
@@ -68,42 +74,38 @@ private fun DashboardScreenContent(
                 )
             }
         )
-    }
-}
-
-@Composable
-private fun DashboardScreenToolbar(
-    modifier: Modifier = Modifier,
-    userDetails: StateFlow<ResponseWrapper<UserDetails>>
-) {
-    val responseWrapper = userDetails.collectAsState().value
-    Column {
-        Spacer(modifier = modifier.height(40.dp))
-        if (responseWrapper.isLoading) {
-            ShimmerSkeletonDoubleLine(
-                modifier = Modifier.padding(
-                    horizontal = LocalSYPadding.current.screenHorizontalPadding,
-                    vertical = 18.dp
-                )
+        Spacer(modifier = Modifier.height(40.dp))
+        Text(
+            text = "Get your money working for you",
+            style = MaterialTheme.typography.titleSmall
+        )
+        Column(
+            modifier = Modifier.padding(top = 20.dp),
+            verticalArrangement = spacedBy(20.dp)
+        ) {
+            SYListItem(
+                label = "Set a savings goal",
+                trailingIcon = painterResource(id = R.drawable.baseline_arrow_forward_ios_24),
+                leadingIcon = painterResource(id = R.drawable.baseline_savings_24)
             )
-        } else {
-            responseWrapper.body?.let { userDetails ->
-                val toolbarType = if (userDetails.dailyPhrase != null) {
-                    StatusBarType.TitleAndSubtitle(
-                        stringResource(R.string.hello, userDetails.userName),
-                        userDetails.dailyPhrase
-                    )
-                } else {
-                    StatusBarType.LeftTitle(
-                        stringResource(
-                            R.string.hello,
-                            userDetails.userName
-                        )
-                    )
-                }
-                SYStatusBar(toolbarType)
-            }
+            SYListItem(
+                label = "Review your monthly report",
+                trailingIcon = painterResource(id = R.drawable.baseline_arrow_forward_ios_24),
+                leadingIcon = painterResource(id = R.drawable.baseline_space_dashboard_24)
+            )
         }
+        Spacer(modifier = Modifier.height(36.dp))
+        Text(
+            text = "Categories",
+            style = MaterialTheme.typography.titleSmall
+        )
+        SYListItem(
+            label = "Manage your categories",
+            trailingIcon = painterResource(id = R.drawable.baseline_arrow_forward_ios_24),
+            leadingIcon = painterResource(id = R.drawable.baseline_category_24),
+            leadingIconTint = MaterialTheme.colorScheme.onTertiary,
+            modifier = Modifier.padding(top = 20.dp)
+        )
     }
 }
 
