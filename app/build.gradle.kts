@@ -68,6 +68,7 @@ dependencies {
     implementation(project(":app:uikit"))
     implementation(project(":app:auth"))
     implementation(project(":app:onboarding"))
+    implementation(project(":app:common"))
     implementation(project(":app:dashboard"))
 
     implementation(libs.androidx.ktx)

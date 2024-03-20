@@ -15,48 +15,71 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.button.SYTextButton
+import com.nestor.uikit.loading.ShimmerSkeletonDoubleLine
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SYStatusBar(barType: StatusBarType) {
-    TopAppBar(
-        title = {
-            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                barType.title?.let {
-                    Text(
-                        text = it.title,
-                        textAlign = it.alignment,
-                        style = it.style.getStyleFromStatusBarTextStyle(),
-                        modifier = Modifier
-                            .padding(start = 12.dp)
-                            .fillMaxWidth()
-                    )
-                }
-                barType.subtitle?.let {
-                    Text(
-                        text = it.title,
-                        textAlign = it.alignment,
-                        style = it.style.getStyleFromStatusBarTextStyle(),
-                        modifier = Modifier
-                            .padding(start = 12.dp)
-                            .fillMaxWidth()
-                    )
-                }
+    Column {
+        val topPadding = when(barType.topPadding) {
+            StatusTopPadding.Big -> {
+                40.dp
             }
-        },
-        navigationIcon = {
-            barType.navigationIcon?.let { icon ->
-                IconButton(onClick = icon.onClick) {
-                    Icon(imageVector = icon.icon, contentDescription = "")
-                }
-            }
-        },
-        actions = {
-            barType.action?.let {
-                SYTextButton(onClick = it.onClick, buttonText = it.text)
+            StatusTopPadding.None -> {
+                0.dp
             }
         }
-    )
+        TopAppBar(
+            modifier = Modifier.padding(top = topPadding),
+            title = {
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    if (barType is StatusBarType.LoadingDoubleLineStatusBar) {
+                        ShimmerSkeletonDoubleLine()
+                    }
+                    barType.title?.let {
+                        Text(
+                            text = it.title,
+                            textAlign = it.alignment,
+                            style = it.style.getStyleFromStatusBarTextStyle(),
+                            modifier = Modifier
+                                .padding(start = 12.dp)
+                                .fillMaxWidth()
+                        )
+                    }
+                    barType.subtitle?.let {
+                        Text(
+                            text = it.title,
+                            textAlign = it.alignment,
+                            style = it.style.getStyleFromStatusBarTextStyle(),
+                            modifier = Modifier
+                                .padding(start = 12.dp)
+                                .fillMaxWidth()
+                        )
+                    }
+                }
+            },
+            navigationIcon = {
+                barType.navigationIcon?.let { icon ->
+                    IconButton(onClick = icon.onClick) {
+                        Icon(imageVector = icon.icon, contentDescription = "")
+                    }
+                }
+            },
+            actions = {
+                barType.action?.let {
+                    SYTextButton(onClick = it.onClick, buttonText = it.text)
+                }
+            }
+        )
+    }
+}
+
+@Preview("Loading")
+@Composable
+fun SYStatusBarPreviewLoading() {
+    SpentifyTheme {
+        SYStatusBar(StatusBarType.LoadingDoubleLineStatusBar)
+    }
 }
 
 @Preview("Only Navigation")

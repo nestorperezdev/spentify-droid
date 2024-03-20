@@ -6,6 +6,8 @@ import com.nestor.common.data.CurrencyRemoteDataSource
 import com.nestor.common.data.CurrencyRemoteDataSourceImpl
 import com.nestor.common.data.CurrencyRepository
 import com.nestor.common.data.CurrencyRepositoryImpl
+import com.nestor.common.data.statusbar.StatusBarRepository
+import com.nestor.common.data.statusbar.StatusBarRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -26,4 +28,8 @@ interface CommonModule {
     @Binds
     @Singleton
     fun bindsCurrencyRemoteDataSource(currencyRemoteDataSource: CurrencyRemoteDataSourceImpl): CurrencyRemoteDataSource
+
+    @Binds
+    @Singleton
+    fun bindsStatusBarRepository(statusBarRepository: StatusBarRepositoryImpl): StatusBarRepository
 }

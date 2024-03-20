@@ -43,6 +43,7 @@ dependencies {
 
     implementation(project(":app:lib:schema"))
     implementation(project(":app:database"))
+    implementation(project(":app:uikit"))
 
     implementation(libs.androidx.ktx)
     testImplementation(libs.junit)

@@ -29,40 +29,20 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
-fun DashboardScreen(viewModel: DashboardViewModel = hiltViewModel()) {
+fun DashboardScreen(
+    modifier: Modifier = Modifier,
+    viewModel: DashboardViewModel = hiltViewModel()
+) {
     DashboardScreenContent(
-        userDetails = viewModel.userDetails,
-        summary = viewModel.summary,
-        onDifferentCurrencySelect = viewModel::onDifferentCurrencySelect
+        modifier = modifier,
+        summaryState = viewModel.summary,
     )
 }
 
 @Composable
 private fun DashboardScreenContent(
-    userDetails: StateFlow<ResponseWrapper<UserDetails>>,
-    summary: StateFlow<ResponseWrapper<DailySummary>>,
-    onDifferentCurrencySelect: () -> Unit = {}
-) {
-    Scaffold(
-        topBar = {
-            DashboardScreenToolbar(userDetails = userDetails)
-        }
-    ) {
-        DashboardScreenSummaryContent(
-            modifier = Modifier
-                .padding(it)
-                .padding(horizontal = LocalSYPadding.current.screenHorizontalPadding),
-            summaryState = summary,
-            onDifferentCurrencySelect = onDifferentCurrencySelect
-        )
-    }
-}
-
-@Composable
-private fun DashboardScreenSummaryContent(
     modifier: Modifier = Modifier,
     summaryState: StateFlow<ResponseWrapper<DailySummary>>,
-    onDifferentCurrencySelect: () -> Unit = {}
 ) {
     val summaryWrapper = summaryState.collectAsState().value
     Column(
@@ -132,26 +112,23 @@ private fun DashboardScreenToolbar(
 @Composable
 private fun DashboardScreenContentPrev() {
     SpentifyTheme {
-        DashboardScreenContent(
-            userDetails = MutableStateFlow(
-                ResponseWrapper.success(
-                    UserDetails(
-                        userName = "Nestor",
-                        dailyPhrase = "Good morning, Remember to save today 💸",
-                    )
-                )
-            ),
-            summary = MutableStateFlow(
-                ResponseWrapper.success(
-                    DailySummary(
-                        totalExpenses = 1723.50,
-                        minimalExpense = 500.0,
-                        maximalExpense = 501.76,
-                        dailyAverageExpense = 123.10,
+        Scaffold {
+            DashboardScreenContent(
+                modifier = Modifier
+                    .padding(it)
+                    .padding(LocalSYPadding.current.screenHorizontalPadding),
+                summaryState = MutableStateFlow(
+                    ResponseWrapper.success(
+                        DailySummary(
+                            totalExpenses = 1723.50,
+                            minimalExpense = 500.0,
+                            maximalExpense = 501.76,
+                            dailyAverageExpense = 123.10,
+                        )
                     )
                 )
             )
-        )
+        }
     }
 }
 
@@ -159,9 +136,13 @@ private fun DashboardScreenContentPrev() {
 @Composable
 private fun DashboardScreenContentLoadingPrev() {
     SpentifyTheme {
-        DashboardScreenContent(
-            userDetails = MutableStateFlow(ResponseWrapper.loading()),
-            summary = MutableStateFlow(ResponseWrapper.loading())
-        )
+        Scaffold {
+            DashboardScreenContent(
+                summaryState = MutableStateFlow(ResponseWrapper.loading()),
+                modifier = Modifier
+                    .padding(it)
+                    .padding(LocalSYPadding.current.screenHorizontalPadding),
+            )
+        }
     }
 }

@@ -2,9 +2,12 @@ package com.nestor.spentify.ui
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -15,6 +18,8 @@ import com.nestor.auth.ui.navigation.AuthGraph
 import com.nestor.dashboard.ui.DashboardScreen
 import com.nestor.onboarding.ui.OnboardingScreen
 import com.nestor.spentify.navigation.AppNavigationGraph
+import com.nestor.uikit.statusbar.SYStatusBar
+import com.nestor.uikit.theme.spacing.LocalSYPadding
 
 @Composable
 fun MainScreen(mainViewModel: MainViewModel = hiltViewModel()) {
@@ -51,7 +56,16 @@ fun MainScreen(mainViewModel: MainViewModel = hiltViewModel()) {
             )
         }
         composable(route = AppNavigationGraph.Home.route) {
-            DashboardScreen()
+            Scaffold(
+                topBar = { SYStatusBar(mainViewModel.statusBarType.collectAsState().value) },
+                bottomBar = { BottomNavBar() }
+            ) {
+                DashboardScreen(
+                    modifier = Modifier
+                        .padding(it)
+                        .padding(LocalSYPadding.current.screenHorizontalPadding)
+                )
+            }
         }
     }
 }

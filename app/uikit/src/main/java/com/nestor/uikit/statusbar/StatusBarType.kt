@@ -12,8 +12,10 @@ sealed class StatusBarType(
     val navigationIcon: NavigationIcon? = null,
     val action: StatusBarAction? = null,
     val title: StatusBarTitle? = null,
-    val subtitle: StatusBarTitle? = null
+    val subtitle: StatusBarTitle? = null,
+    val topPadding: StatusTopPadding = StatusTopPadding.None
 ) {
+    object LoadingDoubleLineStatusBar : StatusBarType(topPadding = StatusTopPadding.Big)
     class OnlyNavigation(navigationIcon: NavigationIcon) : StatusBarType(navigationIcon)
     class OnlyAction(action: StatusBarAction) : StatusBarType(action = action)
     class NavigationWithTitle(title: String, navigation: NavigationIcon) :
@@ -24,12 +26,14 @@ sealed class StatusBarType(
     class TitleAndSubtitle(title: String, subtitle: String) :
         StatusBarType(
             title = StatusBarTitle.MediumTitle(title),
-            subtitle = StatusBarTitle.SubtitleSmall(subtitle)
+            subtitle = StatusBarTitle.SubtitleSmall(subtitle),
+            topPadding = StatusTopPadding.Big
         )
 
     class LeftTitle(title: String) :
         StatusBarType(
-            title = StatusBarTitle.LeftBig(title)
+            title = StatusBarTitle.LeftBig(title),
+            topPadding = StatusTopPadding.Big
         )
 }
 
@@ -49,6 +53,7 @@ sealed class StatusBarTitle(
     class LeftBig(text: String) : StatusBarTitle(text, TextAlign.Start, StatusBarTextStyle.Big)
     class SmallCenterTitle(text: String) :
         StatusBarTitle(text, TextAlign.Center, StatusBarTextStyle.Small)
+
     class MediumTitle(text: String) :
         StatusBarTitle(text, TextAlign.Start, StatusBarTextStyle.Medium)
 
@@ -61,6 +66,11 @@ enum class StatusBarTextStyle {
     Medium,
     Small,
     Thin,
+}
+
+enum class StatusTopPadding {
+    None,
+    Big
 }
 
 @Composable
