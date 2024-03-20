@@ -17,4 +17,5 @@ interface AuthRepository {
     fun userDetails(): Flow<ResponseWrapper<UserEntity?>>
     fun getRawToken(): String?
     suspend fun setRawToken(token: String)
+    suspend fun logout()
 }

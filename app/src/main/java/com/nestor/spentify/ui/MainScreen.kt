@@ -4,15 +4,12 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.nestor.auth.data.model.AuthState
 import com.nestor.auth.ui.authScreen
 import com.nestor.auth.ui.navigation.AuthGraph
 import com.nestor.dashboard.ui.DashboardScreen
@@ -22,23 +19,9 @@ import com.nestor.spentify.navigation.AppNavigationGraph
 @Composable
 fun MainScreen(mainViewModel: MainViewModel = hiltViewModel()) {
     val navController = rememberNavController()
-    val authState = mainViewModel.authState.collectAsState()
-    val tookOnboarding = mainViewModel.tookOnboarding.collectAsState().value
-    val initialRoute = remember(authState.value) {
-        when (authState.value.body) {
-            is AuthState.Authenticated -> AppNavigationGraph.Home.route
-            is AuthState.Anonymous -> AppNavigationGraph.AuthGraph.route
-            else -> AppNavigationGraph.Splash.route
-        }
-    }
-    LaunchedEffect(tookOnboarding) {
-        if (tookOnboarding.not()) {
-            navController.navigate(AppNavigationGraph.Onboarding.route)
-        }
-    }
     NavHost(
         navController,
-        startDestination = initialRoute
+        startDestination = mainViewModel.navRoute.collectAsState().value
     ) {
         composable(AppNavigationGraph.Splash.route) {
             Text(text = "Splash!")
@@ -47,9 +30,7 @@ fun MainScreen(mainViewModel: MainViewModel = hiltViewModel()) {
             route = AppNavigationGraph.AuthGraph.route,
             startDestination = AuthGraph.Welcome.route,
         ) {
-            authScreen(navController) {
-                navController.navigate(AppNavigationGraph.Home.route)
-            }
+            authScreen(navController) {}
         }
         composable(
             route = AppNavigationGraph.Onboarding.route,

@@ -12,7 +12,8 @@ interface AuthLocalDataSource {
     suspend fun updateUserCurrency(currencyCode: String)
     suspend fun storeToken(token: String)
     suspend fun storeUser(userEntity: UserEntity)
-    fun tokenContents(): Flow<TokenPayload?>
+    fun tokenContents(): SharedFlow<TokenPayload?>
     fun userDetails(): SharedFlow<UserEntity?>
     fun rawToken(): String?
+    suspend fun clearToken()
 }

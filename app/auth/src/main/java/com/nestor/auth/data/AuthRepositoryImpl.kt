@@ -4,13 +4,11 @@ import com.nestor.auth.data.datasource.AuthLocalDataSource
 import com.nestor.auth.data.datasource.AuthRemoteDataSource
 import com.nestor.database.data.user.UserEntity
 import com.nestor.schema.UserDetailsQuery
-import com.nestor.schema.adapter.UserDetailsQuery_ResponseAdapter
-import com.nestor.schema.type.User
 import com.nestor.schema.utils.ResponseWrapper
 import com.nestor.schema.utils.safeApiCall
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.flow
-import java.lang.IllegalStateException
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
@@ -40,22 +38,23 @@ class AuthRepositoryImpl @Inject constructor(
         this.remoteDataSource.updateUserCurrency(code)
     }
 
-    override fun userDetails() = flow {
-        localDatasource.userDetails().collect {
-            it?.let { user ->
-                emit(ResponseWrapper.success<UserEntity?>(user))
-            } ?: run {
-                emit(ResponseWrapper.loading())
-                if (localDatasource.rawToken() == null) {
-                    emit(ResponseWrapper.success<UserEntity?>(null))
-                    return@run
+    override fun userDetails(): Flow<ResponseWrapper<UserEntity?>> =
+        localDatasource.tokenContents().flatMapLatest { tokenPayload ->
+            localDatasource.userDetails().map {
+                it?.let { user ->
+                    ResponseWrapper.success(user)
+                } ?: run {
+                    ResponseWrapper.loading<UserEntity?>()
+                    if (tokenPayload == null) {
+                        ResponseWrapper.success(null)
+                    } else {
+                        val result = safeApiCall { remoteDataSource.fetchUserDetails() }
+                        saveUserDetails(result)
+                        ResponseWrapper.success(result.body?.userEntity())
+                    }
                 }
-                val result = safeApiCall { remoteDataSource.fetchUserDetails() }
-                saveUserDetails(result)
-                emit(ResponseWrapper.success(result.body?.userEntity()))
             }
         }
-    }
 
     private suspend fun saveUserDetails(userResponse: ResponseWrapper<UserDetailsQuery.Data>) {
         userResponse.body?.let {
@@ -71,6 +70,11 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun setRawToken(token: String) {
         localDatasource.storeToken(token)
+    }
+
+    override suspend fun logout() {
+        localDatasource.clearUsers()
+        localDatasource.clearToken()
     }
 }
 

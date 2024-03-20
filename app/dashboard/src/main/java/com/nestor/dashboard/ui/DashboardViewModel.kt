@@ -79,4 +79,10 @@ class DashboardViewModel @Inject constructor(
                 }
         }
     }
+
+    fun logout() {
+        viewModelScope.launch(coroutineContextProvider.io()) {
+            authRepository.logout()
+        }
+    }
 }

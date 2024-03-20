@@ -29,7 +29,6 @@ class AuthLocalDataSourceImpl @Inject constructor(
     private val contextProvider: CoroutineContextProvider
 ) : AuthLocalDataSource {
     private val _coroutineScope = CoroutineScope(contextProvider.io() + SupervisorJob())
-    private val _user = MutableStateFlow<UserEntity?>(null)
     private val _rawToken = MutableStateFlow(this.retrieveToken())
     private val _tokenPayload = _rawToken.transform { emit(it.decryptToken()) }
 
@@ -37,7 +36,11 @@ class AuthLocalDataSourceImpl @Inject constructor(
         userDao.insertUser(userEntity)
     }
 
-    override fun tokenContents(): Flow<TokenPayload?> = _tokenPayload
+    override fun tokenContents(): SharedFlow<TokenPayload?> = _tokenPayload.shareIn(
+        _coroutineScope,
+        SharingStarted.Lazily,
+        1
+    )
 
     override fun userDetails(): SharedFlow<UserEntity?> =
         userDao.getUser().shareIn(
@@ -48,6 +51,12 @@ class AuthLocalDataSourceImpl @Inject constructor(
 
     override fun rawToken(): String? {
         return _rawToken.value
+    }
+
+    override suspend fun clearToken() {
+        userDao.clearUsers()
+        encryptedPreferences.edit().remove(TOKEN_KEY).apply()
+        _rawToken.update { null }
     }
 
     override suspend fun clearUsers() {

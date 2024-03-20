@@ -79,6 +79,8 @@ private fun DashboardScreenSummaryContent(
                 buttonText = "Toggle different currency"
             )
         }
+        val vm: DashboardViewModel = hiltViewModel()
+        SYButton(onClick = { vm.logout() }, buttonText = "Logout test")
     }
 }
 
