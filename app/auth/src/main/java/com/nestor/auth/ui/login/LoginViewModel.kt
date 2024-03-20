@@ -66,6 +66,7 @@ class LoginViewModel @Inject constructor(
                 loginResult.body?.login?.loginToken?.token?.let {
                     authRepository.setRawToken(it)
                 }
+                _uiState.update { it.copy(isSuccess = true) }
             }
         }
     }

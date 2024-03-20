@@ -18,7 +18,6 @@ import com.nestor.auth.ui.navigation.AuthGraph
 import com.nestor.dashboard.ui.DashboardScreen
 import com.nestor.onboarding.ui.OnboardingScreen
 import com.nestor.spentify.navigation.AppNavigationGraph
-import com.nestor.uikit.SpentifyTheme
 
 @Composable
 fun MainScreen(mainViewModel: MainViewModel = hiltViewModel()) {
@@ -48,7 +47,9 @@ fun MainScreen(mainViewModel: MainViewModel = hiltViewModel()) {
             route = AppNavigationGraph.AuthGraph.route,
             startDestination = AuthGraph.Welcome.route,
         ) {
-            authScreen(navController)
+            authScreen(navController) {
+                navController.navigate(AppNavigationGraph.Home.route)
+            }
         }
         composable(
             route = AppNavigationGraph.Onboarding.route,

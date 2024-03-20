@@ -21,8 +21,9 @@ import com.nestor.uikit.animation.syPopExitTransition
 import com.nestor.uikit.util.isRouteOnPreviousStack
 
 private const val TAG = "AuthScreen"
+
 @SuppressLint("RestrictedApi")
-fun NavGraphBuilder.authScreen(navController: NavHostController) {
+fun NavGraphBuilder.authScreen(navController: NavHostController, onSuccessfulLogin: () -> Unit) {
     composable(AuthGraph.Welcome.route) {
         WelcomeScreen(
             onLoginClick = {
@@ -51,7 +52,10 @@ fun NavGraphBuilder.authScreen(navController: NavHostController) {
                 }
             },
             initialEmailValue = backstackEntry.arguments?.getString("username"),
-            onForgotPasswordClick = { navController.navigate(AuthGraph.ForgotPassword.route) }
+            onForgotPasswordClick = { navController.navigate(AuthGraph.ForgotPassword.route) },
+            onSuccessLogin = {
+                onSuccessfulLogin()
+            }
         )
     }
     composable(
@@ -75,10 +79,15 @@ fun NavGraphBuilder.authScreen(navController: NavHostController) {
                 }
             },
             onRecoverPassword = {
+                //TODO: Implement recover password
             },
             onNavigationBackClick = {
                 navController.popBackStack()
-            })
+            },
+            onSuccessLogin = {
+                onSuccessfulLogin()
+            }
+        )
     }
 
     composable(

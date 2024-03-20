@@ -10,5 +10,6 @@ data class SignupUiState(
     val isLoading: Boolean = false,
     val signupErrorResource: Int? = null,
     val isRegistered: Boolean = false,
-    val showFormInvalidToast: Boolean = false
+    val showFormInvalidToast: Boolean = false,
+    val isSuccess: Boolean = false
 )

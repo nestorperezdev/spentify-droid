@@ -63,12 +63,18 @@ fun LoginScreen(
     initialEmailValue: String? = null,
     onForgotPasswordClick: () -> Unit = {},
     onNavigationBackClick: () -> Unit = {},
-    onSignupClick: () -> Unit = {}
+    onSignupClick: () -> Unit = {},
+    onSuccessLogin: () -> Unit = {},
 ) {
     val uiState = loginViewModel.uiState.collectAsState().value
     LaunchedEffect(initialEmailValue) {
         initialEmailValue?.let {
             loginViewModel.onEmailChanged(it)
+        }
+    }
+    LaunchedEffect(uiState.isSuccess) {
+        if (uiState.isSuccess) {
+            onSuccessLogin()
         }
     }
     if (uiState.isLoading) {

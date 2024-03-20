@@ -66,9 +66,15 @@ fun SignupScreen(
     onNavigationBackClick: () -> Unit,
     onLoginClick: (String?) -> Unit,
     onRecoverPassword: (String?) -> Unit,
+    onSuccessLogin: () -> Unit = {},
     viewModel: SignupViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsState().value
+    LaunchedEffect(uiState.isSuccess) {
+        if (uiState.isSuccess) {
+            onSuccessLogin()
+        }
+    }
     if (uiState.isLoading) {
         LoadingScreen(text = stringResource(R.string.creating_account))
     } else {

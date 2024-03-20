@@ -6,5 +6,6 @@ data class LoginUiState(
     val email: FormFieldData = FormFieldData(""),
     val password: FormFieldData = FormFieldData(""),
     val isLoading: Boolean = false,
-    val loginErrorResource: Int? = null
+    val loginErrorResource: Int? = null,
+    val isSuccess: Boolean = false
 )
