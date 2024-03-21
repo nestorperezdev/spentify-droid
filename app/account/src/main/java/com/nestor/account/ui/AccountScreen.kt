@@ -1,5 +1,6 @@
 package com.nestor.account.ui
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,6 +53,18 @@ private fun AccountScreenContent(
     username: String,
     onLogoutClick: () -> Unit = {}
 ) {
+    var privacyDialogIsVisible by remember { mutableStateOf(false) }
+    var tocsDialogIsVisible by remember { mutableStateOf(false) }
+    if (privacyDialogIsVisible) {
+        PrivacyDialog {
+            privacyDialogIsVisible = false
+        }
+    }
+    if (tocsDialogIsVisible) {
+        TOCSDialog {
+            tocsDialogIsVisible = false
+        }
+    }
     Column(
         modifier
             .fillMaxWidth()
@@ -94,9 +111,17 @@ private fun AccountScreenContent(
         Text(text = "About Spentify", style = MaterialTheme.typography.titleSmall)
         Spacer(modifier = Modifier.height(40.dp))
         SYList(
+            onItemClick = {
+                if (it.key == "privacy") {
+                    privacyDialogIsVisible = true
+                } else if (it.key == "tocs") {
+                    tocsDialogIsVisible = true
+                }
+            },
             items = listOf(
                 SYListItemData(
                     label = "Privacy",
+                    key = "privacy",
                     leadingIcon = SYListItemData.SYListItemIcon(
                         icon = painterResource(id = UIKitR.drawable.baseline_help_24),
                         tint = MaterialTheme.colorScheme.primary
@@ -108,7 +133,8 @@ private fun AccountScreenContent(
                     )
                 ),
                 SYListItemData(
-                    label = "About spentify",
+                    label = "Terms & Conditions",
+                    key = "tocs",
                     leadingIcon = SYListItemData.SYListItemIcon(
                         icon = painterResource(id = UIKitR.drawable.baseline_help_24),
                         tint = MaterialTheme.colorScheme.primary
