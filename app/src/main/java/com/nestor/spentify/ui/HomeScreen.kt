@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import com.nestor.account.ui.AccountScreen
 import com.nestor.dashboard.ui.DashboardScreen
 import com.nestor.uikit.statusbar.SYStatusBar
 import com.nestor.uikit.statusbar.StatusBarType
@@ -61,8 +62,8 @@ fun HomeScreen(statusBarType: StatusBarType) {
                         .padding(LocalSYPadding.current.screenHorizontalPadding)
                 )
 
-                2 -> Text(
-                    text = "Account", modifier = Modifier
+                2 -> AccountScreen(
+                    modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues)
                         .padding(LocalSYPadding.current.screenHorizontalPadding)

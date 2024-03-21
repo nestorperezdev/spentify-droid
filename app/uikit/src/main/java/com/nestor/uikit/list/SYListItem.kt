@@ -22,7 +22,6 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,13 +32,7 @@ import com.nestor.uikit.SpentifyTheme
 @Composable
 fun SYListItem(
     modifier: Modifier = Modifier,
-    label: String,
-    leadingIconTint: Color = MaterialTheme.colorScheme.primary,
-    leadingForegroundTint: Color? = leadingIconTint.copy(alpha = 0.05f),
-    leadingIcon: Painter? = null,
-    trailingIconTint: Color = MaterialTheme.colorScheme.onBackground,
-    trailingForegroundTint: Color? = null,
-    trailingIcon: Painter? = null,
+    item: SYListItemData,
 ) {
     Box(
         modifier = modifier
@@ -50,54 +43,49 @@ fun SYListItem(
                 color = Color(0xFFC9C9C9),
                 shape = MaterialTheme.shapes.large
             )
-            .clickable {  }
+            .clickable { }
     ) {
         Row(
             modifier = Modifier.fillMaxSize(),
             verticalAlignment = CenterVertically
         ) {
             Spacer(modifier = Modifier.width(24.dp))
-            leadingIcon?.let { painter ->
-                Box(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .size(42.dp)
-                        .background(leadingForegroundTint ?: Color.Transparent),
-                    contentAlignment = Center
-                ) {
-                    Icon(
-                        painter = painter,
-                        contentDescription = null,
-                        tint = leadingIconTint,
-                        modifier = Modifier.size(22.dp)
-                    )
-                }
+            item.leadingIcon?.let { icon ->
+                SYItemIcon(icon = icon)
                 Spacer(modifier = Modifier.width(24.dp))
             }
             Text(
-                text = label,
+                text = item.label,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.W300
             )
             Spacer(modifier = Modifier.weight(1f))
-            trailingIcon?.let { painter ->
-                Box(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .size(42.dp)
-                        .background(trailingForegroundTint ?: Color.Transparent),
-                    contentAlignment = Center
-                ) {
-                    Icon(
-                        painter = painter,
-                        contentDescription = null,
-                        tint = trailingIconTint,
-                        modifier = Modifier.size(22.dp)
-                    )
-                }
+            item.trailingIcon?.let { icon ->
+                SYItemIcon(icon = icon)
                 Spacer(modifier = Modifier.width(24.dp))
             }
         }
+    }
+}
+
+@Composable
+private fun SYItemIcon(
+    modifier: Modifier = Modifier,
+    icon: SYListItemData.SYListItemIcon,
+) {
+    Box(
+        modifier = modifier
+            .clip(CircleShape)
+            .size(42.dp)
+            .background(icon.foregroundTint ?: Color.Transparent),
+        contentAlignment = Center
+    ) {
+        Icon(
+            painter = icon.icon,
+            contentDescription = null,
+            tint = icon.tint,
+            modifier = Modifier.size(22.dp)
+        )
     }
 }
 
@@ -107,9 +95,18 @@ private fun SYListItemPreview() {
     SpentifyTheme {
         SYListItem(
             modifier = Modifier.padding(16.dp),
-            label = "Label",
-            leadingIcon = painterResource(id = R.drawable.baseline_home_24),
-            trailingIcon = painterResource(id = R.drawable.baseline_arrow_forward_ios_24)
+            item = SYListItemData(
+                label = "Label",
+                leadingIcon = SYListItemData.SYListItemIcon(
+                    icon = painterResource(id = R.drawable.baseline_home_24),
+                    tint = MaterialTheme.colorScheme.primary
+                ),
+                trailingIcon = SYListItemData.SYListItemIcon(
+                    icon = painterResource(id = R.drawable.baseline_arrow_forward_ios_24),
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    foregroundTint = null
+                )
+            )
         )
     }
 }

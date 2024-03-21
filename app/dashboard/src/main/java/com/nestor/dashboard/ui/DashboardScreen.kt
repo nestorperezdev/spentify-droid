@@ -25,7 +25,9 @@ import com.nestor.dashboard.ui.summarytiles.SummaryTilesScreen
 import com.nestor.schema.utils.ResponseWrapper
 import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.button.SYAlternativeButton
+import com.nestor.uikit.list.SYList
 import com.nestor.uikit.list.SYListItem
+import com.nestor.uikit.list.SYListItemData
 import com.nestor.uikit.loading.ShimmerSkeletonBox
 import com.nestor.uikit.loading.ShimmerSkeletonDoubleLine
 import com.nestor.uikit.statusbar.SYStatusBar
@@ -83,15 +85,35 @@ private fun DashboardScreenContent(
             modifier = Modifier.padding(top = 20.dp),
             verticalArrangement = spacedBy(20.dp)
         ) {
-            SYListItem(
-                label = "Set a savings goal",
-                trailingIcon = painterResource(id = R.drawable.baseline_arrow_forward_ios_24),
-                leadingIcon = painterResource(id = R.drawable.baseline_savings_24)
+            SYList(
+                items = listOf(
+                    SYListItemData(
+                        label = "Set a savings goal",
+                        leadingIcon = SYListItemData.SYListItemIcon(
+                            icon = painterResource(id = R.drawable.baseline_savings_24),
+                            tint = MaterialTheme.colorScheme.primary,
+                        ),
+                        trailingIcon = SYListItemData.SYListItemIcon(
+                            icon = painterResource(id = R.drawable.baseline_arrow_forward_ios_24),
+                            tint = MaterialTheme.colorScheme.onSurface,
+                            foregroundTint = null
+                        ),
+                    )
+                )
             )
             SYListItem(
-                label = "Review your monthly report",
-                trailingIcon = painterResource(id = R.drawable.baseline_arrow_forward_ios_24),
-                leadingIcon = painterResource(id = R.drawable.baseline_space_dashboard_24)
+                item = SYListItemData(
+                    label = "Review your monthly report",
+                    leadingIcon = SYListItemData.SYListItemIcon(
+                        icon = painterResource(id = R.drawable.baseline_space_dashboard_24),
+                        tint = MaterialTheme.colorScheme.primary,
+                    ),
+                    trailingIcon = SYListItemData.SYListItemIcon(
+                        icon = painterResource(id = R.drawable.baseline_arrow_forward_ios_24),
+                        tint = MaterialTheme.colorScheme.onSurface,
+                        foregroundTint = null
+                    )
+                )
             )
         }
         Spacer(modifier = Modifier.height(36.dp))
@@ -100,11 +122,19 @@ private fun DashboardScreenContent(
             style = MaterialTheme.typography.titleSmall
         )
         SYListItem(
-            label = "Manage your categories",
-            trailingIcon = painterResource(id = R.drawable.baseline_arrow_forward_ios_24),
-            leadingIcon = painterResource(id = R.drawable.baseline_category_24),
-            leadingIconTint = MaterialTheme.colorScheme.onTertiary,
-            modifier = Modifier.padding(top = 20.dp)
+            modifier = Modifier.padding(top = 20.dp),
+            item = SYListItemData(
+                label = "Manage your categories",
+                leadingIcon = SYListItemData.SYListItemIcon(
+                    icon = painterResource(id = R.drawable.baseline_category_24),
+                    tint = MaterialTheme.colorScheme.onTertiary,
+                ),
+                trailingIcon = SYListItemData.SYListItemIcon(
+                    icon = painterResource(id = R.drawable.baseline_arrow_forward_ios_24),
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    foregroundTint = null
+                )
+            )
         )
     }
 }

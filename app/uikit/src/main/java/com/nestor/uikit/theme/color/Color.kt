@@ -8,6 +8,7 @@ val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)
 
 internal val Blue80 = Color(0xFF0066F6)
+val Blue50 = Color(0xFF5299FF)
 internal val Blue10 = Color(0xFF001533)
 val Pink40 = Color(0xFF7D5260)
 val warningLight = Color(0xFFFF647C)
