@@ -29,9 +29,8 @@ import com.nestor.uikit.list.SYList
 import com.nestor.uikit.list.SYListItem
 import com.nestor.uikit.list.SYListItemData
 import com.nestor.uikit.loading.ShimmerSkeletonBox
-import com.nestor.uikit.loading.ShimmerSkeletonDoubleLine
-import com.nestor.uikit.statusbar.SYStatusBar
 import com.nestor.uikit.statusbar.StatusBarType
+import com.nestor.uikit.statusbar.TopBarTitle
 import com.nestor.uikit.theme.spacing.LocalSYPadding
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -44,6 +43,7 @@ fun DashboardScreen(
     DashboardScreenContent(
         modifier = modifier,
         summaryState = viewModel.summary,
+        userDetailsState = viewModel.userDetails
     )
 }
 
@@ -51,11 +51,26 @@ fun DashboardScreen(
 private fun DashboardScreenContent(
     modifier: Modifier = Modifier,
     summaryState: StateFlow<ResponseWrapper<DailySummary>>,
+    userDetailsState: StateFlow<ResponseWrapper<UserDetails>>
 ) {
+    val userDetailResponse = userDetailsState.collectAsState().value
     val summaryWrapper = summaryState.collectAsState().value
     Column(
         modifier = modifier.verticalScroll(rememberScrollState())
     ) {
+        val statusBarType = if (userDetailResponse.body != null) {
+            val details = userDetailResponse.body!!
+            details.dailyPhrase?.let { daily ->
+                StatusBarType.TitleAndSubtitle(
+                    title = stringResource(R.string.hello, details.userName),
+                    subtitle = daily
+                )
+            } ?: StatusBarType.LeftTitle(stringResource(R.string.hello, details.userName))
+        } else {
+            StatusBarType.LoadingDoubleLineStatusBar
+        }
+        Spacer(modifier = Modifier.height(40.dp))
+        TopBarTitle(barType = statusBarType, startPadding = 0.dp)
         Spacer(modifier = Modifier.height(16.dp))
         if (summaryWrapper.isLoading) {
             ShimmerSkeletonBox()
@@ -158,6 +173,14 @@ private fun DashboardScreenContentPrev() {
                             dailyAverageExpense = 123.10,
                         )
                     )
+                ),
+                userDetailsState = MutableStateFlow(
+                    ResponseWrapper.success(
+                        UserDetails(
+                            userName = "Nestor",
+                            dailyPhrase = "You are doing great!"
+                        )
+                    )
                 )
             )
         }
@@ -174,6 +197,7 @@ private fun DashboardScreenContentLoadingPrev() {
                 modifier = Modifier
                     .padding(it)
                     .padding(LocalSYPadding.current.screenHorizontalPadding),
+                userDetailsState = MutableStateFlow(ResponseWrapper.loading())
             )
         }
     }

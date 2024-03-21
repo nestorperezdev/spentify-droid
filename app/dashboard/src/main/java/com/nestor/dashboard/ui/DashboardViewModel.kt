@@ -34,30 +34,10 @@ class DashboardViewModel @Inject constructor(
     private val dashboardRepository: DashboardRepository,
     private val coroutineContextProvider: CoroutineContextProvider,
     private val currencyRepository: CurrencyRepository,
-    private val statusBarRepository: StatusBarRepository,
-    @ApplicationContext private val context: Context
 ) : ViewModel() {
     val userDetails: StateFlow<ResponseWrapper<UserDetails>> =
         dashboardRepository.fetchDashboardInfo().map {
             it.mapBody { UserDetails(it.userName, it.dailyPhrase) }
-        }.onEach { detailsWrapper ->
-            if (detailsWrapper.isLoading) {
-                statusBarRepository.updateStatusBar(StatusBarType.LoadingDoubleLineStatusBar)
-            } else {
-                detailsWrapper.body?.let { details ->
-                    details.dailyPhrase?.let {
-                        statusBarRepository.updateStatusBar(
-                            StatusBarType.TitleAndSubtitle(
-                                formatStr(R.string.hello, details.userName), it
-                            )
-                        )
-                    } ?: run {
-                        statusBarRepository.updateStatusBar(
-                            StatusBarType.LeftTitle(formatStr(R.string.hello, details.userName))
-                        )
-                    }
-                }
-            }
         }.stateIn(viewModelScope, SharingStarted.Lazily, ResponseWrapper.loading())
     private val _userCurrency: StateFlow<ResponseWrapper<UserCurrency>> =
         authRepository.userDetails()
@@ -121,9 +101,5 @@ class DashboardViewModel @Inject constructor(
         viewModelScope.launch(coroutineContextProvider.io()) {
             authRepository.logout()
         }
-    }
-
-    private fun formatStr(resource: Int, arg: String): String {
-        return this.context.getString(resource, arg)
     }
 }

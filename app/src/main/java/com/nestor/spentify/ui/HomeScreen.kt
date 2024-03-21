@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeScreen(statusBarType: StatusBarType) {
+fun HomeScreen(statusBarType: StatusBarType?) {
     val currentItem = remember { mutableStateOf(NavItems.Home) }
     val pagerState = rememberPagerState { 3 }
     val coroutineScope = rememberCoroutineScope()
@@ -35,7 +35,7 @@ fun HomeScreen(statusBarType: StatusBarType) {
         }
     }
     Scaffold(
-        topBar = { SYStatusBar(statusBarType) },
+        topBar = { statusBarType?.let { SYStatusBar(it) } },
         bottomBar = {
             BottomNavBar(selectedItem = currentItem, onNavItemClicked = {
                 currentItem.value = it

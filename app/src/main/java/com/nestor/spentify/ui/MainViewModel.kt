@@ -36,7 +36,7 @@ class MainViewModel @Inject constructor(
         }
     }.stateIn(viewModelScope, SharingStarted.Lazily, AppNavigationGraph.Splash.route)
 
-    val statusBarType: StateFlow<StatusBarType> = statusBarRepository.statusBarType()
+    val statusBarType: StateFlow<StatusBarType?> = statusBarRepository.statusBarType()
 
     fun onOnboardingFinished() {
         viewModelScope.launch(dispatcherProvider.io()) {

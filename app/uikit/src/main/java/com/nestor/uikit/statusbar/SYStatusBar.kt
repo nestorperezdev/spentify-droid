@@ -2,6 +2,7 @@ package com.nestor.uikit.statusbar
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -9,22 +10,28 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.button.SYTextButton
 import com.nestor.uikit.loading.ShimmerSkeletonDoubleLine
+import com.nestor.uikit.theme.spacing.LocalSYPadding
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SYStatusBar(barType: StatusBarType) {
+fun SYStatusBar(
+    barType: StatusBarType,
+) {
     Column {
-        val topPadding = when(barType.topPadding) {
+        val topPadding = when (barType.topPadding) {
             StatusTopPadding.Big -> {
                 40.dp
             }
+
             StatusTopPadding.None -> {
                 0.dp
             }
@@ -32,31 +39,7 @@ fun SYStatusBar(barType: StatusBarType) {
         TopAppBar(
             modifier = Modifier.padding(top = topPadding),
             title = {
-                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    if (barType is StatusBarType.LoadingDoubleLineStatusBar) {
-                        ShimmerSkeletonDoubleLine()
-                    }
-                    barType.title?.let {
-                        Text(
-                            text = it.title,
-                            textAlign = it.alignment,
-                            style = it.style.getStyleFromStatusBarTextStyle(),
-                            modifier = Modifier
-                                .padding(start = 12.dp)
-                                .fillMaxWidth()
-                        )
-                    }
-                    barType.subtitle?.let {
-                        Text(
-                            text = it.title,
-                            textAlign = it.alignment,
-                            style = it.style.getStyleFromStatusBarTextStyle(),
-                            modifier = Modifier
-                                .padding(start = 12.dp)
-                                .fillMaxWidth()
-                        )
-                    }
-                }
+                TopBarTitle(barType)
             },
             navigationIcon = {
                 barType.navigationIcon?.let { icon ->
@@ -71,6 +54,35 @@ fun SYStatusBar(barType: StatusBarType) {
                 }
             }
         )
+    }
+}
+
+@Composable
+fun TopBarTitle(barType: StatusBarType, startPadding: Dp = 12.dp) {
+    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        if (barType is StatusBarType.LoadingDoubleLineStatusBar) {
+            ShimmerSkeletonDoubleLine()
+        }
+        barType.title?.let {
+            Text(
+                text = it.title,
+                textAlign = it.alignment,
+                style = it.style.getStyleFromStatusBarTextStyle(),
+                modifier = Modifier
+                    .padding(start = startPadding)
+                    .fillMaxWidth()
+            )
+        }
+        barType.subtitle?.let {
+            Text(
+                text = it.title,
+                textAlign = it.alignment,
+                style = it.style.getStyleFromStatusBarTextStyle(),
+                modifier = Modifier
+                    .padding(start = startPadding)
+                    .fillMaxWidth()
+            )
+        }
     }
 }
 

@@ -8,12 +8,12 @@ import javax.inject.Inject
 
 
 class StatusBarRepositoryImpl @Inject constructor() : StatusBarRepository {
-    private val statusBarTypeFlow: MutableStateFlow<StatusBarType> =
-        MutableStateFlow(StatusBarType.LoadingDoubleLineStatusBar)
+    private val statusBarTypeFlow: MutableStateFlow<StatusBarType?> =
+        MutableStateFlow(null)
 
-    override fun updateStatusBar(statusBar: StatusBarType) {
+    override fun updateStatusBar(statusBar: StatusBarType?) {
         statusBarTypeFlow.update { statusBar }
     }
 
-    override fun statusBarType(): StateFlow<StatusBarType> = statusBarTypeFlow
+    override fun statusBarType(): StateFlow<StatusBarType?> = statusBarTypeFlow
 }

@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 
 interface StatusBarRepository {
-    fun updateStatusBar(statusBar: StatusBarType)
-    fun statusBarType(): StateFlow<StatusBarType>
+    fun updateStatusBar(statusBar: StatusBarType?)
+    fun statusBarType(): StateFlow<StatusBarType?>
 }
