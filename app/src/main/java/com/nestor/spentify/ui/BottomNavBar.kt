@@ -19,17 +19,20 @@ object NavItems {
     val Home = SYBottomNavBarData(
         iconResource = R.drawable.baseline_home_24,
         text = "Home",
-        route = AppNavigationGraph.Home.route
+        route = AppNavigationGraph.Home.route,
+        ordinal = 0
     )
     val Expenses = SYBottomNavBarData(
         iconResource = R.drawable.baseline_receipt_long_24,
         text = "Expenses",
-        route = ""
+        route = "",
+        ordinal = 1
     )
     val Account = SYBottomNavBarData(
         iconResource = R.drawable.baseline_manage_accounts_24,
         text = "Account",
-        route = ""
+        route = "",
+        ordinal = 2
     )
 }
 
@@ -38,13 +41,13 @@ val itemList = listOf(NavItems.Home, NavItems.Expenses, NavItems.Account)
 @Composable
 fun BottomNavBar(
     modifier: Modifier = Modifier,
-    onNavItemClicked: (String) -> Unit = {},
+    onNavItemClicked: (SYBottomNavBarData) -> Unit = {},
     selectedItem: MutableState<SYBottomNavBarData> = remember { mutableStateOf(NavItems.Home) }
 ) {
     SYBottomNavigationBar(
         items = itemList,
         onNavItemClicked = {
-            onNavItemClicked(it.route)
+            onNavItemClicked(it)
             selectedItem.value = it
         },
         currentActiveItem = selectedItem.value,

@@ -87,22 +87,26 @@ private fun SYBottomNavigationBarPreview() {
         SYBottomNavBarData(
             "Home",
             androidx.core.R.drawable.ic_call_answer,
-            "Home"
+            "Home",
+            0
         ),
         SYBottomNavBarData(
             "Expenses",
             androidx.core.R.drawable.ic_call_decline,
-            "Expenses"
+            "Expenses",
+            1
         ),
         SYBottomNavBarData(
             "Monthly Report",
             androidx.core.R.drawable.ic_call_answer_video_low,
-            "Monthly"
+            "Monthly",
+            2
         ),
         SYBottomNavBarData(
             "Account",
             androidx.core.R.drawable.ic_call_decline_low,
-            "account"
+            "account",
+            3
         ),
     )
     var activeItem by remember { mutableStateOf(items.first()) }
