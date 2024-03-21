@@ -1,5 +1,6 @@
 package com.nestor.uikit.list
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
@@ -10,7 +11,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun SYList(
     modifier: Modifier = Modifier,
-    items: List<SYListItemData>
+    items: List<SYListItemData>,
+    onItemClick: (item: SYListItemData) -> Unit = {}
 ) {
     Column(
         modifier = modifier,
@@ -18,17 +20,7 @@ fun SYList(
         verticalArrangement = spacedBy(20.dp)
     ) {
         items.forEach { item ->
-            SYListItem(item = item)
+            SYListItem(item = item, modifier = Modifier.clickable { onItemClick(item) })
         }
     }
-    /*LazyColumn(
-        modifier = modifier,
-        horizontalAlignment = CenterHorizontally,
-        verticalArrangement = spacedBy(20.dp),
-        userScrollEnabled = false
-    ) {
-        items(items.size, key = { items[it].key }) { index ->
-            SYListItem(item = items[index])
-        }
-    }*/
 }

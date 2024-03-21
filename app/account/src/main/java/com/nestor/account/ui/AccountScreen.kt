@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.nestor.uikit.R as UIKitR
 import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.list.SYList
@@ -30,17 +31,22 @@ import com.nestor.uikit.theme.color.Blue50
 import com.nestor.uikit.theme.spacing.LocalSYPadding
 
 @Composable
-fun AccountScreen(modifier: Modifier = Modifier) {
+fun AccountScreen(
+    modifier: Modifier = Modifier,
+    vm: AccountViewModel = hiltViewModel()
+) {
     AccountScreenContent(
         modifier = modifier,
-        username = "Nestor"
+        username = "Nestor",
+        onLogoutClick = vm::logout
     )
 }
 
 @Composable
 private fun AccountScreenContent(
     modifier: Modifier = Modifier,
-    username: String
+    username: String,
+    onLogoutClick: () -> Unit = {}
 ) {
     Column(
         modifier
@@ -117,13 +123,19 @@ private fun AccountScreenContent(
         )
         Spacer(modifier = Modifier.height(48.dp))
         SYList(
+            onItemClick = {
+                if (it.key == "logout") {
+                    onLogoutClick()
+                }
+            },
             items = listOf(
                 SYListItemData(
                     label = "Logout",
                     trailingIcon = SYListItemData.SYListItemIcon(
                         icon = painterResource(id = UIKitR.drawable.baseline_exit_to_app_24),
                         tint = MaterialTheme.colorScheme.error
-                    )
+                    ),
+                    key = "logout",
                 ),
                 SYListItemData(
                     label = "Delete Account",

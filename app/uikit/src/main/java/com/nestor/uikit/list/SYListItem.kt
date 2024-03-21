@@ -43,7 +43,6 @@ fun SYListItem(
                 color = Color(0xFFC9C9C9),
                 shape = MaterialTheme.shapes.large
             )
-            .clickable { }
     ) {
         Row(
             modifier = Modifier.fillMaxSize(),
