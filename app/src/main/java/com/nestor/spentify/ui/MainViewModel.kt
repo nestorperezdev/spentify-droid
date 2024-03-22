@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.nestor.auth.data.AuthRepository
 import com.nestor.common.data.statusbar.StatusBarRepository
 import com.nestor.database.data.user.UserEntity
-import com.nestor.onboarding.data.datasource.OnboardingLocalDataSource
+import com.nestor.onboarding.data.repository.OnboardingRepository
 import com.nestor.spentify.navigation.AppNavigationGraph
 import com.nestor.uikit.statusbar.StatusBarType
 import com.nestor.uikit.util.CoroutineContextProvider
@@ -20,12 +20,12 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     authRepository: AuthRepository,
-    private val onboardingLocalDataSource: OnboardingLocalDataSource,
+    private val onboardingRepository: OnboardingRepository,
     private val dispatcherProvider: CoroutineContextProvider,
     statusBarRepository: StatusBarRepository
 ) : ViewModel() {
     val navRoute: StateFlow<String> = combine(
-        authRepository.userDetails(), onboardingLocalDataSource.isOnboardingComplete()
+        authRepository.userDetails(), onboardingRepository.isOnboardingComplete()
     ) { authState, onboardingState ->
         when {
             authState.isLoading -> AppNavigationGraph.Splash.route
@@ -40,7 +40,7 @@ class MainViewModel @Inject constructor(
 
     fun onOnboardingFinished() {
         viewModelScope.launch(dispatcherProvider.io()) {
-            onboardingLocalDataSource.setOnBoardingComplete()
+            onboardingRepository.setOnBoardingComplete()
         }
     }
 }

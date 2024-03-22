@@ -10,8 +10,6 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.network.okHttpClient
 import com.nestor.auth.data.datasource.AuthTokenInterceptor
-import com.nestor.onboarding.data.datasource.OnboardingLocalDataSource
-import com.nestor.onboarding.data.datasource.OnboardingLocalDataSourceImpl
 import com.nestor.spentify.R
 import com.nestor.uikit.util.CoroutineContextProvider
 import com.nestor.uikit.util.CoroutineContextProviderImpl
@@ -31,12 +29,10 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 abstract class AppModule {
     @Binds
+    @Singleton
     abstract fun coroutineContextProvider(
         contextProviderImpl: CoroutineContextProviderImpl
     ): CoroutineContextProvider
-
-    @Binds
-    abstract fun bindsOnboardingLocalDataSource(dataSourceImpl: OnboardingLocalDataSourceImpl): OnboardingLocalDataSource
 
     companion object {
         @Provides

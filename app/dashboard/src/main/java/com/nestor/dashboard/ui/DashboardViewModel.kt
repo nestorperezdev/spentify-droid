@@ -1,33 +1,28 @@
 package com.nestor.dashboard.ui
 
-import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nestor.auth.data.AuthRepository
 import com.nestor.common.data.CurrencyRepository
-import com.nestor.common.data.statusbar.StatusBarRepository
-import com.nestor.dashboard.R
 import com.nestor.dashboard.data.DashboardRepository
 import com.nestor.schema.utils.ResponseWrapper
 import com.nestor.schema.utils.combineTransform
 import com.nestor.schema.utils.mapBody
-import com.nestor.uikit.statusbar.StatusBarType
 import com.nestor.uikit.util.CoroutineContextProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+private const val TAG = "DashboardViewModel"
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     private val authRepository: AuthRepository,
@@ -72,34 +67,14 @@ class DashboardViewModel @Inject constructor(
             }.stateIn(viewModelScope, SharingStarted.Lazily, ResponseWrapper.loading())
 
     init {
+        Log.i(TAG, "init: ")
         viewModelScope.launch(coroutineContextProvider.io()) {
             userDetails.collect()
         }
     }
 
-    fun onDifferentCurrencySelect() {
-        viewModelScope.launch(coroutineContextProvider.io()) {
-            currencyRepository.fetchCurrencies()
-                .map { it.body }
-                .filterNotNull()
-                .collect { currencies ->
-                    val currentCurrency = _userCurrency.value.body?.code ?: "USD"
-                    var currencyIndex =
-                        currencies.indexOfFirst { current -> current.code == currentCurrency }
-                    if (currencyIndex + 1 >= currencies.size) {
-                        currencyIndex = 0
-                    } else {
-                        currencyIndex++
-                    }
-                    val selectedCurrency = currencies[currencyIndex]
-                    authRepository.updateUserCurrency(selectedCurrency.code)
-                }
-        }
-    }
-
-    fun logout() {
-        viewModelScope.launch(coroutineContextProvider.io()) {
-            authRepository.logout()
-        }
+    override fun onCleared() {
+        Log.i(TAG, "onCleared: ")
+        super.onCleared()
     }
 }
