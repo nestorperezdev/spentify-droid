@@ -22,7 +22,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeScreen(statusBarType: StatusBarType?) {
+fun HomeScreen(
+    statusBarType: StatusBarType?,
+    onNewExpenseClick: () -> Unit = {}
+) {
     val currentItem = remember { mutableStateOf(NavItems.Home) }
     val pagerState = rememberPagerState { 3 }
     val coroutineScope = rememberCoroutineScope()
@@ -52,7 +55,8 @@ fun HomeScreen(statusBarType: StatusBarType?) {
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues)
-                        .padding(LocalSYPadding.current.screenHorizontalPadding)
+                        .padding(LocalSYPadding.current.screenHorizontalPadding),
+                    onNewExpenseClick = onNewExpenseClick
                 )
 
                 1 -> Text(

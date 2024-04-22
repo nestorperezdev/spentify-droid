@@ -29,6 +29,7 @@ import androidx.navigation.compose.rememberNavController
 import com.nestor.auth.ui.authScreen
 import com.nestor.auth.ui.navigation.AuthGraph
 import com.nestor.dashboard.ui.DashboardScreen
+import com.nestor.expenses.ui.NewExpenseScreen
 import com.nestor.onboarding.ui.OnboardingScreen
 import com.nestor.spentify.navigation.AppHomeNavigationGraph
 import com.nestor.spentify.navigation.AppNavigationGraph
@@ -70,7 +71,16 @@ fun MainScreen(mainViewModel: MainViewModel = hiltViewModel()) {
             })
         }
         composable(route = AppNavigationGraph.Home.route) {
-            HomeScreen(mainViewModel.statusBarType.collectAsState().value)
+            HomeScreen(mainViewModel.statusBarType.collectAsState().value,
+                onNewExpenseClick = {
+                    navController.navigate(AppNavigationGraph.NewExpense.route)
+                }
+            )
+        }
+        composable(route = AppNavigationGraph.NewExpense.route) {
+            NewExpenseScreen {
+                navController.popBackStack()
+            }
         }
     }
 }

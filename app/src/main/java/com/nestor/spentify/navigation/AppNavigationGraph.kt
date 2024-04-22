@@ -5,6 +5,7 @@ sealed class AppNavigationGraph(val route: String) {
     object Home : AppNavigationGraph("home")
     object Onboarding : AppNavigationGraph("onboarding")
     object Splash : AppNavigationGraph("splash")
+    object NewExpense : AppNavigationGraph("newexpense")
 }
 
 sealed class AppHomeNavigationGraph(val route: String) {

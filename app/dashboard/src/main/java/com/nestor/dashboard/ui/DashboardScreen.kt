@@ -38,12 +38,14 @@ import kotlinx.coroutines.flow.StateFlow
 @Composable
 fun DashboardScreen(
     modifier: Modifier = Modifier,
-    viewModel: DashboardViewModel = hiltViewModel()
+    viewModel: DashboardViewModel = hiltViewModel(),
+    onNewExpenseClick: () -> Unit = {}
 ) {
     DashboardScreenContent(
         modifier = modifier,
         summaryState = viewModel.summary,
-        userDetailsState = viewModel.userDetails
+        userDetailsState = viewModel.userDetails,
+        onNewExpenseClick = onNewExpenseClick
     )
 }
 
@@ -51,7 +53,8 @@ fun DashboardScreen(
 private fun DashboardScreenContent(
     modifier: Modifier = Modifier,
     summaryState: StateFlow<ResponseWrapper<DailySummary>>,
-    userDetailsState: StateFlow<ResponseWrapper<UserDetails>>
+    userDetailsState: StateFlow<ResponseWrapper<UserDetails>>,
+    onNewExpenseClick: () -> Unit = {}
 ) {
     val userDetailResponse = userDetailsState.collectAsState().value
     val summaryWrapper = summaryState.collectAsState().value
@@ -82,7 +85,7 @@ private fun DashboardScreenContent(
         Spacer(modifier = Modifier.height(30.dp))
         SYAlternativeButton(
             modifier = Modifier.fillMaxWidth(),
-            onClick = { /*TODO*/ },
+            onClick = { onNewExpenseClick() },
             buttonText = "Register New Expense",
             trailingIcon = {
                 Icon(

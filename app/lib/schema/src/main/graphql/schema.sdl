@@ -10,6 +10,8 @@ type Currency {
 type CurrencyInfo {
   code: String!
 
+  exchangeId: String!
+
   """
   iso 8601
   """
@@ -40,6 +42,28 @@ type DashboardMonthlySummary {
   totalExpenses: Float!
 }
 
+type ExpenseDetail {
+  currency: CurrencyInfo!
+
+  description: String!
+
+  usdValue: Float!
+
+  value: Float!
+}
+
+input ExpenseInput {
+  currentExchangeId: String!
+
+  description: String!
+
+  value: Float!
+}
+
+type ExpenseList {
+  expenses: [ExpenseDetail!]!
+}
+
 """
 The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point).
 """
@@ -52,6 +76,8 @@ type LoginToken {
 }
 
 type Mutation {
+  createExpense(input: ExpenseInput!): ExpenseDetail!
+
   forgotPassword(username: String!): RecoverPasswordStatus!
 
   login(password: String!, username: String!): LoginToken!
@@ -65,6 +91,10 @@ type Query {
   currencyInfo: Currency!
 
   dashboard: Dashboard!
+
+  expenseDetails(expenseId: String!): ExpenseDetail!
+
+  expensesList(month: Float!, year: Float!): ExpenseList!
 
   userDetails: User!
 }
