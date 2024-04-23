@@ -10,8 +10,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -19,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.nestor.expenses.R
 import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.button.SYButton
+import com.nestor.uikit.keyboard.SYKeyboard
 import com.nestor.uikit.statusbar.NavigationIcon
 import com.nestor.uikit.statusbar.SYStatusBar
 import com.nestor.uikit.statusbar.StatusBarType
@@ -29,11 +34,19 @@ fun NewExpenseScreen(
     viewModel: NewExpenseViewModel = hiltViewModel(),
     onNavBack: () -> Unit = {},
 ) {
-    NewExpenseScreenContent(onNavBack = onNavBack)
+    NewExpenseScreenContent(
+        onNavBack = onNavBack,
+        onKeyPressed = viewModel::onKeyPressed,
+        onSaveClick = viewModel::onSave
+    )
 }
 
 @Composable
-private fun NewExpenseScreenContent(onNavBack: () -> Unit = {}) {
+private fun NewExpenseScreenContent(
+    onNavBack: () -> Unit = {},
+    onKeyPressed: (Key) -> Unit = {},
+    onSaveClick: () -> Unit = {}
+) {
     Scaffold(topBar = { NewExpenseToolbar(onNavBack) }) {
         Column(
             modifier = Modifier
@@ -51,8 +64,9 @@ private fun NewExpenseScreenContent(onNavBack: () -> Unit = {}) {
             Spacer(modifier = Modifier.height(40.dp))
             Text(text = "USD 100.0 $", style = MaterialTheme.typography.titleLarge)
             Spacer(modifier = Modifier.weight(1f))
+            SYKeyboard(modifier = Modifier.fillMaxWidth(), onKeyPress = onKeyPressed)
             SYButton(
-                onClick = { /*TODO*/ },
+                onClick = onSaveClick,
                 buttonText = "Save",
                 modifier = Modifier.fillMaxWidth()
             )
@@ -74,6 +88,6 @@ private fun NewExpenseToolbar(onNavBack: () -> Unit) {
 @Composable
 private fun NewExpenseScreenContentPreview() {
     SpentifyTheme {
-        NewExpenseScreenContent()
+        NewExpenseScreenContent(onKeyPressed = {})
     }
 }
