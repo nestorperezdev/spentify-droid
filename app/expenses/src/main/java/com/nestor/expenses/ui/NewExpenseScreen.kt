@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -53,7 +54,9 @@ fun NewExpenseScreen(
         onSaveClick = viewModel::onSave,
         onAmountChanged = viewModel::onAmountChanged,
         amountField = viewModel.amount.collectAsState().value,
-        isLoading = viewModel.loadingState
+        isLoading = viewModel.loadingState,
+        descriptionText = viewModel.description.collectAsState().value,
+        onDescriptionChanged = viewModel::onDescriptionChanged
     )
 }
 
@@ -63,6 +66,8 @@ private fun NewExpenseScreenContent(
     onSaveClick: () -> Unit = {},
     amountField: FormFieldData,
     onAmountChanged: (String) -> Unit,
+    descriptionText: FormFieldData,
+    onDescriptionChanged: (String) -> Unit,
     isLoading: StateFlow<Boolean>
 ) {
     Scaffold(topBar = { NewExpenseToolbar(onNavBack) }) {
@@ -82,7 +87,7 @@ private fun NewExpenseScreenContent(
                 )
                 Spacer(modifier = Modifier.height(40.dp))
                 CompositionLocalProvider(LocalTextInputService provides LocalTextInputService.current) {
-                    TextField(
+                    OutlinedTextField(
                         value = amountField.value,
                         onValueChange = onAmountChanged,
                         prefix = {
@@ -99,9 +104,18 @@ private fun NewExpenseScreenContent(
                             imeAction = ImeAction.Done,
                             keyboardType = KeyboardType.Decimal
                         ),
-                        keyboardActions = KeyboardActions(onDone = { onSaveClick() })
+                        keyboardActions = KeyboardActions(onDone = { onSaveClick() }),
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
+                Spacer(modifier = Modifier.height(40.dp))
+                OutlinedTextField(
+                    value = descriptionText.value,
+                    onValueChange = onDescriptionChanged,
+                    label = { Text(stringResource(R.string.description)) },
+                    supportingText = { Text("${descriptionText.value.length} / 255") },
+                    modifier = Modifier.fillMaxWidth()
+                )
                 Spacer(modifier = Modifier.weight(1f))
                 SYButton(
                     onClick = onSaveClick,
@@ -132,7 +146,9 @@ private fun NewExpenseScreenContentPreview() {
         NewExpenseScreenContent(
             amountField = FormFieldData(""),
             onAmountChanged = {},
-            isLoading = MutableStateFlow(false)
+            isLoading = MutableStateFlow(false),
+            descriptionText = FormFieldData(""),
+            onDescriptionChanged = {}
         )
     }
 }

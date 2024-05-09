@@ -35,9 +35,17 @@ class NewExpenseViewModel @Inject constructor(
     val loadingState = _loadingState.asStateFlow()
     private val _dismissDialog = MutableStateFlow(false)
     val dismissDialog = _dismissDialog.asStateFlow()
+    private val _description = MutableStateFlow(FormFieldData(""))
+    val description = _description.asStateFlow()
 
     private fun isValidInput(input: String): Boolean {
         return inputRegex.matches(input)
+    }
+
+    fun onDescriptionChanged(text: String) {
+        if (text.length < 255) {
+            _description.update { it.copy(text) }
+        }
     }
 
     fun onSave() {
@@ -46,7 +54,7 @@ class NewExpenseViewModel @Inject constructor(
             //  todo: use a real exchange rate here!!
             val expenseInput = ExpenseInput(
                 currentExchangeId = "3bfa95b0-33c6-4ddd-bd24-4e6c84e8cca0",
-                description = "Description",
+                description = _description.value.value,
                 value = amount
             )
             _loadingState.update { true }
