@@ -1,8 +1,7 @@
-package com.nestor.auth.data.datasource
+package com.nestor.common.data.auth.datasource
 
 import com.apollographql.apollo3.api.http.HttpRequest
 import com.apollographql.apollo3.api.http.HttpResponse
-import com.apollographql.apollo3.network.http.HttpInterceptor
 import com.apollographql.apollo3.network.http.HttpInterceptorChain
 import javax.inject.Inject
 

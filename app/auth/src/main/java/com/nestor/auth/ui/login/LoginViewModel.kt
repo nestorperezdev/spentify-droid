@@ -3,7 +3,7 @@ package com.nestor.auth.ui.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nestor.auth.R
-import com.nestor.auth.data.AuthRepository
+import com.nestor.common.data.auth.AuthRepository
 import com.nestor.uikit.util.CoroutineContextProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

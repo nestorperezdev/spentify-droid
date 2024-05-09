@@ -60,7 +60,7 @@ dependencies {
 
     //modules
     implementation(project(":app:uikit"))
-    implementation(project(":app:auth"))
+    implementation(project(":app:common"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

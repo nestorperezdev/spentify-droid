@@ -1,24 +1,16 @@
 package com.nestor.dashboard.data
 
 import com.apollographql.apollo3.exception.ApolloNetworkException
-import com.nestor.auth.data.AuthRepository
-import com.nestor.auth.data.datasource.AuthLocalDataSource
-import com.nestor.dashboard.ui.UserDetails
+import com.nestor.common.data.auth.AuthRepository
+import com.nestor.common.data.auth.datasource.AuthLocalDataSource
 import com.nestor.database.data.dashboard.DashboardEntity
-import com.nestor.database.data.user.UserEntity
 import com.nestor.schema.utils.ResponseWrapper
-import com.nestor.uikit.util.CoroutineContextProvider
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.last
-import kotlinx.coroutines.flow.lastOrNull
 import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class DashboardRepositoryImpl @Inject constructor(

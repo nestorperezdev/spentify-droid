@@ -1,7 +1,7 @@
-package com.nestor.auth.data
+package com.nestor.common.data.auth
 
-import com.nestor.auth.data.datasource.AuthLocalDataSource
-import com.nestor.auth.data.datasource.AuthRemoteDataSource
+import com.nestor.common.data.auth.datasource.AuthLocalDataSource
+import com.nestor.common.data.auth.datasource.AuthRemoteDataSource
 import com.nestor.database.data.user.UserEntity
 import com.nestor.schema.UserDetailsQuery
 import com.nestor.schema.utils.ResponseWrapper
@@ -77,7 +77,6 @@ class AuthRepositoryImpl @Inject constructor(
         localDatasource.clearToken()
     }
 }
-
 private fun UserDetailsQuery.Data.userEntity(): UserEntity {
     return UserEntity(
         name = this.userDetails.user.name,

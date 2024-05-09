@@ -2,22 +2,17 @@ package com.nestor.expenses.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nestor.common.data.CurrencyRepository
+import com.nestor.common.data.currency.CurrencyRepository
 import com.nestor.dashboard.data.DashboardRepository
 import com.nestor.expenses.data.ExpenseRepository
-import com.nestor.schema.type.Currency
 import com.nestor.schema.type.ExpenseInput
-import com.nestor.schema.utils.ResponseWrapper
 import com.nestor.uikit.input.FormFieldData
 import com.nestor.uikit.util.CoroutineContextProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel

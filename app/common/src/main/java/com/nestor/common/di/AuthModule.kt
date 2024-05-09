@@ -1,13 +1,13 @@
-package com.nestor.auth.di
+package com.nestor.common.di
 
-import com.nestor.auth.data.AuthRepository
-import com.nestor.auth.data.AuthRepositoryImpl
-import com.nestor.auth.data.datasource.AuthLocalDataSource
-import com.nestor.auth.data.datasource.AuthLocalDataSourceImpl
-import com.nestor.auth.data.datasource.AuthRemoteDataSource
-import com.nestor.auth.data.datasource.AuthRemoteDataSourceImpl
-import com.nestor.auth.data.datasource.AuthTokenInterceptor
-import com.nestor.auth.data.datasource.AuthTokenInterceptorImpl
+import com.nestor.common.data.auth.AuthRepository
+import com.nestor.common.data.auth.AuthRepositoryImpl
+import com.nestor.common.data.auth.datasource.AuthLocalDataSource
+import com.nestor.common.data.auth.datasource.AuthLocalDataSourceImpl
+import com.nestor.common.data.auth.datasource.AuthRemoteDataSource
+import com.nestor.common.data.auth.datasource.AuthRemoteDataSourceImpl
+import com.nestor.common.data.auth.datasource.AuthTokenInterceptor
+import com.nestor.common.data.auth.datasource.AuthTokenInterceptorImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

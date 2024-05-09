@@ -3,8 +3,8 @@ package com.nestor.dashboard.ui
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nestor.auth.data.AuthRepository
-import com.nestor.common.data.CurrencyRepository
+import com.nestor.common.data.auth.AuthRepository
+import com.nestor.common.data.currency.CurrencyRepository
 import com.nestor.dashboard.data.DashboardRepository
 import com.nestor.schema.utils.ResponseWrapper
 import com.nestor.schema.utils.combineTransform

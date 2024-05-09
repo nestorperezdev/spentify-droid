@@ -1,4 +1,4 @@
-package com.nestor.auth.data.model
+package com.nestor.common.data.auth.model
 
 internal fun String.toUserClaim(): UserClaims {
     return when (this) {

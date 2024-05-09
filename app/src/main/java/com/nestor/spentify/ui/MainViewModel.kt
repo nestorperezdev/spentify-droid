@@ -2,7 +2,7 @@ package com.nestor.spentify.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nestor.auth.data.AuthRepository
+import com.nestor.common.data.auth.AuthRepository
 import com.nestor.common.data.statusbar.StatusBarRepository
 import com.nestor.database.data.user.UserEntity
 import com.nestor.onboarding.data.repository.OnboardingRepository

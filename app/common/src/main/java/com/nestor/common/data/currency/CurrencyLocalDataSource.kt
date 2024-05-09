@@ -1,4 +1,4 @@
-package com.nestor.common.data
+package com.nestor.common.data.currency
 
 import com.nestor.database.data.currency.CurrencyEntity
 import kotlinx.coroutines.flow.Flow

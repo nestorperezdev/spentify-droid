@@ -1,4 +1,4 @@
-package com.nestor.auth.data
+package com.nestor.common.data.auth
 
 import com.nestor.database.data.user.UserEntity
 import com.nestor.schema.ForgotPasswordMutation

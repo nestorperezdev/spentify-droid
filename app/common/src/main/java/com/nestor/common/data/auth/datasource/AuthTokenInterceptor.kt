@@ -1,4 +1,4 @@
-package com.nestor.auth.data.datasource
+package com.nestor.common.data.auth.datasource
 
 import com.apollographql.apollo3.network.http.HttpInterceptor
 

@@ -1,17 +1,15 @@
-package com.nestor.auth.data.datasource
+package com.nestor.common.data.auth.datasource
 
 import android.content.SharedPreferences
-import androidx.core.content.edit
 import com.auth0.android.jwt.JWT
-import com.nestor.auth.data.model.TokenPayload
-import com.nestor.auth.data.model.toUserClaim
+import com.nestor.common.data.auth.model.TokenPayload
+import com.nestor.common.data.auth.model.toUserClaim
 import com.nestor.database.data.encryptedpreferences.EncryptedPreferences
 import com.nestor.database.data.user.UserDao
 import com.nestor.database.data.user.UserEntity
 import com.nestor.uikit.util.CoroutineContextProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted

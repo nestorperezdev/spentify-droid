@@ -1,4 +1,4 @@
-package com.nestor.auth.data.model
+package com.nestor.common.data.auth.model
 
 import com.nestor.database.data.user.UserEntity
 

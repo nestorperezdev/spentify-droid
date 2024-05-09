@@ -1,11 +1,8 @@
-package com.nestor.auth.data.datasource
+package com.nestor.common.data.auth.datasource
 
-import com.nestor.auth.data.model.TokenPayload
+import com.nestor.common.data.auth.model.TokenPayload
 import com.nestor.database.data.user.UserEntity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
 
 interface AuthLocalDataSource {
     suspend fun clearUsers()

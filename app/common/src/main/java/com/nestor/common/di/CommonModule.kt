@@ -1,11 +1,11 @@
 package com.nestor.common.di
 
-import com.nestor.common.data.CurrencyLocalDataSource
-import com.nestor.common.data.CurrencyLocalDataSourceImpl
-import com.nestor.common.data.CurrencyRemoteDataSource
-import com.nestor.common.data.CurrencyRemoteDataSourceImpl
-import com.nestor.common.data.CurrencyRepository
-import com.nestor.common.data.CurrencyRepositoryImpl
+import com.nestor.common.data.currency.CurrencyLocalDataSource
+import com.nestor.common.data.currency.CurrencyLocalDataSourceImpl
+import com.nestor.common.data.currency.CurrencyRemoteDataSource
+import com.nestor.common.data.currency.CurrencyRemoteDataSourceImpl
+import com.nestor.common.data.currency.CurrencyRepository
+import com.nestor.common.data.currency.CurrencyRepositoryImpl
 import com.nestor.common.data.statusbar.StatusBarRepository
 import com.nestor.common.data.statusbar.StatusBarRepositoryImpl
 import dagger.Binds

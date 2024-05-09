@@ -9,7 +9,7 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.network.okHttpClient
-import com.nestor.auth.data.datasource.AuthTokenInterceptor
+import com.nestor.common.data.auth.datasource.AuthTokenInterceptor
 import com.nestor.spentify.R
 import com.nestor.uikit.util.CoroutineContextProvider
 import com.nestor.uikit.util.CoroutineContextProviderImpl

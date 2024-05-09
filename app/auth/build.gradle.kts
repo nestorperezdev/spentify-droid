@@ -42,9 +42,6 @@ android {
 }
 
 dependencies {
-    //jwt
-    implementation(libs.auth0.jwt.decode)
-
     implementation(libs.androidx.hilt.navigation)
     implementation(libs.hilt)
     kapt(libs.hiltCompiler)

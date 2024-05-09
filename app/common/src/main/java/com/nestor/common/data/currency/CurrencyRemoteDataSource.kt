@@ -1,4 +1,4 @@
-package com.nestor.common.data
+package com.nestor.common.data.currency
 
 import com.apollographql.apollo3.api.ApolloResponse
 import com.nestor.schema.CurrencyInfoQuery
