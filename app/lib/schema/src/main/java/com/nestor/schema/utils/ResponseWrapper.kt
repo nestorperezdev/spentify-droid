@@ -1,8 +1,11 @@
 package com.nestor.schema.utils
 
 data class ResponseWrapper<T>(
-    val isLoading: Boolean = false, val error: String? = null, val body: T? = null
+    val isLoading: Boolean = false,
+    val error: String? = null,
+    val body: T? = null,
 ) {
+    fun isSuccessful(): Boolean = body != null && error == null && !isLoading
     companion object {
         fun <T> loading(): ResponseWrapper<T> = ResponseWrapper(isLoading = true)
         fun <T> success(body: T): ResponseWrapper<T> = ResponseWrapper(body = body)

@@ -7,5 +7,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface DashboardRepository {
     fun fetchDashboardInfo(): Flow<ResponseWrapper<DashboardEntity>>
-    suspend fun refreshDashboardData(userEntity: UserEntity)
+    suspend fun refreshDashboardData()
 }

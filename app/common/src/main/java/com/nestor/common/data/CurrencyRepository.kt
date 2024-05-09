@@ -7,4 +7,5 @@ import kotlinx.coroutines.flow.Flow
 interface CurrencyRepository {
     fun fetchCurrencies(): Flow<ResponseWrapper<List<CurrencyEntity>>>
     fun fetchCurrencyByCode(code: String): Flow<ResponseWrapper<CurrencyEntity>>
+    fun fetchUserCurrency(): Flow<CurrencyEntity>
 }

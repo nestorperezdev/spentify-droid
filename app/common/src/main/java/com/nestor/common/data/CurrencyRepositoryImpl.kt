@@ -33,6 +33,10 @@ class CurrencyRepositoryImpl @Inject constructor(
             }
         }
 
+    override fun fetchUserCurrency(): Flow<CurrencyEntity> {
+        TODO("Not yet implemented")
+    }
+
     private suspend fun updateCurrencies() {
         val currencies = remoteDataSource.fetchCurrencies()
         currencies.body?.let {

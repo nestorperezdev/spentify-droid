@@ -1,0 +1,6 @@
+fragment expenseFragment on ExpenseDetail {
+    currency { ...currencyInfo }
+    description,
+    usdValue,
+    value
+}

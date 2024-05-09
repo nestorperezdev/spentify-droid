@@ -68,7 +68,10 @@ private val keyboardSymbols = listOf(
 
 
 @Composable
-fun SYKeyboard(modifier: Modifier = Modifier, onKeyPress: (Key) -> Unit) {
+fun SYKeyboard(
+    modifier: Modifier = Modifier,
+    onKeyPress: (Key) -> Unit
+) {
     val rippleEffect = rememberRipple(bounded = false)
     CompositionLocalProvider(LocalIndication provides rippleEffect) {
         Column(modifier = modifier.aspectRatio(3 / 4f)) {
