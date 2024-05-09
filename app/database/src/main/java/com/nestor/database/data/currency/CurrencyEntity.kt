@@ -13,4 +13,5 @@ data class CurrencyEntity(
     @ColumnInfo("last_update") val lastUpdate: Date,
     @ColumnInfo("symbol") val symbol: String,
     @ColumnInfo("usd_rate") val usdRate: Double,
+    @ColumnInfo("exchange_id") val exchangeId: String,
 )

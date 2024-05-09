@@ -10,6 +10,7 @@ import com.nestor.database.data.currency.CurrencyDao
 import com.nestor.database.data.dashboard.DashboardDao
 import com.nestor.database.data.encryptedpreferences.EncryptedPreferences
 import com.nestor.database.data.user.UserDao
+import com.nestor.database.migrations.Migration5to6
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,6 +27,7 @@ abstract class SpentifyDatabaseModule {
         @Provides
         fun providesDatabase(@ApplicationContext context: Context): SpentifyDatabase =
             Room.databaseBuilder(context, SpentifyDatabase::class.java, "spentify-db")
+                .addMigrations(Migration5to6())
                 .fallbackToDestructiveMigration()
                 .build()
 

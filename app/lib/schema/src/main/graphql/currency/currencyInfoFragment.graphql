@@ -3,5 +3,6 @@ fragment currencyInfo on CurrencyInfo {
     name,
     lastUpdate,
     symbol,
-    usdRate
+    usdRate,
+    exchangeId
 }

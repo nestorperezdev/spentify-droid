@@ -47,7 +47,8 @@ class CurrencyRepositoryImpl @Inject constructor(
                     name = currencyExchange.currencyInfo.name,
                     lastUpdate = parseISODate(currencyExchange.currencyInfo.lastUpdate) ?: Date(),
                     symbol = currencyExchange.currencyInfo.symbol,
-                    usdRate = currencyExchange.currencyInfo.usdRate
+                    usdRate = currencyExchange.currencyInfo.usdRate,
+                    exchangeId = currencyExchange.currencyInfo.exchangeId
                 )
             })
         }
