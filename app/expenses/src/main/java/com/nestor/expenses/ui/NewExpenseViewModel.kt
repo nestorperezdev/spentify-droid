@@ -1,9 +1,11 @@
 package com.nestor.expenses.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nestor.common.data.currency.CurrencyRepository
 import com.nestor.dashboard.data.DashboardRepository
+import com.nestor.database.data.currency.CurrencyEntity
 import com.nestor.expenses.data.ExpenseRepository
 import com.nestor.schema.type.ExpenseInput
 import com.nestor.uikit.input.FormFieldData
@@ -11,6 +13,10 @@ import com.nestor.uikit.util.CoroutineContextProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,6 +38,18 @@ class NewExpenseViewModel @Inject constructor(
     val dismissDialog = _dismissDialog.asStateFlow()
     private val _description = MutableStateFlow(FormFieldData(""))
     val description = _description.asStateFlow()
+    private val _selectedCurrency = MutableStateFlow<CurrencyEntity?>(null)
+    val selectedCurrency = _selectedCurrency.asStateFlow()
+
+    init {
+        viewModelScope.launch(coroutineDispatcher.io()) {
+            currencyRepository.fetchCurrentUserCurrency()
+                .filterNotNull()
+                .collect { currency ->
+                    _selectedCurrency.update { currency }
+                }
+        }
+    }
 
     private fun isValidInput(input: String): Boolean {
         return inputRegex.matches(input)
@@ -46,19 +64,20 @@ class NewExpenseViewModel @Inject constructor(
     fun onSave() {
         val amount = _amount.value.value.toDouble()
         viewModelScope.launch(coroutineDispatcher.io()) {
-            //  todo: use a real exchange rate here!!
-            val expenseInput = ExpenseInput(
-                currentExchangeId = "3bfa95b0-33c6-4ddd-bd24-4e6c84e8cca0",
-                description = _description.value.value,
-                value = amount
-            )
-            _loadingState.update { true }
-            val result = expenseRepository.createExpense(expenseInput)
-            if (result.isSuccessful()) {
-                launch { dashRepo.refreshDashboardData() }
-                _dismissDialog.update { true }
-            } else {
-                _loadingState.update { false }
+            _selectedCurrency.value?.let { currency ->
+                val expenseInput = ExpenseInput(
+                    currentExchangeId = currency.exchangeId,
+                    description = _description.value.value,
+                    value = amount
+                )
+                _loadingState.update { true }
+                val result = expenseRepository.createExpense(expenseInput)
+                if (result.isSuccessful()) {
+                    launch { dashRepo.refreshDashboardData() }
+                    _dismissDialog.update { true }
+                } else {
+                    _loadingState.update { false }
+                }
             }
         }
     }
@@ -67,5 +86,9 @@ class NewExpenseViewModel @Inject constructor(
         if (this.isValidInput(text)) {
             _amount.update { it.copy(text) }
         }
+    }
+
+    fun onCurrencyClicked() {
+        TODO("Not yet implemented")
     }
 }

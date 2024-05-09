@@ -1,5 +1,6 @@
 package com.nestor.expenses.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,7 +13,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -26,6 +26,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.nestor.database.data.currency.CurrencyEntity
 import com.nestor.expenses.R
 import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.button.SYButton
@@ -56,7 +57,9 @@ fun NewExpenseScreen(
         amountField = viewModel.amount.collectAsState().value,
         isLoading = viewModel.loadingState,
         descriptionText = viewModel.description.collectAsState().value,
-        onDescriptionChanged = viewModel::onDescriptionChanged
+        onDescriptionChanged = viewModel::onDescriptionChanged,
+        selectedCurrencyEntity = viewModel.selectedCurrency,
+        onCurrencyClicked = viewModel::onCurrencyClicked
     )
 }
 
@@ -68,7 +71,9 @@ private fun NewExpenseScreenContent(
     onAmountChanged: (String) -> Unit,
     descriptionText: FormFieldData,
     onDescriptionChanged: (String) -> Unit,
-    isLoading: StateFlow<Boolean>
+    selectedCurrencyEntity: StateFlow<CurrencyEntity?>,
+    isLoading: StateFlow<Boolean>,
+    onCurrencyClicked: () -> Unit = {}
 ) {
     Scaffold(topBar = { NewExpenseToolbar(onNavBack) }) {
         if (isLoading.collectAsState().value.not()) {
@@ -87,16 +92,24 @@ private fun NewExpenseScreenContent(
                 )
                 Spacer(modifier = Modifier.height(40.dp))
                 CompositionLocalProvider(LocalTextInputService provides LocalTextInputService.current) {
+                    val selectedCurrency = selectedCurrencyEntity.collectAsState().value
                     OutlinedTextField(
                         value = amountField.value,
                         onValueChange = onAmountChanged,
                         prefix = {
                             Text(
-                                text = "USD ",
-                                style = MaterialTheme.typography.titleLarge
+                                text = "${selectedCurrency?.code ?: ""} ",
+                                style = MaterialTheme.typography.titleLarge,
+                                modifier = Modifier.clickable { onCurrencyClicked() }
                             )
                         },
-                        suffix = { Text(text = "$", style = MaterialTheme.typography.titleLarge) },
+                        suffix = {
+                            Text(
+                                text = selectedCurrency?.symbol ?: "",
+                                style = MaterialTheme.typography.titleLarge,
+                                modifier = Modifier.clickable { onCurrencyClicked() }
+                            )
+                        },
                         textStyle = MaterialTheme.typography.titleLarge,
                         maxLines = 1,
                         minLines = 1,
@@ -148,7 +161,8 @@ private fun NewExpenseScreenContentPreview() {
             onAmountChanged = {},
             isLoading = MutableStateFlow(false),
             descriptionText = FormFieldData(""),
-            onDescriptionChanged = {}
+            onDescriptionChanged = {},
+            selectedCurrencyEntity = MutableStateFlow(null)
         )
     }
 }

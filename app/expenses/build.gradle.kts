@@ -44,6 +44,7 @@ dependencies {
     //hilt
     implementation(libs.androidx.hilt.navigation)
     implementation(libs.hilt)
+    implementation(project(":app:database"))
     kapt(libs.hiltCompiler)
 
     //compose

@@ -1,16 +1,25 @@
 package com.nestor.common.data.currency
 
+import com.nestor.common.data.auth.datasource.AuthLocalDataSource
 import com.nestor.common.util.parseISODate
 import com.nestor.database.data.currency.CurrencyEntity
 import com.nestor.schema.utils.ResponseWrapper
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.take
 import java.util.Date
 import javax.inject.Inject
 
 class CurrencyRepositoryImpl @Inject constructor(
     private val localDataSource: CurrencyLocalDataSource,
-    private val remoteDataSource: CurrencyRemoteDataSource
+    private val remoteDataSource: CurrencyRemoteDataSource,
+    private val authLocalDataSource: AuthLocalDataSource
 ) : CurrencyRepository {
     override fun fetchCurrencies(): Flow<ResponseWrapper<List<CurrencyEntity>>> =
         localDataSource.fetchCurrencies().map { currencies ->
@@ -32,8 +41,11 @@ class CurrencyRepositoryImpl @Inject constructor(
             }
         }
 
-    override fun fetchUserCurrency(): Flow<CurrencyEntity> {
-        TODO("Not yet implemented")
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun fetchCurrentUserCurrency(): Flow<CurrencyEntity?> {
+        return authLocalDataSource.userDetails().filterNotNull().flatMapLatest { user ->
+            localDataSource.fetchCurrencyByCode(user.currencyCode)
+        }
     }
 
     private suspend fun updateCurrencies() {
