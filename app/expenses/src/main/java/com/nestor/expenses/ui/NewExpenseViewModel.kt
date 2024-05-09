@@ -9,10 +9,14 @@ import com.nestor.expenses.data.ExpenseRepository
 import com.nestor.schema.type.ExpenseInput
 import com.nestor.uikit.input.FormFieldData
 import com.nestor.uikit.util.CoroutineContextProvider
+import com.nestor.uikit.util.EventStateFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -84,7 +88,14 @@ class NewExpenseViewModel @Inject constructor(
         }
     }
 
-    fun onCurrencyClicked() {
-        TODO("Not yet implemented")
+    fun onCurrencySelected(currencyCode: String) {
+        viewModelScope.launch(coroutineDispatcher.io()) {
+            currencyRepository.fetchCurrencies().filterNotNull().take(1).collect { response ->
+                response.body?.let { currencies ->
+                    val currency = currencies.first { it.code == currencyCode }
+                    _selectedCurrency.update { currency }
+                }
+            }
+        }
     }
 }

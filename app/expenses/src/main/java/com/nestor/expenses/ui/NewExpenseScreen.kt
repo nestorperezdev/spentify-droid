@@ -9,14 +9,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalTextInputService
@@ -28,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nestor.database.data.currency.CurrencyEntity
 import com.nestor.expenses.R
+import com.nestor.expenses.ui.currencypicker.CurrencyPickerBottomSheet
 import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.button.SYButton
 import com.nestor.uikit.input.FormFieldData
@@ -36,9 +40,12 @@ import com.nestor.uikit.statusbar.NavigationIcon
 import com.nestor.uikit.statusbar.SYStatusBar
 import com.nestor.uikit.statusbar.StatusBarType
 import com.nestor.uikit.theme.spacing.LocalSYPadding
+import com.nestor.uikit.util.SingleEventEffect
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewExpenseScreen(
     viewModel: NewExpenseViewModel = hiltViewModel(),
@@ -50,6 +57,8 @@ fun NewExpenseScreen(
             onNavBack()
         }
     }
+    val currencyPickerState = rememberModalBottomSheetState()
+    val coroutineScope = rememberCoroutineScope()
     NewExpenseScreenContent(
         onNavBack = onNavBack,
         onSaveClick = viewModel::onSave,
@@ -59,7 +68,13 @@ fun NewExpenseScreen(
         descriptionText = viewModel.description.collectAsState().value,
         onDescriptionChanged = viewModel::onDescriptionChanged,
         selectedCurrencyEntity = viewModel.selectedCurrency,
-        onCurrencyClicked = viewModel::onCurrencyClicked
+        onCurrencyClicked = {
+            coroutineScope.launch { currencyPickerState.show() }
+        }
+    )
+    CurrencyPickerBottomSheet(
+        bottomSheetState = currencyPickerState,
+        onCurrencySelected = viewModel::onCurrencySelected,
     )
 }
 

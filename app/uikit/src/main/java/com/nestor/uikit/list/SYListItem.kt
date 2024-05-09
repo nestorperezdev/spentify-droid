@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -53,11 +54,19 @@ fun SYListItem(
                 SYItemIcon(icon = icon)
                 Spacer(modifier = Modifier.width(24.dp))
             }
-            Text(
-                text = item.label,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.W300
-            )
+            Column {
+                Text(
+                    text = item.label,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.W300
+                )
+                item.subtitle?.let {
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
+            }
             Spacer(modifier = Modifier.weight(1f))
             item.trailingIcon?.let { icon ->
                 SYItemIcon(icon = icon)
@@ -104,7 +113,8 @@ private fun SYListItemPreview() {
                     icon = painterResource(id = R.drawable.baseline_arrow_forward_ios_24),
                     tint = MaterialTheme.colorScheme.onSurface,
                     foregroundTint = null
-                )
+                ),
+                subtitle = "Subtitle"
             )
         )
     }
