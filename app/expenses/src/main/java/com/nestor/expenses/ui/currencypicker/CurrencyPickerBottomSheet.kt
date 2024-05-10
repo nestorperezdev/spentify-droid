@@ -26,6 +26,7 @@ import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -55,6 +56,9 @@ fun CurrencyPickerBottomSheet(
     onCurrencySelected: (String) -> Unit = {}
 ) {
     val coroutineScope = rememberCoroutineScope()
+    LaunchedEffect(initialValue) {
+        viewModel.setInitialCurrencyValue(initialValue)
+    }
     CurrencyPickerBottomSheetContent(
         bottomSheetState = bottomSheetState,
         filterTextState = viewModel.filterText,
@@ -64,6 +68,7 @@ fun CurrencyPickerBottomSheet(
         selectedCurrencyState = viewModel.selectedCurrency,
         onCurrencySelected = {
             onCurrencySelected(it)
+            viewModel.onCurrencySelected(it)
             coroutineScope.launch {
                 bottomSheetState.hide()
                 onDismissRequest()

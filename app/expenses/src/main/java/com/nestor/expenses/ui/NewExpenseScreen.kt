@@ -81,10 +81,12 @@ fun NewExpenseScreen(
                 currencyPickerState.show()
             }
         }
+        val currencySelected = viewModel.selectedCurrency.collectAsState()
         CurrencyPickerBottomSheet(
             bottomSheetState = currencyPickerState,
             onCurrencySelected = viewModel::onCurrencySelected,
-            onDismissRequest = viewModel::onCurrencyPickerDismiss
+            onDismissRequest = viewModel::onCurrencyPickerDismiss,
+            initialValue = currencySelected.value
         )
     }
 }

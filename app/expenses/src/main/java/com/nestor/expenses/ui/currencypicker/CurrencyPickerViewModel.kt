@@ -48,14 +48,46 @@ class CurrencyPickerViewModel @Inject constructor(
 
     fun onFilterTextChange(query: String) {
         _filterText.update { it.copy(query) }
-        if(query.isEmpty()) {
+        if (query.isEmpty()) {
             _filteredCurrencies.update { _originalCurrencies.value }
         } else {
             _filteredCurrencies.update {
                 _originalCurrencies.value.filter { currency ->
-                    currency.code.contains(query, ignoreCase = true) || currency.name.contains(query, ignoreCase = true)
+                    currency.code.contains(
+                        query,
+                        ignoreCase = true
+                    ) || currency.name.contains(query, ignoreCase = true)
                 }
             }
+        }
+        reorderCurrencies()
+    }
+
+    fun setInitialCurrencyValue(initialValue: CurrencyEntity?) {
+        _selectedCurrency.update { initialValue }
+        if (initialValue != null) {
+            reorderCurrencies()
+        }
+    }
+
+    /**
+     * Selected currency should be always on position 0 of the list
+     */
+    private fun reorderCurrencies() {
+        _filteredCurrencies.update {
+            val selectedCurrency = _selectedCurrency.value
+            val filteredCurrencies = it.toMutableList()
+            if (selectedCurrency != null) {
+                filteredCurrencies.remove(selectedCurrency)
+                filteredCurrencies.add(0, selectedCurrency)
+            }
+            filteredCurrencies
+        }
+    }
+
+    fun onCurrencySelected(currencyCode: String) {
+        _selectedCurrency.update {
+            _filteredCurrencies.value.find { it.code == currencyCode }
         }
     }
 }
