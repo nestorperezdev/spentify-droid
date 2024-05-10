@@ -33,11 +33,6 @@ class AuthRepositoryImpl @Inject constructor(
         this.remoteDataSource.recoverPassword(newPassword)
     }
 
-    override suspend fun updateUserCurrency(code: String) {
-        this.localDatasource.updateUserCurrency(code)
-        this.remoteDataSource.updateUserCurrency(code)
-    }
-
     override fun userDetails(): Flow<ResponseWrapper<UserEntity?>> =
         localDatasource.tokenContents().flatMapLatest { tokenPayload ->
             localDatasource.userDetails().map {

@@ -12,10 +12,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.nestor.common.ui.currencypicker.CurrencyPickerBottomSheet
 import com.nestor.uikit.R as UIKitR
 import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.list.SYList
@@ -35,6 +41,7 @@ import com.nestor.uikit.list.SYListItemData
 import com.nestor.uikit.theme.color.Blue50
 import com.nestor.uikit.theme.spacing.LocalSYPadding
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountScreen(
     modifier: Modifier = Modifier,
@@ -43,15 +50,33 @@ fun AccountScreen(
     AccountScreenContent(
         modifier = modifier,
         username = "Nestor",
-        onLogoutClick = vm::logout
+        onLogoutClick = vm::logout,
+        onCurrencyClick = vm::onCurrencyClick
     )
+    val currencyPickerVisible by vm.currencyPickerVisible.collectAsState()
+    val currencyPickerState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    LaunchedEffect(currencyPickerVisible) {
+        if (currencyPickerVisible) {
+            currencyPickerState.show()
+        }
+    }
+    if (currencyPickerVisible) {
+        val selectedCurrency by vm.selectedCurrency.collectAsState()
+        CurrencyPickerBottomSheet(
+            bottomSheetState = currencyPickerState,
+            onDismissRequest = { vm.onCurrencyPickerDismiss() },
+            initialValue = selectedCurrency,
+            onCurrencySelected = vm::onCurrencySelected
+        )
+    }
 }
 
 @Composable
 private fun AccountScreenContent(
     modifier: Modifier = Modifier,
     username: String,
-    onLogoutClick: () -> Unit = {}
+    onLogoutClick: () -> Unit = {},
+    onCurrencyClick: () -> Unit = {}
 ) {
     var privacyDialogIsVisible by remember { mutableStateOf(false) }
     var tocsDialogIsVisible by remember { mutableStateOf(false) }
@@ -77,8 +102,14 @@ private fun AccountScreenContent(
         Text(text = "$username's Profile", style = MaterialTheme.typography.titleSmall)
         Spacer(modifier = Modifier.height(40.dp))
         SYList(
+            onItemClick = {
+                if (it.key == "currency") {
+                    onCurrencyClick()
+                }
+            },
             items = listOf(
                 SYListItemData(
+                    key = "currency",
                     label = "Change currency",
                     leadingIcon = SYListItemData.SYListItemIcon(
                         icon = painterResource(id = UIKitR.drawable.baseline_attach_money_24),

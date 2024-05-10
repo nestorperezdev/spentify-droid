@@ -1,4 +1,4 @@
-package com.nestor.expenses.ui.currencypicker
+package com.nestor.common.ui.currencypicker
 
 import com.nestor.uikit.list.SYListItemData
 

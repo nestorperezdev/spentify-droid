@@ -48,6 +48,10 @@ class CurrencyRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun updateUserCurrency(currency: CurrencyEntity) {
+        authLocalDataSource.updateUserCurrency(currency.code)
+    }
+
     private suspend fun updateCurrencies() {
         val currencies = remoteDataSource.fetchCurrencies()
         currencies.body?.let {

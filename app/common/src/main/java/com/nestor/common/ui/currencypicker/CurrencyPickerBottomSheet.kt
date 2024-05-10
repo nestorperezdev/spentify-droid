@@ -1,7 +1,8 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.nestor.expenses.ui.currencypicker
+package com.nestor.common.ui.currencypicker
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -43,9 +44,13 @@ import com.nestor.uikit.input.FormFieldData
 import com.nestor.uikit.list.SYListItem
 import com.nestor.uikit.list.SYListItemData
 import com.nestor.uikit.theme.spacing.LocalSYPadding
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
+private const val TAG = "CurrencyPickerBottomShe"
 
 @Composable
 fun CurrencyPickerBottomSheet(
@@ -69,9 +74,15 @@ fun CurrencyPickerBottomSheet(
         onCurrencySelected = {
             onCurrencySelected(it)
             viewModel.onCurrencySelected(it)
-            coroutineScope.launch {
-                bottomSheetState.hide()
-                onDismissRequest()
+            coroutineScope.launch(NonCancellable) {
+                try {
+                    //  TODO: investigate why hide is throwing scopeCoroutine was cancelled
+                    bottomSheetState.hide()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                } finally {
+                    onDismissRequest()
+                }
             }
         }
     )

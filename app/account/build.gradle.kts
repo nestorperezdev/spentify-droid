@@ -61,6 +61,8 @@ dependencies {
     //modules
     implementation(project(":app:uikit"))
     implementation(project(":app:common"))
+    implementation(project(":app:database"))
+    implementation(project(":app:lib:schema"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

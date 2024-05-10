@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nestor.database.data.currency.CurrencyEntity
 import com.nestor.expenses.R
-import com.nestor.expenses.ui.currencypicker.CurrencyPickerBottomSheet
+import com.nestor.common.ui.currencypicker.CurrencyPickerBottomSheet
 import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.button.SYButton
 import com.nestor.uikit.input.FormFieldData

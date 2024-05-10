@@ -33,6 +33,12 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
+    }
+    buildFeatures {
+        compose = true
+    }
 }
 
 dependencies {
@@ -47,6 +53,13 @@ dependencies {
     implementation(project(":app:lib:schema"))
     implementation(project(":app:database"))
     implementation(project(":app:uikit"))
+
+    //compose
+    implementation(platform(libs.composeBom))
+    implementation(libs.compose.ui)
+    implementation(libs.compose.graphics)
+    implementation(libs.compose.toolingPreview)
+    implementation(libs.compose.material3)
 
     implementation(libs.androidx.ktx)
     testImplementation(libs.junit)

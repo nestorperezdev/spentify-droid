@@ -13,7 +13,6 @@ interface AuthRepository {
     suspend fun login(username: String, password: String): ResponseWrapper<LoginMutation.Data>
     suspend fun forgotPassword(username: String): ResponseWrapper<ForgotPasswordMutation.Data>
     suspend fun recoverPassword(newPassword: String): ResponseWrapper<RecoverPasswordMutation.Data>
-    suspend fun updateUserCurrency(code: String)
     fun userDetails(): Flow<ResponseWrapper<UserEntity?>>
     fun getRawToken(): String?
     suspend fun setRawToken(token: String)
