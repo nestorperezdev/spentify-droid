@@ -26,7 +26,7 @@
     <string name="sign_up_here">Sign up here</string>
     <string name="incorrect_password_or_email">Your email or password is wrong, please check again.</string>
     <string name="creating_account">Creating account...</string>
-    <string name="logging_in">Logging in...</string>
+    <string name="login">Login…</string>
     <string name="password_must_be_at_least_6_characters">Password must be at least 6 characters</string>
     <string name="network_error">Something failed with the network communication, please verify your internet connectivity.</string>
     <string name="recover_password_action">Recover password</string>

@@ -78,7 +78,7 @@ fun LoginScreen(
         }
     }
     if (uiState.isLoading) {
-        LoadingScreen(text = stringResource(R.string.logging_in))
+        LoadingScreen(text = stringResource(R.string.login))
     } else {
         LoginScreenContent(
             onNavigationBackClick = onNavigationBackClick,

@@ -40,6 +40,8 @@ class NewExpenseViewModel @Inject constructor(
     val description = _description.asStateFlow()
     private val _selectedCurrency = MutableStateFlow<CurrencyEntity?>(null)
     val selectedCurrency = _selectedCurrency.asStateFlow()
+    private val _currencyOpenState = MutableStateFlow(false)
+    val currencyOpenState = _currencyOpenState.asStateFlow()
 
     init {
         viewModelScope.launch(coroutineDispatcher.io()) {
@@ -89,6 +91,7 @@ class NewExpenseViewModel @Inject constructor(
     }
 
     fun onCurrencySelected(currencyCode: String) {
+        onCurrencyPickerDismiss()
         viewModelScope.launch(coroutineDispatcher.io()) {
             currencyRepository.fetchCurrencies().filterNotNull().take(1).collect { response ->
                 response.body?.let { currencies ->
@@ -97,5 +100,13 @@ class NewExpenseViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun onCurrencyPickerClicked() {
+        _currencyOpenState.update { true }
+    }
+
+    fun onCurrencyPickerDismiss() {
+        _currencyOpenState.update { false }
     }
 }

@@ -13,6 +13,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -57,8 +58,10 @@ fun NewExpenseScreen(
             onNavBack()
         }
     }
-    val currencyPickerState = rememberModalBottomSheetState()
-    val coroutineScope = rememberCoroutineScope()
+    val currencyPickerOpen = viewModel.currencyOpenState.collectAsState().value
+    val currencyPickerState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true,
+    )
     NewExpenseScreenContent(
         onNavBack = onNavBack,
         onSaveClick = viewModel::onSave,
@@ -68,14 +71,22 @@ fun NewExpenseScreen(
         descriptionText = viewModel.description.collectAsState().value,
         onDescriptionChanged = viewModel::onDescriptionChanged,
         selectedCurrencyEntity = viewModel.selectedCurrency,
-        onCurrencyClicked = {
-            coroutineScope.launch { currencyPickerState.show() }
+        onCurrencyClicked = viewModel::onCurrencyPickerClicked
+    )
+    val coroutineScope = rememberCoroutineScope()
+    //  TODO: Fix animation
+    if (currencyPickerOpen) {
+        LaunchedEffect(currencyPickerOpen) {
+            coroutineScope.launch {
+                currencyPickerState.show()
+            }
         }
-    )
-    CurrencyPickerBottomSheet(
-        bottomSheetState = currencyPickerState,
-        onCurrencySelected = viewModel::onCurrencySelected,
-    )
+        CurrencyPickerBottomSheet(
+            bottomSheetState = currencyPickerState,
+            onCurrencySelected = viewModel::onCurrencySelected,
+            onDismissRequest = viewModel::onCurrencyPickerDismiss
+        )
+    }
 }
 
 @Composable

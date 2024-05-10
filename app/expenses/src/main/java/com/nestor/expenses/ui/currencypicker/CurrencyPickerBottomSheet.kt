@@ -50,12 +50,10 @@ import kotlinx.coroutines.launch
 fun CurrencyPickerBottomSheet(
     bottomSheetState: SheetState = rememberModalBottomSheetState(),
     viewModel: CurrencyPickerViewModel = hiltViewModel(),
+    initialValue: CurrencyEntity? = null,
     onDismissRequest: () -> Unit = {},
     onCurrencySelected: (String) -> Unit = {}
 ) {
-    if (bottomSheetState.targetValue == SheetValue.Hidden && bottomSheetState.currentValue == SheetValue.Hidden) {
-        return
-    }
     val coroutineScope = rememberCoroutineScope()
     CurrencyPickerBottomSheetContent(
         bottomSheetState = bottomSheetState,
@@ -65,7 +63,6 @@ fun CurrencyPickerBottomSheet(
         currenciesListState = viewModel.filteredCurrencies,
         selectedCurrencyState = viewModel.selectedCurrency,
         onCurrencySelected = {
-            viewModel.onCurrencySelected(it)
             onCurrencySelected(it)
             coroutineScope.launch {
                 bottomSheetState.hide()

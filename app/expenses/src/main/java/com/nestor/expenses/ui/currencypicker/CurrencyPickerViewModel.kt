@@ -58,8 +58,4 @@ class CurrencyPickerViewModel @Inject constructor(
             }
         }
     }
-
-    fun onCurrencySelected(currencyCode: String) {
-        //no-op
-    }
 }
