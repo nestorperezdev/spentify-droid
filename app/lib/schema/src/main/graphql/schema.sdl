@@ -85,6 +85,8 @@ type Mutation {
   recoverPassword(newPassword: String!): LoginToken!
 
   register(name: String!, password: String!, username: String!): LoginToken!
+
+  updateUserDetails(input: UserDetailsUpdateDtoInput!): User!
 }
 
 type Query {
@@ -120,6 +122,12 @@ type User {
   name: String!
 
   username: String!
+}
+
+input UserDetailsUpdateDtoInput {
+  currencyCode: String
+
+  name: String
 }
 
 input UserTimeZoneInput {

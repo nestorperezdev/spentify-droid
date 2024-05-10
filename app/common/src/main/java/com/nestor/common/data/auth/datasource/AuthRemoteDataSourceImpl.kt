@@ -2,11 +2,14 @@ package com.nestor.common.data.auth.datasource
 
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.ApolloResponse
+import com.apollographql.apollo3.api.Optional
 import com.nestor.schema.ForgotPasswordMutation
 import com.nestor.schema.LoginMutation
 import com.nestor.schema.RecoverPasswordMutation
 import com.nestor.schema.RegisterMutation
+import com.nestor.schema.UpdateUserDetailsMutation
 import com.nestor.schema.UserDetailsQuery
+import com.nestor.schema.type.UserDetailsUpdateDtoInput
 import javax.inject.Inject
 
 class AuthRemoteDataSourceImpl @Inject constructor(val apolloClient: ApolloClient) :
@@ -38,6 +41,13 @@ class AuthRemoteDataSourceImpl @Inject constructor(val apolloClient: ApolloClien
     }
 
     override suspend fun updateUserCurrency(currencyCode: String) {
-        //
+        this.apolloClient.mutation(
+            UpdateUserDetailsMutation(
+                UserDetailsUpdateDtoInput(
+                    currencyCode = Optional.present(currencyCode),
+                    name = Optional.absent(),
+                )
+            )
+        ).execute()
     }
 }

@@ -1,6 +1,8 @@
 package com.nestor.common.data.currency
 
 import com.nestor.common.data.auth.datasource.AuthLocalDataSource
+import com.nestor.common.data.auth.datasource.AuthRemoteDataSource
+import com.nestor.common.data.auth.datasource.AuthRemoteDataSourceImpl
 import com.nestor.common.util.parseISODate
 import com.nestor.database.data.currency.CurrencyEntity
 import com.nestor.schema.utils.ResponseWrapper
@@ -19,7 +21,8 @@ import javax.inject.Inject
 class CurrencyRepositoryImpl @Inject constructor(
     private val localDataSource: CurrencyLocalDataSource,
     private val remoteDataSource: CurrencyRemoteDataSource,
-    private val authLocalDataSource: AuthLocalDataSource
+    private val authLocalDataSource: AuthLocalDataSource,
+    private val authRemoteDataSource: AuthRemoteDataSource
 ) : CurrencyRepository {
     override fun fetchCurrencies(): Flow<ResponseWrapper<List<CurrencyEntity>>> =
         localDataSource.fetchCurrencies().map { currencies ->
@@ -49,7 +52,10 @@ class CurrencyRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateUserCurrency(currency: CurrencyEntity) {
-        authLocalDataSource.updateUserCurrency(currency.code)
+        with(currency) {
+            authLocalDataSource.updateUserCurrency(code)
+            authRemoteDataSource.updateUserCurrency(code)
+        }
     }
 
     private suspend fun updateCurrencies() {
