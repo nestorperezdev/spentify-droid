@@ -1,15 +1,21 @@
 package com.nestor.schema.utils
 
+import okhttp3.ResponseBody
+
 data class ResponseWrapper<T>(
     val isLoading: Boolean = false,
     val error: String? = null,
     val body: T? = null,
 ) {
     fun isSuccessful(): Boolean = body != null && error == null && !isLoading
+
     companion object {
-        fun <T> loading(): ResponseWrapper<T> = ResponseWrapper(isLoading = true)
+        fun <T> loading(body: T? = null): ResponseWrapper<T> =
+            ResponseWrapper(isLoading = true, body = body)
+
         fun <T> success(body: T): ResponseWrapper<T> = ResponseWrapper(body = body)
-        fun <T> error(error: String): ResponseWrapper<T> = ResponseWrapper(error = error)
+        fun <T> error(error: String, body: T? = null): ResponseWrapper<T> =
+            ResponseWrapper(error = error, body = body)
     }
 }
 

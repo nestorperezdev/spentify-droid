@@ -21,6 +21,7 @@ room = "2.6.1"
 securityCrypto = "1.0.0"
 auth0JwtDecode = "2.0.2"
 shimmerLoading = "1.2.0"
+paging = "3.2.1"
 
 [libraries]
 androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
@@ -52,6 +53,8 @@ room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "securityCrypto" }
 auth0-jwt-decode = { group = "com.auth0.android", name = "jwtdecode", version.ref = "auth0JwtDecode" }
 compose-shimmerLoading = { group = "com.valentinilk.shimmer", name = "compose-shimmer", version.ref = "shimmerLoading" }
+paging = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
+paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
 
 [plugins]
 apolloGraphql = { id = "com.apollographql.apollo3", version.ref = "apollo" }

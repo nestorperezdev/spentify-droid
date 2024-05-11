@@ -1,0 +1,8 @@
+query ExpensesList($month: Int!, $year: Int!, $next: Int, $cursor: Int) {
+    expensesList(month: $month, year: $year, next: $next, cursor: $cursor) {
+        expenses {
+            ...expenseFragment
+        },
+        totalItems
+    }
+}

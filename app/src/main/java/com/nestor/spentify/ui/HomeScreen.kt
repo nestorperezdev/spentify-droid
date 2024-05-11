@@ -15,6 +15,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import com.nestor.account.ui.AccountScreen
 import com.nestor.dashboard.ui.DashboardScreen
+import com.nestor.expenses.ui.expenselist.ExpenseListScreen
 import com.nestor.uikit.statusbar.SYStatusBar
 import com.nestor.uikit.statusbar.StatusBarType
 import com.nestor.uikit.theme.spacing.LocalSYPadding
@@ -59,12 +60,13 @@ fun HomeScreen(
                     onNewExpenseClick = onNewExpenseClick
                 )
 
-                1 -> Text(
-                    text = "Expenses", modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .padding(LocalSYPadding.current.screenHorizontalPadding)
-                )
+                1 ->
+                    ExpenseListScreen(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .padding(LocalSYPadding.current.screenHorizontalPadding)
+                    )
 
                 2 -> AccountScreen(
                     modifier = Modifier

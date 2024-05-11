@@ -45,7 +45,11 @@ type DashboardMonthlySummary {
 type ExpenseDetail {
   currency: CurrencyInfo!
 
+  cursor: Int!
+
   description: String!
+
+  id: String!
 
   usdValue: Float!
 
@@ -62,12 +66,19 @@ input ExpenseInput {
 
 type ExpenseList {
   expenses: [ExpenseDetail!]!
+
+  totalItems: Int!
 }
 
 """
 The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point).
 """
 scalar Float
+
+"""
+The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
+"""
+scalar Int
 
 type LoginToken {
   name: String!
@@ -96,7 +107,7 @@ type Query {
 
   expenseDetails(expenseId: String!): ExpenseDetail!
 
-  expensesList(month: Float!, year: Float!): ExpenseList!
+  expensesList(cursor: Int, month: Int!, next: Int! = 20, year: Int!): ExpenseList!
 
   userDetails: User!
 }

@@ -41,6 +41,10 @@ android {
 }
 
 dependencies {
+    //paging
+    implementation(libs.paging)
+    implementation(libs.paging.compose)
+
     //hilt
     implementation(libs.androidx.hilt.navigation)
     implementation(libs.hilt)
