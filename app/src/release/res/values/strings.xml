@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Spentify</string>
+    <string name="graphql_server_url" translatable="false">https://spentify.nestorperez.dev/graphql/</string>
+</resources>
