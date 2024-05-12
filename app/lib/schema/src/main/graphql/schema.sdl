@@ -43,16 +43,33 @@ type DashboardMonthlySummary {
 }
 
 type ExpenseDetail {
+  """
+  Currency in which the expense was submitted
+  """
   currency: CurrencyInfo!
 
+  """
+  Cursor to fetch next elements
+  """
   cursor: Int!
 
   description: String!
 
   id: String!
 
+  """
+  Currency selected to convert the value
+  """
+  selectedCurrency: CurrencyInfo!
+
+  """
+  Value in USD with fixed rate
+  """
   usdValue: Float!
 
+  """
+  Value in the user or provided currency
+  """
   value: Float!
 }
 
@@ -105,9 +122,9 @@ type Query {
 
   dashboard: Dashboard!
 
-  expenseDetails(expenseId: String!): ExpenseDetail!
+  expenseDetails(currencyCode: String, expenseId: String!): ExpenseDetail!
 
-  expensesList(cursor: Int, month: Int!, next: Int! = 20, year: Int!): ExpenseList!
+  expensesList(currencyCode: String, cursor: Int, month: Int!, next: Int! = 20, year: Int!): ExpenseList!
 
   userDetails: User!
 }
@@ -122,6 +139,8 @@ The `String` scalar type represents textual data, represented as UTF-8 character
 scalar String
 
 input SummaryDashboardInput {
+  currencyCode: String
+
   timeZoneData: UserTimeZoneInput!
 }
 

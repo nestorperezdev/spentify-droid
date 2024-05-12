@@ -8,19 +8,11 @@ import com.nestor.schema.utils.ResponseWrapper
 import com.nestor.schema.utils.mapBody
 import com.nestor.uikit.util.CoroutineContextProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -43,11 +35,10 @@ class ExpenseListViewModel @Inject constructor(
     ) { expenseList: ResponseWrapper<ExpenseList>, exchangeRate: Double ->
         expenseList.mapBody { list ->
             list.copy(
-                items = list.items.map { item -> item.copy(usdValue = item.usdValue * exchangeRate) }
+                items = list.items.map { item -> item.copy(usdValue = item.amount) }
             )
         }
-    }
-        .stateIn(viewModelScope, SharingStarted.Lazily, ResponseWrapper.loading())
+    }.stateIn(viewModelScope, SharingStarted.Lazily, ResponseWrapper.loading())
 
     init {
         fetchExpenses()

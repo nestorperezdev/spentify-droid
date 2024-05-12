@@ -1,6 +1,5 @@
 package com.nestor.dashboard.ui
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nestor.common.data.auth.AuthRepository
@@ -11,6 +10,7 @@ import com.nestor.schema.utils.combineTransform
 import com.nestor.schema.utils.mapBody
 import com.nestor.uikit.util.CoroutineContextProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
@@ -22,11 +22,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-private const val TAG = "DashboardViewModel"
+@ExperimentalCoroutinesApi
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    private val authRepository: AuthRepository,
-    private val dashboardRepository: DashboardRepository,
+    authRepository: AuthRepository,
+    dashboardRepository: DashboardRepository,
     private val coroutineContextProvider: CoroutineContextProvider,
     private val currencyRepository: CurrencyRepository,
 ) : ViewModel() {
@@ -57,24 +57,18 @@ class DashboardViewModel @Inject constructor(
             .combine(_userCurrency) { dash, currencyResponseWrapper ->
                 dash.combineTransform(currencyResponseWrapper) { summary, currency ->
                     DailySummary(
-                        totalExpenses = summary.totalExpenses * currency.usdValue,
-                        minimalExpense = summary.minimalExpense * currency.usdValue,
-                        dailyAverageExpense = summary.dailyAverageExpense * currency.usdValue,
-                        maximalExpense = summary.maximalExpense * currency.usdValue,
+                        totalExpenses = summary.totalExpenses,
+                        minimalExpense = summary.minimalExpense,
+                        dailyAverageExpense = summary.dailyAverageExpense,
+                        maximalExpense = summary.maximalExpense,
                         userCurrency = currency
                     )
                 }
             }.stateIn(viewModelScope, SharingStarted.Lazily, ResponseWrapper.loading())
 
     init {
-        Log.i(TAG, "init: ")
         viewModelScope.launch(coroutineContextProvider.io()) {
             userDetails.collect()
         }
-    }
-
-    override fun onCleared() {
-        Log.i(TAG, "onCleared: ")
-        super.onCleared()
     }
 }
