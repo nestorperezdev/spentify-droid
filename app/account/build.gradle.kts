@@ -62,6 +62,7 @@ dependencies {
     implementation(project(":app:uikit"))
     implementation(project(":app:common"))
     implementation(project(":app:database"))
+    implementation(project(":app:dashboard"))
     implementation(project(":app:lib:schema"))
 
     testImplementation(libs.junit)

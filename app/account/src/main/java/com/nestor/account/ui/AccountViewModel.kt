@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nestor.common.data.auth.AuthRepository
 import com.nestor.common.data.currency.CurrencyRepository
+import com.nestor.dashboard.data.DashboardRepository
 import com.nestor.database.data.currency.CurrencyEntity
 import com.nestor.uikit.util.CoroutineContextProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +16,8 @@ import javax.inject.Inject
 class AccountViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val currencyRepository: CurrencyRepository,
-    private val coroutineContextProvider: CoroutineContextProvider
+    private val coroutineContextProvider: CoroutineContextProvider,
+    private val dashboardRepository: DashboardRepository
 ) : ViewModel() {
     private val _currencyPickerVisible = MutableStateFlow(false)
     val currencyPickerVisible = _currencyPickerVisible
@@ -42,6 +44,7 @@ class AccountViewModel @Inject constructor(
                 .collect {
                     it.body?.let { currency ->
                         currencyRepository.updateUserCurrency(currency)
+                        dashboardRepository.refreshDashboardData()
                     }
                 }
         }

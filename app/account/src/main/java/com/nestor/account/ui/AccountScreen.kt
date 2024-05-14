@@ -1,6 +1,5 @@
 package com.nestor.account.ui
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,7 +14,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -34,12 +32,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nestor.common.ui.currencypicker.CurrencyPickerBottomSheet
-import com.nestor.uikit.R as UIKitR
 import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.list.SYList
 import com.nestor.uikit.list.SYListItemData
 import com.nestor.uikit.theme.color.Blue50
 import com.nestor.uikit.theme.spacing.LocalSYPadding
+import com.nestor.uikit.R as UIKitR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
