@@ -5,4 +5,11 @@ plugins {
     alias(libs.plugins.kotlinJvm) apply false
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.androidLibrary) apply false
+    alias(libs.plugins.google.googleServices) apply false
+}
+
+buildscript {
+    dependencies {
+        classpath("com.google.firebase:firebase-crashlytics-gradle:2.9.5")
+    }
 }

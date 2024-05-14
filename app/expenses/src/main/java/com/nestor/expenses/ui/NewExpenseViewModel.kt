@@ -64,6 +64,7 @@ class NewExpenseViewModel @Inject constructor(
     }
 
     fun onSave() {
+        if (_amount.value.value.isEmpty()) return
         val amount = _amount.value.value.toDouble()
         viewModelScope.launch(coroutineDispatcher.io()) {
             _selectedCurrency.value?.let { currency ->

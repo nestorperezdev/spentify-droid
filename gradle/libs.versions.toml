@@ -22,6 +22,8 @@ securityCrypto = "1.0.0"
 auth0JwtDecode = "2.0.2"
 shimmerLoading = "1.2.0"
 paging = "3.2.1"
+googleServices = "4.4.1"
+firebaseBom = "33.0.0"
 
 [libraries]
 androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
@@ -55,6 +57,9 @@ auth0-jwt-decode = { group = "com.auth0.android", name = "jwtdecode", version.re
 compose-shimmerLoading = { group = "com.valentinilk.shimmer", name = "compose-shimmer", version.ref = "shimmerLoading" }
 paging = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
 paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
+firebaseBom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
 
 [plugins]
 apolloGraphql = { id = "com.apollographql.apollo3", version.ref = "apollo" }
@@ -63,3 +68,5 @@ androidLibrary = { id = "com.android.library", version.ref = "agp" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 androidApp = { id = "com.android.application", version.ref = "agp" }
+google-googleServices = { id = "com.google.gms.google-services", version.ref = "googleServices" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics" }

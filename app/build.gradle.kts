@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlinAndroid)
     kotlin("kapt")
     alias(libs.plugins.hilt)
+    alias(libs.plugins.google.googleServices)
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -52,6 +54,11 @@ android {
 }
 
 dependencies {
+    //firebase
+    implementation(platform(libs.firebaseBom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
+
     //  datastore
     implementation(libs.data.store)
 
