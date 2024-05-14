@@ -2,6 +2,7 @@ package com.nestor.schema.utils
 
 import com.apollographql.apollo3.api.ApolloResponse
 import com.apollographql.apollo3.api.Operation
+import com.apollographql.apollo3.exception.ApolloNetworkException
 import java.net.SocketTimeoutException
 
 suspend fun <T : Operation.Data> safeApiCall(call: suspend () -> ApolloResponse<T>): ResponseWrapper<T> {
@@ -16,5 +17,7 @@ suspend fun <T : Operation.Data> safeApiCall(call: suspend () -> ApolloResponse<
         return ResponseWrapper.error("Body is empty!")
     } catch (e: SocketTimeoutException) {
         return ResponseWrapper.error("Socket timeout exception")
+    } catch (e: ApolloNetworkException) {
+        return ResponseWrapper.error("Apollo network exception")
     }
 }

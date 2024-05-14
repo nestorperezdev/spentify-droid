@@ -2,12 +2,15 @@ package com.nestor.common.data.auth.datasource
 
 import com.apollographql.apollo3.api.http.HttpRequest
 import com.apollographql.apollo3.api.http.HttpResponse
+import com.apollographql.apollo3.exception.ApolloNetworkException
 import com.apollographql.apollo3.network.http.HttpInterceptorChain
+import okio.IOException
+import java.net.SocketTimeoutException
 import javax.inject.Inject
 
 class AuthTokenInterceptorImpl @Inject constructor(
     private val authRepository: AuthLocalDataSource
-): AuthTokenInterceptor {
+) : AuthTokenInterceptor {
     override suspend fun intercept(
         request: HttpRequest,
         chain: HttpInterceptorChain
