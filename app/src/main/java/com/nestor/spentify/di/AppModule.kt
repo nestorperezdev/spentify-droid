@@ -24,6 +24,8 @@ import kotlinx.coroutines.SupervisorJob
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
+import com.apollographql.apollo3.adapter.DateAdapter
+import com.nestor.schema.type.DateTime
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -50,6 +52,7 @@ abstract class AppModule {
                         .readTimeout(10, TimeUnit.SECONDS)
                         .build()
                 )
+                .addCustomScalarAdapter(DateTime.type, DateAdapter)
                 .build()
         }
 

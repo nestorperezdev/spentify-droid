@@ -5,4 +5,5 @@ fragment expenseFragment on ExpenseDetail {
     value,
     cursor,
     id,
+    date
 }

@@ -16,8 +16,10 @@ suspend fun <T : Operation.Data> safeApiCall(call: suspend () -> ApolloResponse<
         }
         return ResponseWrapper.error("Body is empty!")
     } catch (e: SocketTimeoutException) {
+        e.printStackTrace()
         return ResponseWrapper.error("Socket timeout exception")
     } catch (e: ApolloNetworkException) {
+        e.printStackTrace()
         return ResponseWrapper.error("Apollo network exception")
     }
 }
