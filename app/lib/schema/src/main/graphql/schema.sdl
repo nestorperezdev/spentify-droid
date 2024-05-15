@@ -42,6 +42,11 @@ type DashboardMonthlySummary {
   totalExpenses: Float!
 }
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type ExpenseDetail {
   """
   Currency in which the expense was submitted
@@ -52,6 +57,8 @@ type ExpenseDetail {
   Cursor to fetch next elements
   """
   cursor: Int!
+
+  date: DateTime!
 
   description: String!
 

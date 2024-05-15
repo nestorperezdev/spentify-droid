@@ -65,6 +65,7 @@ firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashly
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockkVersion" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbineVersion" }
+apollo-adapters = { group = "com.apollographql.apollo3", name = "apollo-adapters", version.ref = "apollo" }
 
 [plugins]
 apolloGraphql = { id = "com.apollographql.apollo3", version.ref = "apollo" }

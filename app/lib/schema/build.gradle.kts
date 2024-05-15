@@ -6,6 +6,7 @@ plugins {
 
 dependencies {
     api(libs.apollo.runtime)
+    api(libs.apollo.adapters)
 }
 
 java {
@@ -16,5 +17,6 @@ java {
 apollo {
     service("service") {
         packageName.set("com.nestor.schema")
+        mapScalar("DateTime", "java.util.Date")
     }
 }

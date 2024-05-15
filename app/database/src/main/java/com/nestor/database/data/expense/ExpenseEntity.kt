@@ -7,8 +7,7 @@ import java.util.Date
 
 @Entity
 data class ExpenseEntity(
-    @PrimaryKey
-    val id: Int? = null,
+    @PrimaryKey val id: String,
     @ColumnInfo("user_uuid") val userUuid: String,
     @ColumnInfo val description: String,
     @ColumnInfo val date: Date,

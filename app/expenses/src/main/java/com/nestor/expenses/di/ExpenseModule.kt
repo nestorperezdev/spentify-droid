@@ -1,5 +1,7 @@
 package com.nestor.expenses.di
 
+import com.nestor.expenses.data.ExpenseLocalDataSource
+import com.nestor.expenses.data.ExpenseLocalDataSourceImpl
 import com.nestor.expenses.data.ExpenseRemoteDataSource
 import com.nestor.expenses.data.ExpenseRemoteDataSourceImpl
 import com.nestor.expenses.data.ExpenseRepository
@@ -16,6 +18,10 @@ interface ExpenseModule {
     @Binds
     @ViewModelScoped
     fun bindsExpenseRemoteDataSource(remoteDataSource: ExpenseRemoteDataSourceImpl): ExpenseRemoteDataSource
+
+    @Binds
+    @ViewModelScoped
+    fun bindsExpenseLocalDataSource(localDataSource: ExpenseLocalDataSourceImpl): ExpenseLocalDataSource
 
     @Binds
     @ViewModelScoped

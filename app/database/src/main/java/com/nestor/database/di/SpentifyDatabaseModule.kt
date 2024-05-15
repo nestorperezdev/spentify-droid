@@ -9,6 +9,7 @@ import com.nestor.database.SpentifyDatabase
 import com.nestor.database.data.currency.CurrencyDao
 import com.nestor.database.data.dashboard.DashboardDao
 import com.nestor.database.data.encryptedpreferences.EncryptedPreferences
+import com.nestor.database.data.expense.ExpenseDao
 import com.nestor.database.data.user.UserDao
 import com.nestor.database.migrations.Migration5to6
 import com.nestor.database.migrations.Migration6to7
@@ -70,6 +71,12 @@ abstract class SpentifyDatabaseModule {
         @Provides
         fun providesCurrencyDao(database: SpentifyDatabase): CurrencyDao {
             return database.currencyDao()
+        }
+
+        @Singleton
+        @Provides
+        fun providesExpenseDao(database: SpentifyDatabase): ExpenseDao {
+            return database.expensesDao()
         }
     }
 }
