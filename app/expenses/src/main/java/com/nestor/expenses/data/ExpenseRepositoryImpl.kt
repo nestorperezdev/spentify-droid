@@ -1,6 +1,7 @@
 package com.nestor.expenses.data
 
 import com.nestor.database.data.expense.ExpenseEntity
+import com.nestor.expenses.ui.expenselist.ExpenseList
 import com.nestor.schema.ExpensesListQuery
 import com.nestor.schema.type.ExpenseInput
 import com.nestor.schema.utils.ResponseWrapper
@@ -21,7 +22,7 @@ private fun ExpensesListQuery.Expense.toEntity(
             date = date,
             storedAt = storedAt,
             amount = value,
-            cursor = cursor,
+            order = cursor,
             usdValue = usdValue,
             id = id
         )
@@ -39,36 +40,44 @@ class ExpenseRepositoryImpl @Inject constructor(
     override fun getExpenses(
         month: Int,
         year: Int,
-        cursor: Int?,
+        pageNumber: Int,
         pageSize: Int?,
         userUid: String
-    ): Flow<ResponseWrapper<List<ExpenseEntity>>> = flow {
+    ): Flow<ResponseWrapper<ExpenseList>> = flow {
         val items = localDataSource.getExpenses(
             month = month,
             year = year,
-            afterCursor = cursor ?: 0,
+            page = pageNumber,
             limit = pageSize ?: 20,
             userUuid = userUid
         )
         if (items.isEmpty()) {
             emit(ResponseWrapper.loading())
             val remoteItems = remoteDataSource.getExpenses(
-                month = month, year = year, cursor = cursor, pageSize = pageSize
+                month = month, year = year, pageNumber = pageNumber, pageSize = pageSize
             )
             val storedAt = Date()
-            val itemsEntities: List<ExpenseEntity>? =
-                remoteItems.data?.expensesList?.expenses?.map {
-                    it.toEntity(
-                        userUid = userUid,
-                        storedAt = storedAt
-                    )
-                }
-            itemsEntities?.let {
+            remoteItems.data?.expensesList?.let { list ->
+                val itemsEntities: List<ExpenseEntity> =
+                    list.expenses.map {
+                        it.toEntity(
+                            userUid = userUid,
+                            storedAt = storedAt
+                        )
+                    }
                 localDataSource.saveExpenseList(itemsEntities)
-                emit(ResponseWrapper.success(itemsEntities))
+                emit(
+                    ResponseWrapper.success(
+                        ExpenseList(
+                            totalItems = list.pagination.paginationFragment.totalItems,
+                            totalPages = list.pagination.paginationFragment.totalPages,
+                            items = itemsEntities
+                        )
+                    )
+                )
             }
         } else {
-            emit(ResponseWrapper.success(items))
+            emit(ResponseWrapper.success(ExpenseList(items = items)))
         }
     }
 

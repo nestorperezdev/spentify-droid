@@ -1,6 +1,7 @@
 package com.nestor.expenses.data
 
 import com.nestor.database.data.expense.ExpenseEntity
+import com.nestor.expenses.ui.expenselist.ExpenseList
 import com.nestor.schema.CreateExpenseMutation
 import com.nestor.schema.type.ExpenseInput
 import com.nestor.schema.utils.ResponseWrapper
@@ -11,8 +12,8 @@ interface ExpenseRepository {
     fun getExpenses(
         month: Int,
         year: Int,
-        cursor: Int?,
+        pageNumber: Int,
         pageSize: Int?,
         userUid: String
-    ): Flow<ResponseWrapper<List<ExpenseEntity>>>
+    ): Flow<ResponseWrapper<ExpenseList>>
 }

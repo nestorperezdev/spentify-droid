@@ -3,12 +3,14 @@ package com.nestor.expenses.ui.expenselist
 import com.nestor.database.data.expense.ExpenseEntity
 
 data class ExpenseList(
-    val totalItems: Int,
+    /**
+     * When local fetching we don't know the total pages and total items
+     */
+    val totalItems: Int? = null,
+    val totalPages: Int? = null,
     val items: List<ExpenseEntity>,
     val endReached: Boolean = false
 ) {
-    fun firstItemCursor() = items.firstOrNull()?.cursor
-
     infix fun mergeForward(newList: ExpenseList): ExpenseList {
         return ExpenseList(totalItems = newList.totalItems, items = this.items + newList.items)
     }

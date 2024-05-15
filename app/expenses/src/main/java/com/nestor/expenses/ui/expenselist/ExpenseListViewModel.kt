@@ -6,7 +6,6 @@ import com.nestor.common.data.auth.AuthRepository
 import com.nestor.common.data.currency.CurrencyRepository
 import com.nestor.expenses.data.ExpenseRepository
 import com.nestor.schema.utils.ResponseWrapper
-import com.nestor.schema.utils.mapBody
 import com.nestor.uikit.util.CoroutineContextProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,35 +30,30 @@ class ExpenseListViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : ViewModel() {
     var monthYear: MutableStateFlow<Pair<Int, Int>> = MutableStateFlow(Pair(2024, 5))
+    private val _currentPage = MutableStateFlow(0)
     private val _userCurrencySymbol = MutableStateFlow("$")
     val userCurrencySymbol = _userCurrencySymbol
     val expenseItems: StateFlow<ResponseWrapper<ExpenseList>> =
-        authRepository.userDetails()
+        combineTransform(authRepository.userDetails()
             .map { it.body }
-            .filterNotNull()
-            .combineTransform(monthYear) { user, monthYear ->
-                emitAll(
-                    expenseRepository.getExpenses(
-                        month = monthYear.second,
-                        year = monthYear.first,
-                        pageSize = PAGE_SIZE,
-                        userUid = user.uuid,
-                        cursor = null
-                    )
+            .filterNotNull(), monthYear, _currentPage) { user, monthYear, page ->
+            emitAll(
+                expenseRepository.getExpenses(
+                    month = monthYear.second,
+                    year = monthYear.first,
+                    pageSize = PAGE_SIZE,
+                    userUid = user.uuid,
+                    pageNumber = page + 1
                 )
-            }.map {
-                it.mapBody { list ->
-                    ExpenseList(
-                        totalItems = 20,
-                        items = list,
-                        endReached = false,
-                    )
-                }
-            }
-            .stateIn(viewModelScope, SharingStarted.Lazily, ResponseWrapper.loading())
+            )
+        }.stateIn(viewModelScope, SharingStarted.Lazily, ResponseWrapper.loading())
 
     init {
         fetchUserCurrencyInfo()
+    }
+
+    fun fetchMoreItems() {
+        if (_currentPage.value == (expenseItems.value.body?.totalPages ?: -1)) return
     }
 
     private fun fetchUserCurrencyInfo() {
