@@ -2,8 +2,10 @@ package com.nestor.dashboard.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nestor.common.data.auth.AuthRepository
 import com.nestor.common.data.currency.CurrencyRepository
 import com.nestor.dashboard.data.DashboardRepository
+import com.nestor.database.data.currency.CurrencyEntity
 import com.nestor.schema.utils.ResponseWrapper
 import com.nestor.schema.utils.combineTransform
 import com.nestor.schema.utils.mapBody
@@ -14,9 +16,13 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.transformLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,6 +32,7 @@ class DashboardViewModel @Inject constructor(
     dashboardRepository: DashboardRepository,
     coroutineContextProvider: CoroutineContextProvider,
     currencyRepository: CurrencyRepository,
+    authRepository: AuthRepository
 ) : ViewModel() {
     val userDetails: StateFlow<ResponseWrapper<UserDetails>> =
         dashboardRepository.fetchDashboardInfo().map {
@@ -33,24 +40,28 @@ class DashboardViewModel @Inject constructor(
         }.stateIn(viewModelScope, SharingStarted.Lazily, ResponseWrapper.loading())
 
     val summary: StateFlow<ResponseWrapper<DailySummary>> =
-        dashboardRepository.fetchDashboardInfo()
-            .combine(
-                currencyRepository.fetchCurrentUserCurrency().filterNotNull()
-            ) { dash, currency ->
-                dash.combineTransform(ResponseWrapper.success(currency)) { summary, currencyWrapper ->
+        authRepository.userDetails()
+            .map { it.body }
+            .filterNotNull()
+            .transformLatest { user ->
+                emitAll(currencyRepository.fetchCurrencyByCode(user.currencyCode))
+            }
+            .combine(dashboardRepository.fetchDashboardInfo()) { currencyWrapper, summaryWrapper ->
+                summaryWrapper.combineTransform(currencyWrapper) { summary, currency ->
                     DailySummary(
                         totalExpenses = summary.totalExpenses,
                         minimalExpense = summary.minimalExpense,
                         dailyAverageExpense = summary.dailyAverageExpense,
                         maximalExpense = summary.maximalExpense,
                         userCurrency = UserCurrency(
-                            usdValue = currencyWrapper.usdRate,
-                            symbol = currencyWrapper.symbol,
-                            code = currencyWrapper.code,
+                            usdValue = currency.usdRate,
+                            symbol = currency.symbol,
+                            code = currency.code,
                         )
                     )
                 }
-            }.stateIn(viewModelScope, SharingStarted.Lazily, ResponseWrapper.loading())
+            }
+            .stateIn(viewModelScope, SharingStarted.Lazily, ResponseWrapper.loading())
 
     init {
         viewModelScope.launch(coroutineContextProvider.io()) {

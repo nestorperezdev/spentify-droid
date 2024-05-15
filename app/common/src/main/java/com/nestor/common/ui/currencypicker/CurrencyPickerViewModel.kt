@@ -2,6 +2,7 @@ package com.nestor.common.ui.currencypicker
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nestor.common.data.auth.AuthRepository
 import com.nestor.common.data.currency.CurrencyRepository
 import com.nestor.database.data.currency.CurrencyEntity
 import com.nestor.uikit.input.FormFieldData
@@ -11,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CurrencyPickerViewModel @Inject constructor(
     private val currencyRepository: CurrencyRepository,
+    private val authRepository: AuthRepository,
     coroutineDispatcher: CoroutineContextProvider,
 ) : ViewModel() {
     private val _filterText = MutableStateFlow(FormFieldData(""))
@@ -40,9 +43,16 @@ class CurrencyPickerViewModel @Inject constructor(
                 }
         }
         viewModelScope.launch(coroutineDispatcher.io()) {
-            currencyRepository.fetchCurrentUserCurrency().collect { currency ->
-                _selectedCurrency.update { currency }
-            }
+            authRepository.userDetails()
+                .map { it.body?.currencyCode }
+                .filterNotNull()
+                .collect { code ->
+                    currencyRepository.fetchCurrencyByCode(code)
+                        .map { it.body }
+                        .collect { currency ->
+                            _selectedCurrency.update { currency }
+                        }
+                }
         }
     }
 

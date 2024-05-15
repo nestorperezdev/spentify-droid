@@ -7,8 +7,11 @@ import com.nestor.schema.UserDetailsQuery
 import com.nestor.schema.utils.ResponseWrapper
 import com.nestor.schema.utils.safeApiCall
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.combineTransform
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.transformLatest
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
@@ -34,22 +37,22 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override fun userDetails(): Flow<ResponseWrapper<UserEntity?>> =
-        localDatasource.tokenContents().flatMapLatest { tokenPayload ->
-            localDatasource.userDetails().map {
-                it?.let { user ->
-                    ResponseWrapper.success(user)
+        localDatasource.tokenContents()
+            .combineTransform(localDatasource.userDetails()) { tokenPayload, userWrapper ->
+                userWrapper?.let { user ->
+                    emit(ResponseWrapper.success(user))
                 } ?: run {
-                    ResponseWrapper.loading<UserEntity?>()
                     if (tokenPayload == null) {
-                        ResponseWrapper.success(null)
+                        emit(ResponseWrapper.success(null))
                     } else {
+                        emit(ResponseWrapper.loading())
                         val result = safeApiCall { remoteDataSource.fetchUserDetails() }
                         saveUserDetails(result)
-                        ResponseWrapper.success(result.body?.userEntity())
+                        emit(ResponseWrapper.success(result.body?.userEntity()))
                     }
                 }
             }
-        }
+
 
     private suspend fun saveUserDetails(userResponse: ResponseWrapper<UserDetailsQuery.Data>) {
         userResponse.body?.let {
@@ -72,6 +75,7 @@ class AuthRepositoryImpl @Inject constructor(
         localDatasource.clearToken()
     }
 }
+
 private fun UserDetailsQuery.Data.userEntity(): UserEntity {
     return UserEntity(
         name = this.userDetails.user.name,

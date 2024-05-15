@@ -2,6 +2,7 @@ package com.nestor.expenses.ui.expenselist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nestor.common.data.auth.AuthRepository
 import com.nestor.common.data.currency.CurrencyRepository
 import com.nestor.expenses.data.ExpenseRepository
 import com.nestor.schema.utils.ResponseWrapper
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -24,6 +26,7 @@ class ExpenseListViewModel @Inject constructor(
     private val expenseRepository: ExpenseRepository,
     private val currencyRepository: CurrencyRepository,
     private val coroutineDispatcher: CoroutineContextProvider,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
     var monthYear: MutableStateFlow<Pair<Int, Int>> = MutableStateFlow(Pair(2024, 5))
     private val _currencyUSDExchangeRate = MutableStateFlow(1.0)
@@ -47,11 +50,17 @@ class ExpenseListViewModel @Inject constructor(
 
     private fun fetchUserCurrencyInfo() {
         viewModelScope.launch(coroutineDispatcher.io()) {
-            currencyRepository.fetchCurrentUserCurrency()
+            authRepository.userDetails()
+                .map { it.body?.currencyCode }
                 .filterNotNull()
-                .collect { currency ->
-                    _userCurrencySymbol.update { currency.symbol }
-                    _currencyUSDExchangeRate.update { currency.usdRate }
+                .collect { code ->
+                    currencyRepository.fetchCurrencyByCode(code)
+                        .map { it.body }
+                        .filterNotNull()
+                        .collect { currency ->
+                            _userCurrencySymbol.update { currency.symbol }
+                            _currencyUSDExchangeRate.update { currency.usdRate }
+                        }
                 }
         }
     }

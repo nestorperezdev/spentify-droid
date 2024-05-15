@@ -10,12 +10,15 @@ import com.nestor.schema.utils.safeApiCall
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.transformLatest
 import java.util.Date
 import javax.inject.Inject
 
@@ -44,13 +47,6 @@ class CurrencyRepositoryImpl @Inject constructor(
                 ResponseWrapper.loading()
             }
         }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override fun fetchCurrentUserCurrency(): Flow<CurrencyEntity?> {
-        return authLocalDataSource.userDetails().filterNotNull().flatMapLatest { user ->
-            localDataSource.fetchCurrencyByCode(user.currencyCode)
-        }
-    }
 
     override suspend fun updateUserCurrency(currency: CurrencyEntity) {
         with(currency) {

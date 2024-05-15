@@ -24,6 +24,9 @@ shimmerLoading = "1.2.0"
 paging = "3.2.1"
 googleServices = "4.4.1"
 firebaseBom = "33.0.0"
+mockkVersion = "1.13.10"
+turbineVersion = "1.1.0"
+
 
 [libraries]
 androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
@@ -60,6 +63,8 @@ paging-compose = { group = "androidx.paging", name = "paging-compose", version.r
 firebaseBom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockkVersion" }
+turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbineVersion" }
 
 [plugins]
 apolloGraphql = { id = "com.apollographql.apollo3", version.ref = "apollo" }

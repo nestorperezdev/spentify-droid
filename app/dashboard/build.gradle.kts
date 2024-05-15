@@ -57,6 +57,7 @@ dependencies {
     implementation(project(":app:lib:schema"))
     implementation(project(":app:database"))
     implementation(project(":app:common"))
+    implementation(project(":app:auth"))
     implementation(libs.compose.graphics)
     implementation(libs.compose.material3)
     implementation(libs.compose.toolingPreview)

@@ -26,8 +26,12 @@ class AccountViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(coroutineContextProvider.io()) {
-            currencyRepository.fetchCurrentUserCurrency().collect { currency ->
-                _selectedCurrency.value = currency
+            authRepository.userDetails().collect { userDetails ->
+                userDetails.body?.currencyCode?.let { currencyCode ->
+                    currencyRepository.fetchCurrencyByCode(currencyCode).collect { currency ->
+                        _selectedCurrency.value = currency.body
+                    }
+                }
             }
         }
     }

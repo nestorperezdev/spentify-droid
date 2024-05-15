@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.compose.toolingPreview)
     testImplementation(libs.junit)
+    testImplementation(libs.mockk)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
     debugImplementation(libs.compose.debug.tooling)

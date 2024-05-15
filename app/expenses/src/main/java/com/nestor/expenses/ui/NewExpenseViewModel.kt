@@ -2,6 +2,7 @@ package com.nestor.expenses.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nestor.common.data.auth.AuthRepository
 import com.nestor.common.data.currency.CurrencyRepository
 import com.nestor.dashboard.data.DashboardRepository
 import com.nestor.database.data.currency.CurrencyEntity
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -26,7 +28,8 @@ class NewExpenseViewModel @Inject constructor(
     private val expenseRepository: ExpenseRepository,
     private val currencyRepository: CurrencyRepository,
     private val coroutineDispatcher: CoroutineContextProvider,
-    private val dashRepo: DashboardRepository
+    private val dashRepo: DashboardRepository,
+    private val authRepository: AuthRepository
 ) :
     ViewModel() {
     private val inputRegex = "^\\d*\\.?\\d*\$".toRegex()
@@ -45,10 +48,17 @@ class NewExpenseViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(coroutineDispatcher.io()) {
-            currencyRepository.fetchCurrentUserCurrency()
+            authRepository.userDetails()
+                .map { it.body?.currencyCode }
                 .filterNotNull()
-                .collect { currency ->
-                    _selectedCurrency.update { currency }
+                .take(1)
+                .collect { code ->
+                    currencyRepository.fetchCurrencyByCode(code)
+                        .map { it.body }
+                        .filterNotNull()
+                        .collect { currency ->
+                            _selectedCurrency.update { currency }
+                        }
                 }
         }
     }
