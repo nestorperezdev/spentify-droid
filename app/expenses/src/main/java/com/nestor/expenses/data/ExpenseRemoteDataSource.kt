@@ -7,5 +7,5 @@ import com.nestor.schema.type.ExpenseInput
 
 interface ExpenseRemoteDataSource {
     suspend fun createExpense(expenseInput: ExpenseInput): ApolloResponse<CreateExpenseMutation.Data>
-    suspend fun getExpenses(month: Int, year: Int, pageSize: Int?, cursor: Int?): ApolloResponse<ExpensesListQuery.Data>
+    suspend fun getExpenses(month: Int, year: Int, pageSize: Int?, pageNumber: Int): ApolloResponse<ExpensesListQuery.Data>
 }

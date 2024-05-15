@@ -17,14 +17,14 @@ class ExpenseRemoteDataSourceImpl @Inject constructor(val client: ApolloClient) 
         month: Int,
         year: Int,
         pageSize: Int?,
-        cursor: Int?
+        pageNumber: Int
     ): ApolloResponse<ExpensesListQuery.Data> {
         return client.query(
             ExpensesListQuery(
                 month = month,
                 year = year,
-                next = Optional.presentIfNotNull(pageSize),
-                cursor = Optional.presentIfNotNull(cursor)
+                limit = Optional.presentIfNotNull(pageSize),
+                page = pageNumber
             )
         ).execute()
     }

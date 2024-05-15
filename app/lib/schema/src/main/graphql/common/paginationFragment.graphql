@@ -1,0 +1,5 @@
+fragment paginationFragment on PaginationData {
+    currentPage
+    totalItems
+    totalPages
+}

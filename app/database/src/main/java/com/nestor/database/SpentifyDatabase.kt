@@ -1,5 +1,6 @@
 package com.nestor.database
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -11,11 +12,14 @@ import com.nestor.database.data.expense.ExpenseDao
 import com.nestor.database.data.expense.ExpenseEntity
 import com.nestor.database.data.user.UserDao
 import com.nestor.database.data.user.UserEntity
+import com.nestor.database.migrations.AutoMigration7to8
 import com.nestor.database.util.DateConverter
 
 @Database(
     entities = [DashboardEntity::class, CurrencyEntity::class, UserEntity::class, ExpenseEntity::class],
-    version = 7
+    version = 8,
+    exportSchema = true,
+    autoMigrations = [AutoMigration(from = 7, to = 8, spec = AutoMigration7to8::class)]
 )
 @TypeConverters(DateConverter::class)
 abstract class SpentifyDatabase : RoomDatabase() {

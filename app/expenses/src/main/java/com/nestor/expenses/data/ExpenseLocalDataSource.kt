@@ -8,7 +8,7 @@ interface ExpenseLocalDataSource {
     suspend fun getExpenses(
         month: Int,
         year: Int,
-        afterCursor: Int,
+        page: Int,
         limit: Int,
         userUuid: String
     ): List<ExpenseEntity>
