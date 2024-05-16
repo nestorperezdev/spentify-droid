@@ -55,6 +55,7 @@ class ExpenseListViewModel @Inject constructor(
 
     fun fetchMoreItems() {
         if (_currentPage.value == (expenseItems.value.body?.totalPages ?: -1)) return
+        _currentPage.update { it + 1 }
     }
 
     private fun fetchUserCurrencyInfo() {
@@ -75,6 +76,7 @@ class ExpenseListViewModel @Inject constructor(
 
     fun onScrollEndReached() {
         if (expenseItems.value.isLoading) return
+        this.fetchMoreItems()
     }
 }
 
