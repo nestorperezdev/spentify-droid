@@ -1,6 +1,7 @@
 package com.nestor.expenses.data
 
 import com.nestor.database.data.expense.ExpenseEntity
+import java.util.Date
 
 
 interface ExpenseLocalDataSource {
@@ -10,6 +11,7 @@ interface ExpenseLocalDataSource {
         year: Int,
         page: Int,
         limit: Int,
-        userUuid: String
+        userUuid: String,
+        expirationDate: Date
     ): List<ExpenseEntity>
 }

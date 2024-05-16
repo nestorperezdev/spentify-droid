@@ -6,6 +6,7 @@ import com.apollographql.apollo3.api.Optional
 import com.nestor.schema.CreateExpenseMutation
 import com.nestor.schema.ExpensesListQuery
 import com.nestor.schema.type.ExpenseInput
+import java.util.Date
 import javax.inject.Inject
 
 class ExpenseRemoteDataSourceImpl @Inject constructor(val client: ApolloClient) :
