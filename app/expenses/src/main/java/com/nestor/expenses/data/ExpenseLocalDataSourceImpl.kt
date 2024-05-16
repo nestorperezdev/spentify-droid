@@ -3,6 +3,7 @@ package com.nestor.expenses.data
 import android.icu.util.Calendar
 import com.nestor.database.data.expense.ExpenseDao
 import com.nestor.database.data.expense.ExpenseEntity
+import kotlinx.coroutines.flow.Flow
 import java.util.Date
 import javax.inject.Inject
 
@@ -12,14 +13,12 @@ class ExpenseLocalDataSourceImpl @Inject constructor(private val expenseDao: Exp
         expenseDao.upsertAll(expenseList)
     }
 
-    override suspend fun getExpenses(
+    override fun getExpenses(
         month: Int,
         year: Int,
-        page: Int,
-        limit: Int,
         userUuid: String,
         expirationDate: Date
-    ): List<ExpenseEntity> {
+    ): Flow<List<ExpenseEntity>> {
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.MONTH, month - 1)
         calendar.set(Calendar.YEAR, year)
@@ -31,9 +30,7 @@ class ExpenseLocalDataSourceImpl @Inject constructor(private val expenseDao: Exp
         return expenseDao.getExpenses(
             from = firstDate,
             to = lastDate,
-            page = page,
             userUuid = userUuid,
-            limit = limit,
             expirationDate = expirationDate
         )
     }

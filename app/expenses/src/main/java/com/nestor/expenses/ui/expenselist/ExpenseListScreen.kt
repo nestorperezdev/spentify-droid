@@ -21,6 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nestor.common.util.formatWithDayAndDate
 import com.nestor.dashboard.R
+import com.nestor.database.data.expense.ExpenseEntity
+import com.nestor.schema.ExpensesListQuery
+import com.nestor.schema.type.PaginationData
 import com.nestor.schema.utils.ResponseWrapper
 import com.nestor.uikit.list.SYListItem
 import com.nestor.uikit.list.SYListItemData
@@ -37,18 +40,21 @@ fun ExpenseListScreen(
         modifier = modifier,
         expenseListState = viewModel.expenseItems,
         userCurrencySymbolState = viewModel.userCurrencySymbol,
-        onScrollEndReached = viewModel::onScrollEndReached
+        onScrollEndReached = viewModel::onScrollEndReached,
+        paginationResult = viewModel.paginationResult
     )
 }
 
 @Composable
 private fun ExpenseListContent(
     modifier: Modifier = Modifier,
-    expenseListState: StateFlow<ResponseWrapper<ExpenseList>>,
+    expenseListState: StateFlow<List<ExpenseEntity>>,
+    paginationResult: StateFlow<ResponseWrapper<ExpensesListQuery.Pagination>>,
     userCurrencySymbolState: StateFlow<String>,
     onScrollEndReached: () -> Unit = {}
 ) {
     val expenseList by expenseListState.collectAsState()
+    val pagination by paginationResult.collectAsState()
     val currencySymbol by userCurrencySymbolState.collectAsState()
     val scrollState = rememberLazyListState()
     LazyColumn(
@@ -56,22 +62,20 @@ private fun ExpenseListContent(
         verticalArrangement = Arrangement.spacedBy(20.dp),
         state = scrollState
     ) {
-        expenseList.body?.let {
-            items(it.items) { item ->
-                val separator = if (item.description.isEmpty()) "" else " ⦁ "
-                SYListItem(
-                    item = SYListItemData(
-                        label = stringResource(
-                            R.string.currency_format,
-                            currencySymbol,
-                            item.amount.formatMoneyAmount()
-                        ),
-                        subtitle = "${item.date.formatWithDayAndDate()}${separator}${item.description}"
-                    )
+        items(expenseList) { item ->
+            val separator = if (item.description.isEmpty()) "" else " ⦁ "
+            SYListItem(
+                item = SYListItemData(
+                    label = stringResource(
+                        R.string.currency_format,
+                        currencySymbol,
+                        item.amount.formatMoneyAmount()
+                    ),
+                    subtitle = "${item.date.formatWithDayAndDate()}${separator}${item.description}"
                 )
-            }
+            )
         }
-        if (expenseList.isLoading) {
+        if (pagination.isLoading) {
             item {
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()
