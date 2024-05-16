@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.nestor.common.util.formatWithDayAndDate
 import com.nestor.dashboard.R
 import com.nestor.database.data.currency.CurrencyEntity
 import com.nestor.schema.utils.ResponseWrapper
@@ -55,6 +56,7 @@ private fun ExpenseListContent(
         }
         expenseList.body?.let {
             items(it.items) { item ->
+                val separator = if (item.description.isEmpty()) "" else " ⦁ "
                 SYListItem(
                     item = SYListItemData(
                         label = stringResource(
@@ -62,7 +64,7 @@ private fun ExpenseListContent(
                             currencySymbol,
                             item.usdValue.formatMoneyAmount()
                         ),
-                        subtitle = item.description
+                        subtitle = "${item.date.formatWithDayAndDate()}${separator}${item.description}"
                     )
                 )
             }
