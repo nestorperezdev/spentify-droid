@@ -14,6 +14,7 @@ interface ExpenseRepository {
         year: Int,
         pageNumber: Int,
         pageSize: Int?,
-        userUid: String
+        userUid: String,
+        previousResponse: ExpenseList?
     ): Flow<ResponseWrapper<ExpenseList>>
 }
