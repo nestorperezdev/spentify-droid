@@ -1,13 +1,16 @@
 package com.nestor.expenses.data
 
+import android.util.Log
 import com.nestor.database.data.expense.ExpenseEntity
 import com.nestor.expenses.ui.expenselist.ExpenseList
 import com.nestor.schema.ExpensesListQuery
 import com.nestor.schema.type.ExpenseInput
 import com.nestor.schema.utils.ResponseWrapper
+import com.nestor.schema.utils.mapBody
 import com.nestor.schema.utils.safeApiCall
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onEach
 import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
@@ -38,7 +41,49 @@ class ExpenseRepositoryImpl @Inject constructor(
     override suspend fun createExpense(expenseInput: ExpenseInput) =
         safeApiCall { remoteDataSource.createExpense(expenseInput) }
 
-    override fun getExpenses(
+    override fun getExpenses(month: Int, year: Int, userUid: String): Flow<List<ExpenseEntity>> {
+        val calendar = Calendar.getInstance()
+        calendar.time = Date()
+        calendar.add(Calendar.DATE, -1)
+        return localDataSource.getExpenses(
+            month = month,
+            year = year,
+            userUuid = userUid,
+            expirationDate = calendar.time
+        )
+    }
+
+    override fun fetchMoreExpenses(
+        page: Int,
+        pageSize: Int,
+        userUid: String,
+        year: Int,
+        month: Int
+    ): Flow<ResponseWrapper<ExpensesListQuery.Pagination>> = flow {
+        emit(ResponseWrapper.loading(null))
+        val response = safeApiCall {
+            remoteDataSource.getExpenses(
+                month = month,
+                year = year,
+                pageNumber = page,
+                pageSize = pageSize
+            )
+        }
+        response.body?.let { list ->
+            val storedAt = Date()
+            val itemsEntities: List<ExpenseEntity> =
+                list.expensesList.expenses.map {
+                    it.toEntity(
+                        userUid = userUid,
+                        storedAt = storedAt
+                    )
+                }
+            localDataSource.saveExpenseList(itemsEntities)
+        }
+        emit(response.mapBody { it.expensesList.pagination })
+    }
+
+    /*override fun getExpenses(
         month: Int,
         year: Int,
         pageNumber: Int,
@@ -88,7 +133,7 @@ class ExpenseRepositoryImpl @Inject constructor(
         } else {
             emit(ResponseWrapper.success(ExpenseList(items = items)))
         }
-    }
+    }*/
 
     /*safeApiCall {
         _expensesList.value = ResponseWrapper.loading(_expensesList.value.body)
