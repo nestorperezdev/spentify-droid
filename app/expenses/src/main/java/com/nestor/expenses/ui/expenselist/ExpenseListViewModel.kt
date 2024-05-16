@@ -1,5 +1,6 @@
 package com.nestor.expenses.ui.expenselist
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nestor.common.data.auth.AuthRepository
@@ -70,6 +71,10 @@ class ExpenseListViewModel @Inject constructor(
                         }
                 }
         }
+    }
+
+    fun onScrollEndReached() {
+        if (expenseItems.value.isLoading) return
     }
 }
 
