@@ -64,7 +64,7 @@ private fun ExpenseListContent(
                         label = stringResource(
                             R.string.currency_format,
                             currencySymbol,
-                            item.usdValue.formatMoneyAmount()
+                            item.amount.formatMoneyAmount()
                         ),
                         subtitle = "${item.date.formatWithDayAndDate()}${separator}${item.description}"
                     )
