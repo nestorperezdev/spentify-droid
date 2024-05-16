@@ -3,6 +3,7 @@ package com.nestor.expenses.data
 import android.icu.util.Calendar
 import com.nestor.database.data.expense.ExpenseDao
 import com.nestor.database.data.expense.ExpenseEntity
+import java.util.Date
 import javax.inject.Inject
 
 class ExpenseLocalDataSourceImpl @Inject constructor(private val expenseDao: ExpenseDao) :
@@ -16,7 +17,8 @@ class ExpenseLocalDataSourceImpl @Inject constructor(private val expenseDao: Exp
         year: Int,
         page: Int,
         limit: Int,
-        userUuid: String
+        userUuid: String,
+        expirationDate: Date
     ): List<ExpenseEntity> {
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.MONTH, month - 1)
@@ -31,7 +33,8 @@ class ExpenseLocalDataSourceImpl @Inject constructor(private val expenseDao: Exp
             to = lastDate,
             page = page,
             userUuid = userUuid,
-            limit = limit
+            limit = limit,
+            expirationDate = expirationDate
         )
     }
 }

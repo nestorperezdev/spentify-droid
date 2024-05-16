@@ -10,12 +10,13 @@ interface ExpenseDao {
     @Upsert
     suspend fun upsertAll(expenses: List<ExpenseEntity>)
 
-    @Query("SELECT * FROM expense WHERE date BETWEEN :from AND :to AND user_uuid = :userUuid ORDER BY `order` DESC LIMIT :limit OFFSET :page * :limit")
+    @Query("SELECT * FROM expense WHERE date BETWEEN :from AND :to AND user_uuid = :userUuid AND stored_at > :expirationDate ORDER BY `order` DESC LIMIT :limit OFFSET :page * :limit")
     suspend fun getExpenses(
         from: Date,
         to: Date,
         userUuid: String,
         page: Int,
-        limit: Int
+        limit: Int,
+        expirationDate: Date
     ): List<ExpenseEntity>
 }

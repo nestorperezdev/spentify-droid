@@ -8,6 +8,7 @@ import com.nestor.schema.utils.ResponseWrapper
 import com.nestor.schema.utils.safeApiCall
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
 
@@ -45,17 +46,24 @@ class ExpenseRepositoryImpl @Inject constructor(
         userUid: String,
         previousResponse: ExpenseList?
     ): Flow<ResponseWrapper<ExpenseList>> = flow {
+        val calendar = Calendar.getInstance()
+        calendar.time = Date()
+        calendar.add(Calendar.DATE, -1)
+        emit(ResponseWrapper.loading(body = previousResponse))
         val items = localDataSource.getExpenses(
             month = month,
             year = year,
             page = pageNumber,
             limit = pageSize ?: 20,
-            userUuid = userUid
+            userUuid = userUid,
+            expirationDate = calendar.time
         )
         if (items.isEmpty()) {
-            emit(ResponseWrapper.loading(body = previousResponse))
             val remoteItems = remoteDataSource.getExpenses(
-                month = month, year = year, pageNumber = pageNumber, pageSize = pageSize
+                month = month,
+                year = year,
+                pageNumber = pageNumber,
+                pageSize = pageSize
             )
             val storedAt = Date()
             remoteItems.data?.expensesList?.let { list ->
