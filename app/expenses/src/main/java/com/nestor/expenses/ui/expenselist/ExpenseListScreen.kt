@@ -56,13 +56,6 @@ private fun ExpenseListContent(
         verticalArrangement = Arrangement.spacedBy(20.dp),
         state = scrollState
     ) {
-        if (expenseList.isLoading) {
-            item {
-                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
-                }
-            }
-        }
         expenseList.body?.let {
             items(it.items) { item ->
                 val separator = if (item.description.isEmpty()) "" else " ⦁ "
@@ -76,6 +69,13 @@ private fun ExpenseListContent(
                         subtitle = "${item.date.formatWithDayAndDate()}${separator}${item.description}"
                     )
                 )
+            }
+        }
+        if (expenseList.isLoading) {
+            item {
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
             }
         }
     }

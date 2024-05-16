@@ -20,10 +20,11 @@ data class ResponseWrapper<T>(
 }
 
 fun <R, T> ResponseWrapper<T>.mapBody(transform: (T) -> R): ResponseWrapper<R> {
+    val newBody = body?.let(transform)
     return when {
-        isLoading -> ResponseWrapper.loading()
-        error != null -> ResponseWrapper.error(error)
-        else -> ResponseWrapper.success(transform(body!!))
+        isLoading -> ResponseWrapper.loading(body = newBody)
+        error != null -> ResponseWrapper.error(error = error, body = newBody)
+        else -> ResponseWrapper.success(newBody!!)
     }
 }
 

@@ -1,12 +1,13 @@
 package com.nestor.expenses.ui.expenselist
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nestor.common.data.auth.AuthRepository
 import com.nestor.common.data.currency.CurrencyRepository
+import com.nestor.database.data.expense.ExpenseEntity
 import com.nestor.expenses.data.ExpenseRepository
 import com.nestor.schema.utils.ResponseWrapper
+import com.nestor.schema.utils.mapBody
 import com.nestor.uikit.util.CoroutineContextProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,6 +35,7 @@ class ExpenseListViewModel @Inject constructor(
     private val _currentPage = MutableStateFlow(0)
     private val _userCurrencySymbol = MutableStateFlow("$")
     val userCurrencySymbol = _userCurrencySymbol
+    private var previousResultList: ExpenseList? = null
     val expenseItems: StateFlow<ResponseWrapper<ExpenseList>> =
         combineTransform(authRepository.userDetails()
             .map { it.body }
@@ -44,9 +46,17 @@ class ExpenseListViewModel @Inject constructor(
                     year = monthYear.first,
                     pageSize = PAGE_SIZE,
                     userUid = user.uuid,
-                    pageNumber = page + 1
+                    pageNumber = page + 1,
+                    previousResponse = previousResultList
                 )
             )
+        }.map { wrapper ->
+            wrapper.mapBody {
+                val newList = (previousResultList?.items ?: emptyList()) + it.items
+                it.copy(items = newList)
+            }.also {
+                previousResultList = it.body
+            }
         }.stateIn(viewModelScope, SharingStarted.Lazily, ResponseWrapper.loading())
 
     init {

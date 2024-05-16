@@ -42,7 +42,8 @@ class ExpenseRepositoryImpl @Inject constructor(
         year: Int,
         pageNumber: Int,
         pageSize: Int?,
-        userUid: String
+        userUid: String,
+        previousResponse: ExpenseList?
     ): Flow<ResponseWrapper<ExpenseList>> = flow {
         val items = localDataSource.getExpenses(
             month = month,
@@ -52,7 +53,7 @@ class ExpenseRepositoryImpl @Inject constructor(
             userUuid = userUid
         )
         if (items.isEmpty()) {
-            emit(ResponseWrapper.loading())
+            emit(ResponseWrapper.loading(body = previousResponse))
             val remoteItems = remoteDataSource.getExpenses(
                 month = month, year = year, pageNumber = pageNumber, pageSize = pageSize
             )
