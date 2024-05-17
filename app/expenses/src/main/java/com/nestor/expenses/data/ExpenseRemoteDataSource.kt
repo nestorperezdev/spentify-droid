@@ -11,6 +11,7 @@ interface ExpenseRemoteDataSource {
         month: Int,
         year: Int,
         pageSize: Int?,
-        pageNumber: Int
+        cursor: Int,
+        currencyCode: String
     ): ApolloResponse<ExpensesListQuery.Data>
 }

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,9 +21,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.nestor.common.util.formatWithDayAndDate
 import com.nestor.dashboard.R
 import com.nestor.database.data.expense.ExpenseEntity
-import com.nestor.schema.ExpensesListQuery
-import com.nestor.schema.type.PaginationData
-import com.nestor.schema.utils.ResponseWrapper
 import com.nestor.uikit.list.SYListItem
 import com.nestor.uikit.list.SYListItemData
 import com.nestor.uikit.list.isScrolledToEnd
@@ -41,7 +37,6 @@ fun ExpenseListScreen(
         expenseListState = viewModel.expenseItems,
         userCurrencySymbolState = viewModel.userCurrencySymbol,
         onScrollEndReached = viewModel::onScrollEndReached,
-        paginationResult = viewModel.paginationResult
     )
 }
 
@@ -49,12 +44,10 @@ fun ExpenseListScreen(
 private fun ExpenseListContent(
     modifier: Modifier = Modifier,
     expenseListState: StateFlow<List<ExpenseEntity>>,
-    paginationResult: StateFlow<ResponseWrapper<ExpensesListQuery.Pagination>>,
     userCurrencySymbolState: StateFlow<String>,
     onScrollEndReached: () -> Unit = {}
 ) {
     val expenseList by expenseListState.collectAsState()
-    val pagination by paginationResult.collectAsState()
     val currencySymbol by userCurrencySymbolState.collectAsState()
     val scrollState = rememberLazyListState()
     LazyColumn(
@@ -75,7 +68,7 @@ private fun ExpenseListContent(
                 )
             )
         }
-        if (pagination.isLoading) {
+        if (false) {
             item {
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()

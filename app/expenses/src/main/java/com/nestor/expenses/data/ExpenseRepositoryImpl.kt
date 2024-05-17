@@ -1,8 +1,6 @@
 package com.nestor.expenses.data
 
-import android.util.Log
 import com.nestor.database.data.expense.ExpenseEntity
-import com.nestor.expenses.ui.expenselist.ExpenseList
 import com.nestor.schema.ExpensesListQuery
 import com.nestor.schema.type.ExpenseInput
 import com.nestor.schema.utils.ResponseWrapper
@@ -10,7 +8,6 @@ import com.nestor.schema.utils.mapBody
 import com.nestor.schema.utils.safeApiCall
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.onEach
 import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
@@ -26,9 +23,10 @@ private fun ExpensesListQuery.Expense.toEntity(
             date = date,
             storedAt = storedAt,
             amount = value,
-            order = cursor,
+            cursor = cursor,
             usdValue = usdValue,
-            id = id
+            id = id,
+            currencyCode = selectedCurrency.currencyInfo.code
         )
     }
 }
@@ -41,7 +39,12 @@ class ExpenseRepositoryImpl @Inject constructor(
     override suspend fun createExpense(expenseInput: ExpenseInput) =
         safeApiCall { remoteDataSource.createExpense(expenseInput) }
 
-    override fun getExpenses(month: Int, year: Int, userUid: String): Flow<List<ExpenseEntity>> {
+    override fun getExpenses(
+        month: Int,
+        year: Int,
+        userUid: String,
+        currencyCode: String
+    ): Flow<List<ExpenseEntity>> {
         val calendar = Calendar.getInstance()
         calendar.time = Date()
         calendar.add(Calendar.DATE, -1)
@@ -49,24 +52,26 @@ class ExpenseRepositoryImpl @Inject constructor(
             month = month,
             year = year,
             userUuid = userUid,
-            expirationDate = calendar.time
+            expirationDate = calendar.time,
+            currencyCode = currencyCode
         )
     }
 
-    override fun fetchMoreExpenses(
-        page: Int,
+    override suspend fun fetchMoreExpenses(
+        cursor: Int,
         pageSize: Int,
         userUid: String,
         year: Int,
-        month: Int
-    ): Flow<ResponseWrapper<ExpensesListQuery.Pagination>> = flow {
-        emit(ResponseWrapper.loading(null))
+        month: Int,
+        currencyCode: String
+    ) {
         val response = safeApiCall {
             remoteDataSource.getExpenses(
                 month = month,
                 year = year,
-                pageNumber = page,
-                pageSize = pageSize
+                cursor = cursor,
+                pageSize = pageSize,
+                currencyCode = currencyCode
             )
         }
         response.body?.let { list ->
@@ -80,7 +85,6 @@ class ExpenseRepositoryImpl @Inject constructor(
                 }
             localDataSource.saveExpenseList(itemsEntities)
         }
-        emit(response.mapBody { it.expensesList.pagination })
     }
 
     /*override fun getExpenses(

@@ -17,7 +17,8 @@ class ExpenseLocalDataSourceImpl @Inject constructor(private val expenseDao: Exp
         month: Int,
         year: Int,
         userUuid: String,
-        expirationDate: Date
+        expirationDate: Date,
+        currencyCode: String,
     ): Flow<List<ExpenseEntity>> {
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.MONTH, month - 1)
@@ -31,7 +32,8 @@ class ExpenseLocalDataSourceImpl @Inject constructor(private val expenseDao: Exp
             from = firstDate,
             to = lastDate,
             userUuid = userUuid,
-            expirationDate = expirationDate
+            expirationDate = expirationDate,
+            currencyCode = currencyCode
         )
     }
 }

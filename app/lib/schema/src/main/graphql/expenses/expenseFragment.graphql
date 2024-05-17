@@ -1,5 +1,6 @@
 fragment expenseFragment on ExpenseDetail {
     currency { ...currencyInfo }
+    selectedCurrency { ...currencyInfo }
     description,
     usdValue,
     value,

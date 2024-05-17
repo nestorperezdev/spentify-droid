@@ -11,6 +11,7 @@ interface ExpenseLocalDataSource {
         month: Int,
         year: Int,
         userUuid: String,
-        expirationDate: Date
+        expirationDate: Date,
+        currencyCode: String
     ): Flow<List<ExpenseEntity>>
 }

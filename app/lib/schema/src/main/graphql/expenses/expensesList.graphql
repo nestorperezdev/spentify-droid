@@ -1,10 +1,8 @@
-query ExpensesList($month: Int!, $year: Int!, $page: Int!, $limit: Int) {
-    expensesList(month: $month, year: $year, page: $page, limit: $limit) {
+query ExpensesList($month: Int!, $year: Int!, $cursor: Int!, $limit: Int, $currencyCode: String!) {
+    expensesList(month: $month, year: $year, cursor: $cursor, limit: $limit, currencyCode: $currencyCode) {
         expenses {
             ...expenseFragment
         },
-        pagination {
-            ...paginationFragment
-        }
+        totalItems
     }
 }

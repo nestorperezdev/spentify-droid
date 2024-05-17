@@ -7,20 +7,13 @@ import com.nestor.common.data.auth.AuthRepository
 import com.nestor.common.data.currency.CurrencyRepository
 import com.nestor.database.data.expense.ExpenseEntity
 import com.nestor.expenses.data.ExpenseRepository
-import com.nestor.schema.ExpensesListQuery
-import com.nestor.schema.type.PaginationData
-import com.nestor.schema.utils.ResponseWrapper
-import com.nestor.schema.utils.mapBody
 import com.nestor.uikit.util.CoroutineContextProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.combineTransform
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -41,26 +34,6 @@ class ExpenseListViewModel @Inject constructor(
 ) : ViewModel() {
     private val monthYear: MutableStateFlow<Pair<Int, Int>> = MutableStateFlow(Pair(2024, 5))
     private val _userCurrencySymbol = MutableStateFlow("$")
-    private val _currentPage = MutableStateFlow(0)
-    val paginationResult: StateFlow<ResponseWrapper<ExpensesListQuery.Pagination>> = combineTransform(
-        _currentPage.filter { it > 0 },
-        monthYear,
-        authRepository.userDetails().map { it.body }.filterNotNull()
-    ) { page, monthYear, user ->
-        emitAll(
-            expenseRepository.fetchMoreExpenses(
-                page = page,
-                pageSize = PAGE_SIZE,
-                userUid = user.uuid,
-                year = monthYear.first,
-                month = monthYear.second
-            )
-        )
-    }.stateIn(
-        viewModelScope,
-        SharingStarted.Lazily,
-        ResponseWrapper.loading(null)
-    )
     val userCurrencySymbol = _userCurrencySymbol
     val expenseItems: StateFlow<List<ExpenseEntity>> =
         monthYear
@@ -71,7 +44,8 @@ class ExpenseListViewModel @Inject constructor(
                     expenseRepository.getExpenses(
                         year = monthYear.first,
                         month = monthYear.second,
-                        userUid = user.uuid
+                        userUid = user.uuid,
+                        currencyCode = user.currencyCode
                     )
                 )
             }
@@ -87,18 +61,7 @@ class ExpenseListViewModel @Inject constructor(
     }
 
     private fun fetchMoreItems() {
-        val page = this.calculateCurrentPage()
-        if (page > (paginationResult.value.body?.paginationFragment?.totalPages ?: 0)) {
-            Log.d(TAG, "fetchMoreItems: No more pages to fetch")
-            return
-        }
-        Log.i(TAG, "fetchMoreItems: Fetching page $page")
-        _currentPage.update { it + 1 }
-    }
-
-    private fun calculateCurrentPage(): Int {
-        val currentSize = expenseItems.value.size
-        return currentSize / PAGE_SIZE
+        Log.i(TAG, "fetchMoreItems: ")
     }
 
     private fun fetchUserCurrencyInfo() {
@@ -118,10 +81,6 @@ class ExpenseListViewModel @Inject constructor(
     }
 
     fun onScrollEndReached() {
-        if (paginationResult.value.isLoading) {
-            Log.d(TAG, "onScrollEndReached: Already loading")
-            return
-        }
         this.fetchMoreItems()
     }
 }

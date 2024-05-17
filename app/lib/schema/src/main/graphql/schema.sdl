@@ -91,9 +91,7 @@ input ExpenseInput {
 type ExpenseList {
   expenses: [ExpenseDetail!]!
 
-  pagination: PaginationData!
-
-  totalItems: Int! @deprecated(reason: "Use pagination.totalItems instead")
+  totalItems: Int!
 }
 
 """
@@ -126,14 +124,6 @@ type Mutation {
   updateUserDetails(input: UserDetailsUpdateDtoInput!): User!
 }
 
-type PaginationData {
-  currentPage: Int!
-
-  totalItems: Int!
-
-  totalPages: Int!
-}
-
 type Query {
   currencyInfo: Currency!
 
@@ -141,7 +131,7 @@ type Query {
 
   expenseDetails(currencyCode: String, expenseId: String!): ExpenseDetail!
 
-  expensesList(currencyCode: String, limit: Int! = 20, month: Int!, page: Int! = 1, year: Int!): ExpenseList!
+  expensesList(currencyCode: String, cursor: Int, limit: Int! = 20, month: Int!, year: Int!): ExpenseList!
 
   userDetails: User!
 }

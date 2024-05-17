@@ -11,11 +11,12 @@ interface ExpenseDao {
     @Upsert
     suspend fun upsertAll(expenses: List<ExpenseEntity>)
 
-    @Query("SELECT * FROM expense WHERE date BETWEEN :from AND :to AND user_uuid = :userUuid AND stored_at > :expirationDate ORDER BY `order` DESC")
+    @Query("SELECT * FROM expense WHERE date BETWEEN :from AND :to AND user_uuid = :userUuid AND stored_at > :expirationDate AND currency_code = :currencyCode ORDER BY cursor DESC")
     fun getExpenses(
         from: Date,
         to: Date,
         userUuid: String,
-        expirationDate: Date
+        expirationDate: Date,
+        currencyCode: String
     ): Flow<List<ExpenseEntity>>
 }

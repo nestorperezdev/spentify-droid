@@ -13,6 +13,8 @@ data class ExpenseEntity(
     @ColumnInfo val date: Date,
     @ColumnInfo("stored_at") val storedAt: Date,
     @ColumnInfo val amount: Double,
-    @ColumnInfo val order: Int,
-    @ColumnInfo("usd_value") val usdValue: Double
+    @ColumnInfo val cursor: Int,
+    @ColumnInfo("usd_value") val usdValue: Double,
+    //  TODO: Remove default value
+    @ColumnInfo("currency_code", defaultValue = "") val currencyCode: String,
 )

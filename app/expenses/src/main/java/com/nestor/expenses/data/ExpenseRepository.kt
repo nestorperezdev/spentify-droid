@@ -14,14 +14,16 @@ interface ExpenseRepository {
     fun getExpenses(
         month: Int,
         year: Int,
-        userUid: String
+        userUid: String,
+        currencyCode: String
     ): Flow<List<ExpenseEntity>>
 
-    fun fetchMoreExpenses(
-        page: Int,
+    suspend fun fetchMoreExpenses(
+        cursor: Int,
         pageSize: Int,
         userUid: String,
         year: Int,
-        month: Int
-    ): Flow<ResponseWrapper<ExpensesListQuery.Pagination>>
+        month: Int,
+        currencyCode: String
+    )
 }

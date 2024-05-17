@@ -13,13 +13,19 @@ import com.nestor.database.data.expense.ExpenseEntity
 import com.nestor.database.data.user.UserDao
 import com.nestor.database.data.user.UserEntity
 import com.nestor.database.migrations.AutoMigration7to8
+import com.nestor.database.migrations.AutoMigration8to9
+import com.nestor.database.migrations.AutoMigration9to10
 import com.nestor.database.util.DateConverter
 
 @Database(
     entities = [DashboardEntity::class, CurrencyEntity::class, UserEntity::class, ExpenseEntity::class],
-    version = 8,
+    version = 10,
     exportSchema = true,
-    autoMigrations = [AutoMigration(from = 7, to = 8, spec = AutoMigration7to8::class)]
+    autoMigrations = [
+        AutoMigration(from = 7, to = 8, spec = AutoMigration7to8::class),
+        AutoMigration(from = 8, to = 9),
+        AutoMigration(from = 9, to = 10, spec = AutoMigration9to10::class)
+    ]
 )
 @TypeConverters(DateConverter::class)
 abstract class SpentifyDatabase : RoomDatabase() {
