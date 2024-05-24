@@ -1,6 +1,7 @@
 package com.nestor.spentify.di
 
 import android.content.Context
+import android.icu.util.Calendar
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
@@ -25,6 +26,7 @@ import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 import com.apollographql.apollo3.adapter.DateAdapter
+import com.nestor.common.data.monthandyear.MonthAndYear
 import com.nestor.schema.type.DateTime
 
 @Module
@@ -69,6 +71,15 @@ abstract class AppModule {
                 scope = CoroutineScope(dispatcherProvider.io() + SupervisorJob()),
                 produceFile = { appContext.preferencesDataStoreFile("spentify") }
             )
+        }
+
+        @Provides
+        @Singleton
+        fun providesCurrentMonthAndYear(): MonthAndYear {
+            val calendar = Calendar.getInstance()
+            val month = calendar.get(Calendar.MONTH) + 1
+            val year = calendar.get(Calendar.YEAR)
+            return MonthAndYear(month, year)
         }
     }
 }

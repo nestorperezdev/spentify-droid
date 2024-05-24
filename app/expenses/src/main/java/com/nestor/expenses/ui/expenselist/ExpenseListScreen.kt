@@ -37,6 +37,7 @@ fun ExpenseListScreen(
         expenseListState = viewModel.expenseItems,
         userCurrencySymbolState = viewModel.userCurrencySymbol,
         onScrollEndReached = viewModel::onScrollEndReached,
+        isLoadingState = viewModel.isLoading
     )
 }
 
@@ -45,11 +46,13 @@ private fun ExpenseListContent(
     modifier: Modifier = Modifier,
     expenseListState: StateFlow<List<ExpenseEntity>>,
     userCurrencySymbolState: StateFlow<String>,
+    isLoadingState: StateFlow<Boolean>,
     onScrollEndReached: () -> Unit = {}
 ) {
     val expenseList by expenseListState.collectAsState()
     val currencySymbol by userCurrencySymbolState.collectAsState()
     val scrollState = rememberLazyListState()
+    val isLoading by isLoadingState.collectAsState()
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(20.dp),
@@ -68,7 +71,7 @@ private fun ExpenseListContent(
                 )
             )
         }
-        if (false) {
+        if (isLoading) {
             item {
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()
@@ -82,7 +85,7 @@ private fun ExpenseListContent(
         }
     }
     LaunchedEffect(endOfListReached) {
-        if (endOfListReached) {
+        if (endOfListReached && !isLoading) {
             onScrollEndReached()
         }
     }
