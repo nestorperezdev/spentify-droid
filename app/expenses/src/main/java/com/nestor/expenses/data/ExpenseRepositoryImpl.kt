@@ -61,7 +61,7 @@ class ExpenseRepositoryImpl @Inject constructor(
         year: Int,
         month: Int,
         currencyCode: String
-    ) {
+    ): Int {
         val response = safeApiCall {
             remoteDataSource.getExpenses(
                 month = month,
@@ -82,6 +82,7 @@ class ExpenseRepositoryImpl @Inject constructor(
                 }
             localDataSource.saveExpenseList(itemsEntities)
         }
+        return response.body?.expensesList?.expenses?.size ?: 0
     }
 
     /*override fun getExpenses(

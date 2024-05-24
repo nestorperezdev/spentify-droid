@@ -18,6 +18,9 @@ interface ExpenseRepository {
         currencyCode: String
     ): Flow<List<ExpenseEntity>>
 
+    /**
+     * Int value will be the amount of values fetched from the api
+     */
     suspend fun fetchMoreExpenses(
         cursor: Int,
         pageSize: Int,
@@ -25,5 +28,5 @@ interface ExpenseRepository {
         year: Int,
         month: Int,
         currencyCode: String
-    )
+    ): Int
 }

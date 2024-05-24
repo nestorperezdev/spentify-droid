@@ -7,6 +7,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -37,7 +39,8 @@ fun ExpenseListScreen(
         expenseListState = viewModel.expenseItems,
         userCurrencySymbolState = viewModel.userCurrencySymbol,
         onScrollEndReached = viewModel::onScrollEndReached,
-        isLoadingState = viewModel.isLoading
+        isLoadingState = viewModel.isLoading,
+        isEndReachedState = viewModel.isEndOfList
     )
 }
 
@@ -47,12 +50,15 @@ private fun ExpenseListContent(
     expenseListState: StateFlow<List<ExpenseEntity>>,
     userCurrencySymbolState: StateFlow<String>,
     isLoadingState: StateFlow<Boolean>,
+    isEndReachedState: StateFlow<Boolean>,
     onScrollEndReached: () -> Unit = {}
 ) {
     val expenseList by expenseListState.collectAsState()
     val currencySymbol by userCurrencySymbolState.collectAsState()
     val scrollState = rememberLazyListState()
     val isLoading by isLoadingState.collectAsState()
+    val isEndReached by isEndReachedState.collectAsState()
+
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(20.dp),
@@ -75,6 +81,16 @@ private fun ExpenseListContent(
             item {
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()
+                }
+            }
+        }
+        if (isEndReached) {
+            item {
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    Text(
+                        text = stringResource(com.nestor.expenses.R.string.end_of_list),
+                        style = MaterialTheme.typography.labelMedium
+                    )
                 }
             }
         }

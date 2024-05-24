@@ -2,4 +2,5 @@
 <resources>
     <string name="enter_the_amount_you_want_to_register">Enter the amount you want to register</string>
     <string name="description">Description</string>
+    <string name="end_of_list">End of list</string>
 </resources>

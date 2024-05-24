@@ -39,6 +39,12 @@ class ExpenseListViewModel @Inject constructor(
     private val _userCurrencySymbol = MutableStateFlow("$")
     val userCurrencySymbol = _userCurrencySymbol
     private val _isLoading = MutableStateFlow(false)
+    private val _isEndOfList = MutableStateFlow(false)
+    val isEndOfList: StateFlow<Boolean> = _isEndOfList.stateIn(
+        viewModelScope,
+        SharingStarted.Lazily,
+        false
+    )
     val isLoading: StateFlow<Boolean> =
         _isLoading.stateIn(viewModelScope, SharingStarted.Lazily, false)
     val expenseItems: StateFlow<List<ExpenseEntity>> =
@@ -69,12 +75,16 @@ class ExpenseListViewModel @Inject constructor(
                 Log.i(TAG, "fetchMoreItems: Already loading...")
                 return
             }
+            if (_isEndOfList.value) {
+                Log.i(TAG, "fetchMoreItems: No more items to fetch")
+                return
+            }
             viewModelScope.launch(coroutineDispatcher.io()) {
                 _isLoading.update { true }
                 val userDetails =
                     authRepository.userDetails().map { it.body }.filterNotNull().take(1).last()
                 val lastExpenseItem = expenseItems.map { it.lastOrNull() }.take(1).last()
-                expenseRepository.fetchMoreExpenses(
+                val itemsFetched = expenseRepository.fetchMoreExpenses(
                     month = monthYear.month,
                     year = monthYear.year,
                     userUid = userDetails.uuid,
@@ -82,6 +92,9 @@ class ExpenseListViewModel @Inject constructor(
                     pageSize = PAGE_SIZE,
                     cursor = lastExpenseItem?.cursor ?: 0
                 )
+                if (itemsFetched < PAGE_SIZE) {
+                    _isEndOfList.update { true }
+                }
                 _isLoading.update { false }
             }
         }
@@ -108,6 +121,10 @@ class ExpenseListViewModel @Inject constructor(
             Log.i(TAG, "onScrollEndReached: ")
             if (_isLoading.value) {
                 Log.i(TAG, "onScrollEndReached: Already loading...")
+                return
+            }
+            if (_isEndOfList.value) {
+                Log.i(TAG, "onScrollEndReached: No more items to fetch")
                 return
             }
             fetchMoreItems()
