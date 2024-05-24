@@ -29,4 +29,5 @@ interface ExpenseRepository {
         month: Int,
         currencyCode: String
     ): Int
+    suspend fun saveExpenses(expense: ExpenseEntity)
 }

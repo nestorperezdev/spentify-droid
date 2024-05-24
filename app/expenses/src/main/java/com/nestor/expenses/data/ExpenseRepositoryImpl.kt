@@ -1,7 +1,7 @@
 package com.nestor.expenses.data
 
 import com.nestor.database.data.expense.ExpenseEntity
-import com.nestor.schema.ExpensesListQuery
+import com.nestor.schema.fragment.ExpenseFragment
 import com.nestor.schema.type.ExpenseInput
 import com.nestor.schema.utils.safeApiCall
 import kotlinx.coroutines.flow.Flow
@@ -9,12 +9,11 @@ import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
 
-private fun ExpensesListQuery.Expense.toEntity(
+fun ExpenseFragment.toEntity(
     userUid: String,
-    storedAt: Date
+    storedAt: Date = Date()
 ): ExpenseEntity {
-    return with(expenseFragment) {
-        ExpenseEntity(
+    return ExpenseEntity(
             userUuid = userUid,
             description = description,
             date = date,
@@ -25,7 +24,6 @@ private fun ExpensesListQuery.Expense.toEntity(
             id = id,
             currencyCode = selectedCurrency.currencyInfo.code
         )
-    }
 }
 
 class ExpenseRepositoryImpl @Inject constructor(
@@ -75,7 +73,7 @@ class ExpenseRepositoryImpl @Inject constructor(
             val storedAt = Date()
             val itemsEntities: List<ExpenseEntity> =
                 list.expensesList.expenses.map {
-                    it.toEntity(
+                    it.expenseFragment.toEntity(
                         userUid = userUid,
                         storedAt = storedAt
                     )
@@ -83,6 +81,10 @@ class ExpenseRepositoryImpl @Inject constructor(
             localDataSource.saveExpenseList(itemsEntities)
         }
         return response.body?.expensesList?.expenses?.size ?: 0
+    }
+
+    override suspend fun saveExpenses(expense: ExpenseEntity) {
+        localDataSource.saveExpenseList(listOf(expense))
     }
 
     /*override fun getExpenses(

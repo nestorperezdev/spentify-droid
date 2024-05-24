@@ -7,16 +7,15 @@ import com.nestor.common.data.currency.CurrencyRepository
 import com.nestor.dashboard.data.DashboardRepository
 import com.nestor.database.data.currency.CurrencyEntity
 import com.nestor.expenses.data.ExpenseRepository
+import com.nestor.expenses.data.toEntity
 import com.nestor.schema.type.ExpenseInput
 import com.nestor.uikit.input.FormFieldData
 import com.nestor.uikit.util.CoroutineContextProvider
-import com.nestor.uikit.util.EventStateFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.update
@@ -87,6 +86,14 @@ class NewExpenseViewModel @Inject constructor(
                 val result = expenseRepository.createExpense(expenseInput)
                 if (result.isSuccessful()) {
                     launch { dashRepo.refreshDashboardData() }
+                    launch {
+                        val user =
+                            authRepository.userDetails().map { it.body }.filterNotNull().take(1)
+                                .last()
+                        result.body?.createExpense?.expenseFragment?.toEntity(user.uuid)?.let { expense ->
+                            expenseRepository.saveExpenses(expense)
+                        }
+                    }
                     _dismissDialog.update { true }
                 } else {
                     _loadingState.update { false }
