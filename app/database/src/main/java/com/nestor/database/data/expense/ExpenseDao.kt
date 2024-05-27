@@ -1,6 +1,7 @@
 package com.nestor.database.data.expense
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
@@ -19,4 +20,7 @@ interface ExpenseDao {
         expirationDate: Date,
         currencyCode: String
     ): Flow<List<ExpenseEntity>>
+
+    @Delete
+    suspend fun delete(expense: ExpenseEntity)
 }

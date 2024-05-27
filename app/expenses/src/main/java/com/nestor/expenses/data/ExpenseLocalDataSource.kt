@@ -14,4 +14,5 @@ interface ExpenseLocalDataSource {
         expirationDate: Date,
         currencyCode: String
     ): Flow<List<ExpenseEntity>>
+    suspend fun deleteExpense(expense: ExpenseEntity)
 }

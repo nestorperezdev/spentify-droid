@@ -6,10 +6,12 @@ import androidx.lifecycle.viewModelScope
 import com.nestor.common.data.auth.AuthRepository
 import com.nestor.common.data.currency.CurrencyRepository
 import com.nestor.common.data.monthandyear.MonthAndYear
+import com.nestor.dashboard.data.DashboardRepository
 import com.nestor.database.data.expense.ExpenseEntity
 import com.nestor.expenses.data.ExpenseRepository
 import com.nestor.uikit.util.CoroutineContextProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -28,6 +30,7 @@ import javax.inject.Inject
 const val PAGE_SIZE = 20
 private const val TAG = "ExpenseListViewModel"
 
+@OptIn(FlowPreview::class)
 @HiltViewModel
 class ExpenseListViewModel @Inject constructor(
     private val expenseRepository: ExpenseRepository,
@@ -35,6 +38,7 @@ class ExpenseListViewModel @Inject constructor(
     private val coroutineDispatcher: CoroutineContextProvider,
     private val authRepository: AuthRepository,
     private val monthYear: MonthAndYear,
+    private val dashboardRepository: DashboardRepository
 ) : ViewModel() {
     private val _userCurrencySymbol = MutableStateFlow("$")
     val userCurrencySymbol = _userCurrencySymbol
@@ -129,6 +133,18 @@ class ExpenseListViewModel @Inject constructor(
             }
             fetchMoreItems()
         }
+    }
+
+    fun onDeleteExpense(expenseEntity: ExpenseEntity) {
+        viewModelScope.launch(coroutineDispatcher.io()) {
+            expenseRepository.deleteExpense(expenseEntity)
+            //  todo: delay this call.
+            dashboardRepository.refreshDashboardData()
+        }
+    }
+
+    fun onEditExpense(expenseEntity: ExpenseEntity) {
+        TODO("Not yet implemented")
     }
 }
 

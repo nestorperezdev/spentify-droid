@@ -1,5 +1,6 @@
 package com.nestor.expenses.ui.expenselist
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,12 +18,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nestor.common.util.formatWithDayAndDate
 import com.nestor.dashboard.R
 import com.nestor.database.data.expense.ExpenseEntity
+import com.nestor.uikit.list.DragDirection
 import com.nestor.uikit.list.SYListItem
 import com.nestor.uikit.list.SYListItemData
 import com.nestor.uikit.list.isScrolledToEnd
@@ -40,10 +43,13 @@ fun ExpenseListScreen(
         userCurrencySymbolState = viewModel.userCurrencySymbol,
         onScrollEndReached = viewModel::onScrollEndReached,
         isLoadingState = viewModel.isLoading,
-        isEndReachedState = viewModel.isEndOfList
+        isEndReachedState = viewModel.isEndOfList,
+        onDeleteAction = viewModel::onDeleteExpense,
+        onEditAction = viewModel::onEditExpense
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ExpenseListContent(
     modifier: Modifier = Modifier,
@@ -51,20 +57,36 @@ private fun ExpenseListContent(
     userCurrencySymbolState: StateFlow<String>,
     isLoadingState: StateFlow<Boolean>,
     isEndReachedState: StateFlow<Boolean>,
-    onScrollEndReached: () -> Unit = {}
+    onScrollEndReached: () -> Unit = {},
+    onDeleteAction: (ExpenseEntity) -> Unit = {},
+    onEditAction: (ExpenseEntity) -> Unit = {},
 ) {
     val expenseList by expenseListState.collectAsState()
     val currencySymbol by userCurrencySymbolState.collectAsState()
     val scrollState = rememberLazyListState()
     val isLoading by isLoadingState.collectAsState()
     val isEndReached by isEndReachedState.collectAsState()
+    val deleteIcon = painterResource(id = com.nestor.uikit.R.drawable.baseline_delete_24)
+    val deleteBackground = MaterialTheme.colorScheme.error
+    val contextualActions = remember {
+        SYListItemData.ContextualActionContainer(
+            primary = SYListItemData.ContextualAction(
+                action = {},
+                icon = SYListItemData.SYListItemIcon(
+                    icon = deleteIcon,
+                    tint = deleteBackground,
+                    foregroundTint = deleteBackground.copy(alpha = 0.5f),
+                )
+            ),
+        )
+    }
 
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(20.dp),
         state = scrollState
     ) {
-        items(expenseList) { item ->
+        items(expenseList, key = { it.id }) { item ->
             val separator = if (item.description.isEmpty()) "" else " ⦁ "
             SYListItem(
                 item = SYListItemData(
@@ -73,8 +95,18 @@ private fun ExpenseListContent(
                         currencySymbol,
                         item.amount.formatMoneyAmount()
                     ),
-                    subtitle = "${item.date.formatWithDayAndDate()}${separator}${item.description}"
-                )
+                    subtitle = "${item.date.formatWithDayAndDate()}${separator}${item.description}",
+                    contextualActions = contextualActions
+                ),
+                onDragged = {
+                    if (it == DragDirection.LEFT) {
+                        onDeleteAction(item)
+                    } else {
+                        onEditAction(item)
+                    }
+                    0f
+                },
+                modifier = Modifier.animateItemPlacement()
             )
         }
         if (isLoading) {

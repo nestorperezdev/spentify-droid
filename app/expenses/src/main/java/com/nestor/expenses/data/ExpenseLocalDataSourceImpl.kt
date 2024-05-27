@@ -36,4 +36,8 @@ class ExpenseLocalDataSourceImpl @Inject constructor(private val expenseDao: Exp
             currencyCode = currencyCode
         )
     }
+
+    override suspend fun deleteExpense(expense: ExpenseEntity) {
+        expenseDao.delete(expense)
+    }
 }

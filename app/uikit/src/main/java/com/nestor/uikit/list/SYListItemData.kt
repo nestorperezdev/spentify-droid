@@ -10,10 +10,21 @@ data class SYListItemData(
     val subtitle: String? = null,
     val trailingIcon: SYListItemIcon? = null,
     val leadingIcon: SYListItemIcon? = null,
+    val contextualActions: ContextualActionContainer? = null,
 ) {
     data class SYListItemIcon(
         val icon: Painter,
         val tint: Color,
         val foregroundTint: Color? = tint.copy(alpha = 0.05f),
+    )
+
+    data class ContextualActionContainer(
+        val primary: ContextualAction,
+        val secondary: ContextualAction? = null
+    )
+
+    data class ContextualAction(
+        val icon: SYListItemIcon,
+        val action: () -> Unit
     )
 }

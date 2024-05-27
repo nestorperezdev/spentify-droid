@@ -47,6 +47,10 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type ExpenseDeleteResult {
+  deleted: Boolean!
+}
+
 type ExpenseDetail {
   """
   Currency in which the expense was submitted
@@ -112,6 +116,8 @@ type LoginToken {
 
 type Mutation {
   createExpense(input: ExpenseInput!): ExpenseDetail!
+
+  deleteExpense(expenseId: String!): ExpenseDeleteResult!
 
   forgotPassword(username: String!): RecoverPasswordStatus!
 

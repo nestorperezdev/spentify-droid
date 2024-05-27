@@ -87,6 +87,11 @@ class ExpenseRepositoryImpl @Inject constructor(
         localDataSource.saveExpenseList(listOf(expense))
     }
 
+    override suspend fun deleteExpense(expense: ExpenseEntity) {
+        localDataSource.deleteExpense(expense)
+        remoteDataSource.deleteExpense(expense.id)
+    }
+
     /*override fun getExpenses(
         month: Int,
         year: Int,

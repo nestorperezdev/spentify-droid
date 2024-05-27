@@ -4,6 +4,7 @@ import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.ApolloResponse
 import com.apollographql.apollo3.api.Optional
 import com.nestor.schema.CreateExpenseMutation
+import com.nestor.schema.DeleteExpenseMutation
 import com.nestor.schema.ExpensesListQuery
 import com.nestor.schema.type.ExpenseInput
 import javax.inject.Inject
@@ -29,5 +30,9 @@ class ExpenseRemoteDataSourceImpl @Inject constructor(val client: ApolloClient) 
                 currencyCode = currencyCode
             )
         ).execute()
+    }
+
+    override suspend fun deleteExpense(id: String) {
+        client.mutation(DeleteExpenseMutation(id)).execute()
     }
 }

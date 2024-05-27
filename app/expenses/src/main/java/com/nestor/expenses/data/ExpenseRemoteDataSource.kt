@@ -14,4 +14,5 @@ interface ExpenseRemoteDataSource {
         cursor: Int,
         currencyCode: String
     ): ApolloResponse<ExpensesListQuery.Data>
+    suspend fun deleteExpense(id: String)
 }
