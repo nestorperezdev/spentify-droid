@@ -23,6 +23,10 @@ jobs:
         run: ./gradlew :app:lib:schema:downloadApolloSchema --endpoint='https://spentify.nestorperez.dev/graphql/' --schema=app/lib/schema/src/main/graphql/schema.sdl
       - name: Build
         run: ./gradlew :app:assemble
+      - name: Load Google Service file
+        env:
+          DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: echo $DATA | base64 -di > app/google-services.json
       - name: Check for changes and commit/push if applicable
         env:
           HEAD_REF: ${{ github.event.pull_request.head.ref }}
