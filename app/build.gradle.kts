@@ -27,18 +27,22 @@ android {
     }
 
     signingConfigs {
-        create("release") {
-            storeFile = file(providers.gradleProperty("RELEASE_STORE_FILE").getOrElse(""))
-            storePassword = providers.gradleProperty("RELEASE_STORE_PASSWORD").getOrElse("")
-            keyAlias = providers.gradleProperty("RELEASE_KEY_ALIAS").getOrElse("")
-            keyPassword = providers.gradleProperty("RELEASE_KEY_PASSWORD").getOrElse("")
+        providers.gradleProperty("RELEASE_STORE_FILE").orNull?.let {
+            create("release") {
+                storeFile = file(it)
+                storePassword = providers.gradleProperty("RELEASE_STORE_PASSWORD").get()
+                keyAlias = providers.gradleProperty("RELEASE_KEY_ALIAS").get()
+                keyPassword = providers.gradleProperty("RELEASE_KEY_PASSWORD").get()
+            }
         }
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
-            signingConfig = signingConfigs.getByName("release")
+            providers.gradleProperty("RELEASE_STORE_FILE").orNull?.let {
+                signingConfig = signingConfigs.getByName("release")
+            }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
