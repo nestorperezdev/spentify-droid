@@ -27,22 +27,25 @@ android {
     }
 
     signingConfigs {
-        providers.gradleProperty("RELEASE_STORE_FILE").orNull?.let {
-            create("release") {
-                storeFile = file(it)
-                storePassword = providers.gradleProperty("RELEASE_STORE_PASSWORD").get()
-                keyAlias = providers.gradleProperty("RELEASE_KEY_ALIAS").get()
-                keyPassword = providers.gradleProperty("RELEASE_KEY_PASSWORD").get()
-            }
+        create("release") {
+            val env = System.getenv()
+            storeFile = file("sign.keystore")
+            storePassword =
+                env.getOrDefault("RELEASE_STORE_PASSWORD", null)
+                    ?: providers.gradleProperty("RELEASE_STORE_PASSWORD").orNull
+                            ?: ""
+            keyAlias = "nessdev"
+            keyPassword =
+                env.getOrDefault("RELEASE_KEY_PASSWORD", null)
+                    ?: providers.gradleProperty("RELEASE_KEY_PASSWORD").orNull
+                            ?: ""
         }
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
-            providers.gradleProperty("RELEASE_STORE_FILE").orNull?.let {
-                signingConfig = signingConfigs.getByName("release")
-            }
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -127,7 +130,15 @@ tasks.create("bumpVersionCode") {
         val versionName = parseVersionName(android.defaultConfig.versionName!!)
         //write back to the gradle file
         val gradleFile = file("build.gradle.kts")
-        gradleFile.writeText(gradleFile.readText().replace("versionCode = ${versionCode - 1}", "versionCode = $versionCode"))
-        gradleFile.writeText(gradleFile.readText().replace("versionName = \"${versionName.first}.${versionName.second}.${versionName.third}.${versionCode - 1}\"", "versionName = \"${versionName.first}.${versionName.second}.${versionName.third}.$versionCode\""))
+        gradleFile.writeText(
+            gradleFile.readText()
+                .replace("versionCode = ${versionCode - 1}", "versionCode = $versionCode")
+        )
+        gradleFile.writeText(
+            gradleFile.readText().replace(
+                "versionName = \"${versionName.first}.${versionName.second}.${versionName.third}.${versionCode - 1}\"",
+                "versionName = \"${versionName.first}.${versionName.second}.${versionName.third}.$versionCode\""
+            )
+        )
     }
 }

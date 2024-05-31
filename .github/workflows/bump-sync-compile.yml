@@ -3,6 +3,10 @@ on:
   push:
     branches:
       - master
+env:
+  RELEASE_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
+  RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+
 jobs:
   bump:
     runs-on: ubuntu-latest
@@ -18,10 +22,6 @@ jobs:
         env:
           DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
         run: echo $DATA | base64 -di > app/google-services.json
-      - name: Load gradle properties file.
-        env:
-          DATA: ${{ secrets.GRADLE_PROPERTIES }}
-        run: mkdir -p ~/.gradle && echo $DATA | base64 -di > ~/.gradle/gradle.properties
       - name: Load keystore file
         env:
           DATA: ${{ secrets.NESSDEV_KEYSTORE }}
