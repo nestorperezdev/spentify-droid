@@ -1,0 +1,8 @@
+fragment subcategory on SubCategory {
+    id
+    subcategoryName
+    iconId
+    categories {
+        ...category
+    }
+}

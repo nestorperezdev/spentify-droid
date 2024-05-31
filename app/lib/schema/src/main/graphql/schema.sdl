@@ -3,6 +3,18 @@ The `Boolean` scalar type represents `true` or `false`.
 """
 scalar Boolean
 
+type Category {
+  categoryName: String!
+
+  iconId: String!
+
+  id: String!
+}
+
+type CategoryList {
+  groups: [SubCategory!]!
+}
+
 type Currency {
   info: [CurrencyInfo!]!
 }
@@ -103,6 +115,22 @@ The `Float` scalar type represents signed double-precision fractional values as 
 """
 scalar Float
 
+type Icon {
+  cursor: Float!
+
+  flavor: String!
+
+  id: String!
+
+  name: String!
+}
+
+type IconList {
+  icons: [Icon!]!
+
+  totalItems: Int!
+}
+
 """
 The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
 """
@@ -131,6 +159,8 @@ type Mutation {
 }
 
 type Query {
+  categoryList: CategoryList!
+
   currencyInfo: Currency!
 
   dashboard: Dashboard!
@@ -138,6 +168,8 @@ type Query {
   expenseDetails(currencyCode: String, expenseId: String!): ExpenseDetail!
 
   expensesList(currencyCode: String, cursor: Int, limit: Int! = 20, month: Int!, year: Int!): ExpenseList!
+
+  iconList(cursor: Int, filter: String = null, limit: Int! = 50): IconList!
 
   userDetails: User!
 }
@@ -150,6 +182,16 @@ type RecoverPasswordStatus {
 The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
 """
 scalar String
+
+type SubCategory {
+  categories: [Category!]!
+
+  iconId: String!
+
+  id: String!
+
+  subcategoryName: String!
+}
 
 input SummaryDashboardInput {
   currencyCode: String

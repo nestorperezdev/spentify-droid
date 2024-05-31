@@ -1,0 +1,5 @@
+fragment categoryListFragment on CategoryList {
+    groups {
+        ...subcategory
+    }
+}
