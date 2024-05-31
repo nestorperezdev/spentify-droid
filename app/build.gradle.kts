@@ -1,3 +1,5 @@
+import org.apache.commons.logging.LogFactory.release
+
 plugins {
     alias(libs.plugins.androidApp)
     alias(libs.plugins.kotlinAndroid)
@@ -15,8 +17,8 @@ android {
         applicationId = "com.nestor.spentify"
         minSdk = 29
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 500
+        versionName = "0.0.0.500"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -24,13 +26,26 @@ android {
         }
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file(providers.gradleProperty("RELEASE_STORE_FILE").get())
+            storePassword = providers.gradleProperty("RELEASE_STORE_PASSWORD").get()
+            keyAlias = providers.gradleProperty("RELEASE_KEY_ALIAS").get()
+            keyPassword = providers.gradleProperty("RELEASE_KEY_PASSWORD").get()
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+        debug {
+            versionNameSuffix = "-debug"
         }
     }
     compileOptions {
@@ -95,4 +110,20 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation(libs.compose.debug.tooling)
     debugImplementation(libs.compose.debug.uiTestManifest)
+}
+
+tasks.create("bumpVersionCode") {
+    description = "Bump the versionCode by 1 and write it to the gradle file."
+    fun parseVersionName(versionName: String): Triple<Int, Int, Int> {
+        val (major, minor, patch) = versionName.split(".").map { it.toInt() }
+        return Triple(major, minor, patch)
+    }
+    doLast {
+        val versionCode = (android.defaultConfig.versionCode!!) + 1
+        val versionName = parseVersionName(android.defaultConfig.versionName!!)
+        //write back to the gradle file
+        val gradleFile = file("build.gradle.kts")
+        gradleFile.writeText(gradleFile.readText().replace("versionCode = ${versionCode - 1}", "versionCode = $versionCode"))
+        gradleFile.writeText(gradleFile.readText().replace("versionName = \"${versionName.first}.${versionName.second}.${versionName.third}.${versionCode - 1}\"", "versionName = \"${versionName.first}.${versionName.second}.${versionName.third}.$versionCode\""))
+    }
 }

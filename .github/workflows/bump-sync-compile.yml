@@ -1,0 +1,59 @@
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'oracle'
+          java-version: '17'
+      - name: Load Google Service file
+        env:
+          DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: echo $DATA | base64 -di > app/google-services.json
+      - name: Load gradle properties file.
+        env:
+          DATA: ${{ secrets.GRADLE_PROPERTIES }}
+        run: echo $DATA | base64 -di > ~/.gradle/gradle.properties
+      - name: Load keystore file
+        env:
+          DATA: ${{ secrets.NESSDEV_KEYSTORE }}
+        run: echo $DATA | base64 -di > app/sign.keystore
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Bump version
+        run: ./gradlew :app:bumpVersionCode
+      - name: Update Production GraphQL schema
+        run: ./gradlew :app:lib:schema:downloadApolloSchema --endpoint='https://spentify.nestorperez.dev/graphql/' --schema=app/lib/schema/src/main/graphql/schema.sdl
+      - name: Generate signed APK
+        run: ./gradlew :app:assembleRelease
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: app/build/outputs/apk/release/app-release.apk
+          overwrite: true
+      - name: Check for changes and commit/push if applicable
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: |
+          git status --porcelain
+          CHANGES=$(git status --porcelain)
+          if [ "$CHANGES" == "" ]; then
+            echo "No changes detected"
+          else
+            echo "Pushing local changes to origin remote branch"
+            git config --local user.name 'bot'
+            git config --local user.email 'bot@github.com'
+            git add .
+            git commit -m '[skip ci] schema and version update.'
+            git push origin $HEAD_REF
+          fi
+
