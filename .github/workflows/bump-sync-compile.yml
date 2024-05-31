@@ -21,7 +21,7 @@ jobs:
       - name: Load gradle properties file.
         env:
           DATA: ${{ secrets.GRADLE_PROPERTIES }}
-        run: echo $DATA | base64 -di > ~/.gradle/gradle.properties
+        run: mkdir -p ~/.gradle && echo $DATA | base64 -di > ~/.gradle/gradle.properties
       - name: Load keystore file
         env:
           DATA: ${{ secrets.NESSDEV_KEYSTORE }}
