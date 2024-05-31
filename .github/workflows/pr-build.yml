@@ -27,23 +27,3 @@ jobs:
         run: ./gradlew :app:lib:schema:downloadApolloSchema --endpoint='https://spentify.nestorperez.dev/graphql/' --schema=app/lib/schema/src/main/graphql/schema.sdl
       - name: Build
         run: ./gradlew :app:assemble
-      - name: Check for changes and commit/push if applicable
-        env:
-          HEAD_REF: ${{ github.event.pull_request.head.ref }}
-        run: |
-          git status --porcelain
-          CHANGES=$(git status --porcelain)
-          if [ "$CHANGES" == "" ]; then
-            echo "No changes detected"
-          else
-            echo "Pushing local changes to origin remote branch"
-            git config --local user.name 'bot'
-            git config --local user.email 'bot@github.com'
-            git remote add feature_branch ${{ github.event.pull_request.head.repo.clone_url }}
-            git remote set-url origin ${{ github.event.pull_request.base.repo.clone_url }}
-            git add .
-            git commit -m '[skip ci] schema update.'
-            git push feature_branch $HEAD_REF
-          fi
-      
-
