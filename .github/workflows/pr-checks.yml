@@ -26,8 +26,8 @@ jobs:
       - name: Commit back bumped version
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: [skip ci] Bump version code
-          file_pattern: app/build.gradle
+          commit_message: '[skip ci] Bump version code'
+          file_pattern: 'app/build.gradle'
 
   validate-schema:
     runs-on: ubuntu-latest
