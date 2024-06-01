@@ -9,6 +9,20 @@ on:
 env:
   INTROSPECTION_TOKEN: ${{ secrets.SPENTIFY_INTROSPECTION_TOKEN }}
 jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'oracle'
+          java-version: '17'
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Bump version
+        run: ./gradlew :app:bumpVersionCode
   validate-schema:
     runs-on: ubuntu-latest
     steps:
@@ -29,3 +43,21 @@ jobs:
         run: ./gradlew :app:lib:schema:downloadSpentifyApolloSchema
       - name: Build
         run: ./gradlew :app:assemble
+      - name: Commit back bumped version
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: |
+          git status --porcelain
+          CHANGES=$(git status --porcelain)
+          if [ "$CHANGES" == "" ]; then
+            echo "No changes detected"
+          else
+            echo "Pushing local changes to origin remote branch"
+            git config --local user.name 'bot'
+            git config --local user.email 'bot@github.com'
+            git remote add feature_branch ${{ github.event.pull_request.head.repo.clone_url }}
+            git remote set-url origin ${{ github.event.pull_request.base.repo.clone_url }}
+            git add app/build.gradle
+            git commit -m '[skip ci] components version bump.'
+            git push feature_branch $HEAD_REF
+          fi

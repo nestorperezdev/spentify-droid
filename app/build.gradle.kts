@@ -1,5 +1,3 @@
-import org.apache.commons.logging.LogFactory.release
-
 plugins {
     alias(libs.plugins.androidApp)
     alias(libs.plugins.kotlinAndroid)
