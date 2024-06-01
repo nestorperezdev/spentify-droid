@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1056650810104",
+    "project_id": "spentify-4f2ed",
+    "storage_bucket": "spentify-4f2ed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1056650810104:android:04e00563c28706da62610d",
+        "android_client_info": {
+          "package_name": "com.nestor.spentify.debug"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgw0uyO7ZrQku_1ZE5h4wsJX-5I5wWdQE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

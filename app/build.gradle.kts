@@ -1,5 +1,3 @@
-import org.apache.commons.logging.LogFactory.release
-
 plugins {
     alias(libs.plugins.androidApp)
     alias(libs.plugins.kotlinAndroid)
@@ -17,8 +15,8 @@ android {
         applicationId = "com.nestor.spentify"
         minSdk = 29
         targetSdk = 34
-        versionCode = 501
-        versionName = "0.0.0.501"
+        versionCode = 502
+        versionName = "0.0.0.502"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -57,6 +55,7 @@ android {
         }
         debug {
             versionNameSuffix = "-debug"
+            applicationIdSuffix = ".debug"
         }
     }
     compileOptions {
