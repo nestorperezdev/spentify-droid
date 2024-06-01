@@ -15,8 +15,8 @@ android {
         applicationId = "com.nestor.spentify"
         minSdk = 29
         targetSdk = 34
-        versionCode = 502
-        versionName = "0.0.0.502"
+        versionCode = 503
+        versionName = "0.0.0.503"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
