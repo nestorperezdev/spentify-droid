@@ -26,6 +26,6 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Update Production GraphQL schema
-        run: ./gradlew :app:lib:schema:downloadApolloSchema --endpoint='https://spentify.nestorperez.dev/graphql/' --schema=app/lib/schema/src/main/graphql/schema.sdl --header="Authorization: Bearer $INTROSPECTION_TOKEN"
+        run: ./gradlew :app:lib:schema:downloadSpentifyApolloSchema
       - name: Build
         run: ./gradlew :app:assemble
