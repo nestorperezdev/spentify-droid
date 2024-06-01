@@ -15,8 +15,13 @@ java {
 }
 
 apollo {
-    service("service") {
+    service("spentify") {
         packageName.set("com.nestor.schema")
         mapScalar("DateTime", "java.util.Date")
+        introspection {
+            headers.set(mapOf("Authorization" to "Bearer: ${System.getenv("INTROSPECTION_TOKEN")}"))
+            endpointUrl.set("https://spentify.nestorperez.dev/graphql/")
+            schemaFile.set(file("src/main/graphql/schema.sdl"))
+        }
     }
 }

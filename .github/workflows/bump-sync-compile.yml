@@ -6,7 +6,7 @@ on:
 env:
   RELEASE_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
   RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
-
+  INTROSPECTION_TOKEN: ${{ secrets.SPENTIFY_INTROSPECTION_TOKEN }}
 jobs:
   bump:
     runs-on: ubuntu-latest
@@ -31,7 +31,7 @@ jobs:
       - name: Bump version
         run: ./gradlew :app:bumpVersionCode
       - name: Update Production GraphQL schema
-        run: ./gradlew :app:lib:schema:downloadApolloSchema --endpoint='https://spentify.nestorperez.dev/graphql/' --schema=app/lib/schema/src/main/graphql/schema.sdl
+        run: ./gradlew :app:lib:schema:downloadSpentifyApolloSchema
       - name: Generate signed APK
         run: ./gradlew :app:assembleRelease
       - name: Upload APK
