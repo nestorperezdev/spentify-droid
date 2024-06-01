@@ -6,7 +6,7 @@ on:
 env:
   RELEASE_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
   RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
-
+  INTROSPECTION_TOKEN: ${{ secrets.SPENTIFY_INTROSPECTION_TOKEN }}
 jobs:
   bump:
     runs-on: ubuntu-latest
