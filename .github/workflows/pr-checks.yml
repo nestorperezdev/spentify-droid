@@ -24,23 +24,11 @@ jobs:
       - name: Bump version
         run: ./gradlew :app:bumpVersionCode
       - name: Commit back bumped version
-        env:
-          HEAD_REF: ${{ github.event.pull_request.head.ref }}
-        run: |
-          git status --porcelain
-          CHANGES=$(git status --porcelain)
-          if [ "$CHANGES" == "" ]; then
-            echo "No changes detected"
-          else
-            echo "Pushing local changes to origin remote branch"
-            git config --local user.name 'bot'
-            git config --local user.email 'bot@github.com'
-            git remote add feature_branch ${{ github.event.pull_request.head.repo.clone_url }}
-            git remote set-url origin ${{ github.event.pull_request.base.repo.clone_url }}
-            git add app/build.gradle.kts
-            git commit -m '[skip ci] app version bump.'
-            git push feature_branch $HEAD_REF
-          fi
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: [skip ci] Bump version code
+          file_pattern: app/build.gradle
+
   validate-schema:
     runs-on: ubuntu-latest
     steps:
