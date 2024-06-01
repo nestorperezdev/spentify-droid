@@ -10,6 +10,8 @@ env:
 jobs:
   bump-version:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -27,6 +29,8 @@ jobs:
         with:
           commit_message: '[skip ci] Bump version code'
           file_pattern: 'app/build.gradle.kts'
+          push_options: '--force'
+          token: ${{ secrets.GH_TOKEN }}
   build:
     runs-on: ubuntu-latest
     steps:
