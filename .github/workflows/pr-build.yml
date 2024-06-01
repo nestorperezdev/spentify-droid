@@ -9,7 +9,7 @@ on:
 env:
   INTROSPECTION_TOKEN: ${{ secrets.SPENTIFY_INTROSPECTION_TOKEN }}
 jobs:
-  build:
+  validate-schema:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
