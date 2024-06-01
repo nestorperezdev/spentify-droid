@@ -7,16 +7,12 @@ import com.nestor.schema.UserDetailsQuery
 import com.nestor.schema.utils.ResponseWrapper
 import com.nestor.schema.utils.safeApiCall
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.combineTransform
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.transformLatest
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val localDatasource: AuthLocalDataSource,
-    private val remoteDataSource: AuthRemoteDataSource
+    private val remoteDataSource: AuthRemoteDataSource,
 ) : AuthRepository {
 
     override suspend fun register(username: String, name: String, password: String) =
