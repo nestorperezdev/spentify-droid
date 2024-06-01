@@ -30,7 +30,7 @@ android {
         if (file("sign.keystore").exists()) {
             create("release") {
                 val env = System.getenv()
-                storeFile = file("")
+                storeFile = file("sign.keystore")
                 storePassword =
                     env.getOrDefault("RELEASE_STORE_PASSWORD", null)
                         ?: providers.gradleProperty("RELEASE_STORE_PASSWORD").orNull
