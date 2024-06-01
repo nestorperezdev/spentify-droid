@@ -21,7 +21,7 @@ apollo {
         introspection {
             headers.set(mapOf("Authorization" to "Bearer: ${System.getenv("INTROSPECTION_TOKEN")}"))
             endpointUrl.set("https://spentify.nestorperez.dev/graphql/")
-            schemaFile.set(file("app/lib/schema/src/main/graphql/schema.sdl"))
+            schemaFile.set(file("src/main/graphql/schema.sdl"))
         }
     }
 }
