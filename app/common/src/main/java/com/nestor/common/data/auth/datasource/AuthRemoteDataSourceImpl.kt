@@ -13,7 +13,7 @@ import com.nestor.schema.type.UserDetailsUpdateDtoInput
 import com.nestor.schema.utils.safeApiCall
 import javax.inject.Inject
 
-class AuthRemoteDataSourceImpl @Inject constructor(val apolloClient: ApolloClient) :
+class AuthRemoteDataSourceImpl @Inject constructor(private val apolloClient: ApolloClient) :
     AuthRemoteDataSource {
     override suspend fun register(username: String, name: String, password: String) =
         apolloClient.mutation(
@@ -42,7 +42,7 @@ class AuthRemoteDataSourceImpl @Inject constructor(val apolloClient: ApolloClien
     }
 
     override suspend fun updateUserCurrency(currencyCode: String) {
-        com.nestor.schema.utils.safeApiCall {
+        safeApiCall {
             this.apolloClient.mutation(
                 UpdateUserDetailsMutation(
                     UserDetailsUpdateDtoInput(

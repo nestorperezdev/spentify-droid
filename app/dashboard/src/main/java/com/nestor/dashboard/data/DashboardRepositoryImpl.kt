@@ -19,14 +19,14 @@ class DashboardRepositoryImpl @Inject constructor(
     private val authRepo: AuthRepository,
     private val authLocalDataSource: AuthLocalDataSource
 ) : DashboardRepository {
-    override fun fetchDashboardInfo(): Flow<com.nestor.schema.utils.ResponseWrapper<DashboardEntity>> =
+    override fun fetchDashboardInfo(): Flow<ResponseWrapper<DashboardEntity>> =
         flow {
             authLocalDataSource.userDetails().filterNotNull().collect { details ->
                 localDataSource.getCurrentDashboard(details.uuid).collect { dashboard ->
                     dashboard?.let {
-                        emit(com.nestor.schema.utils.ResponseWrapper(body = it))
+                        emit(ResponseWrapper(body = it))
                     } ?: run {
-                        emit(com.nestor.schema.utils.ResponseWrapper(isLoading = true))
+                        emit(ResponseWrapper(isLoading = true))
                         refreshDashboardData()
                     }
                 }
