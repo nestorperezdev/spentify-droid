@@ -28,9 +28,10 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun forgotPassword(username: String) =
         safeApiCall { this.remoteDataSource.forgotPassword(username) }
 
-    override suspend fun recoverPassword(newPassword: String) = safeApiCall {
-        this.remoteDataSource.recoverPassword(newPassword)
-    }
+    override suspend fun recoverPassword(newPassword: String) =
+        safeApiCall {
+            this.remoteDataSource.recoverPassword(newPassword)
+        }
 
     override fun userDetails(): Flow<ResponseWrapper<UserEntity?>> =
         localDatasource.tokenContents()
@@ -42,7 +43,8 @@ class AuthRepositoryImpl @Inject constructor(
                         emit(ResponseWrapper.success(null))
                     } else {
                         emit(ResponseWrapper.loading())
-                        val result = safeApiCall { remoteDataSource.fetchUserDetails() }
+                        val result =
+                            safeApiCall { remoteDataSource.fetchUserDetails() }
                         saveUserDetails(result)
                         emit(ResponseWrapper.success(result.body?.userEntity()))
                     }
