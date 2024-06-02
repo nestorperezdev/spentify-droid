@@ -52,8 +52,8 @@ fun DashboardScreen(
 @Composable
 private fun DashboardScreenContent(
     modifier: Modifier = Modifier,
-    summaryState: StateFlow<ResponseWrapper<DailySummary>>,
-    userDetailsState: StateFlow<ResponseWrapper<UserDetails>>,
+    summaryState: StateFlow<com.nestor.schema.utils.ResponseWrapper<DailySummary>>,
+    userDetailsState: StateFlow<com.nestor.schema.utils.ResponseWrapper<UserDetails>>,
     onNewExpenseClick: () -> Unit = {}
 ) {
     val userDetailResponse = userDetailsState.collectAsState().value
@@ -168,7 +168,7 @@ private fun DashboardScreenContentPrev() {
                     .padding(it)
                     .padding(LocalSYPadding.current.screenHorizontalPadding),
                 summaryState = MutableStateFlow(
-                    ResponseWrapper.success(
+                    com.nestor.schema.utils.ResponseWrapper.success(
                         DailySummary(
                             totalExpenses = 1723.50,
                             minimalExpense = 500.0,
@@ -178,7 +178,7 @@ private fun DashboardScreenContentPrev() {
                     )
                 ),
                 userDetailsState = MutableStateFlow(
-                    ResponseWrapper.success(
+                    com.nestor.schema.utils.ResponseWrapper.success(
                         UserDetails(
                             userName = "Nestor",
                             dailyPhrase = "You are doing great!"
@@ -196,11 +196,11 @@ private fun DashboardScreenContentLoadingPrev() {
     SpentifyTheme {
         Scaffold {
             DashboardScreenContent(
-                summaryState = MutableStateFlow(ResponseWrapper.loading()),
+                summaryState = MutableStateFlow(com.nestor.schema.utils.ResponseWrapper.loading()),
                 modifier = Modifier
                     .padding(it)
                     .padding(LocalSYPadding.current.screenHorizontalPadding),
-                userDetailsState = MutableStateFlow(ResponseWrapper.loading())
+                userDetailsState = MutableStateFlow(com.nestor.schema.utils.ResponseWrapper.loading())
             )
         }
     }

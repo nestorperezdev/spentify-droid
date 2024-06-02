@@ -9,11 +9,11 @@ import com.nestor.schema.utils.ResponseWrapper
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
-    suspend fun register(username: String, name: String, password: String): ResponseWrapper<RegisterMutation.Data>
-    suspend fun login(username: String, password: String): ResponseWrapper<LoginMutation.Data>
-    suspend fun forgotPassword(username: String): ResponseWrapper<ForgotPasswordMutation.Data>
-    suspend fun recoverPassword(newPassword: String): ResponseWrapper<RecoverPasswordMutation.Data>
-    fun userDetails(): Flow<ResponseWrapper<UserEntity?>>
+    suspend fun register(username: String, name: String, password: String): com.nestor.schema.utils.ResponseWrapper<RegisterMutation.Data>
+    suspend fun login(username: String, password: String): com.nestor.schema.utils.ResponseWrapper<LoginMutation.Data>
+    suspend fun forgotPassword(username: String): com.nestor.schema.utils.ResponseWrapper<ForgotPasswordMutation.Data>
+    suspend fun recoverPassword(newPassword: String): com.nestor.schema.utils.ResponseWrapper<RecoverPasswordMutation.Data>
+    fun userDetails(): Flow<com.nestor.schema.utils.ResponseWrapper<UserEntity?>>
     fun getRawToken(): String?
     suspend fun setRawToken(token: String)
     suspend fun logout()

@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,6 +39,8 @@ import com.nestor.uikit.list.SYList
 import com.nestor.uikit.list.SYListItemData
 import com.nestor.uikit.theme.color.Blue50
 import com.nestor.uikit.theme.spacing.LocalSYPadding
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import com.nestor.uikit.R as UIKitR
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,7 +53,8 @@ fun AccountScreen(
         modifier = modifier,
         username = "Nestor",
         onLogoutClick = vm::logout,
-        onCurrencyClick = vm::onCurrencyClick
+        onCurrencyClick = vm::onCurrencyClick,
+        appVersion = vm.appVersion
     )
     val currencyPickerVisible by vm.currencyPickerVisible.collectAsState()
     val currencyPickerState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -73,6 +78,7 @@ fun AccountScreen(
 private fun AccountScreenContent(
     modifier: Modifier = Modifier,
     username: String,
+    appVersion: StateFlow<String>,
     onLogoutClick: () -> Unit = {},
     onCurrencyClick: () -> Unit = {}
 ) {
@@ -205,6 +211,12 @@ private fun AccountScreenContent(
                 ),
             )
         )
+        Text(
+            text = appVersion.collectAsState().value,
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+            textAlign = TextAlign.Center
+        )
     }
 }
 
@@ -237,7 +249,9 @@ private fun AccountScreenPreview() {
             AccountScreenContent(
                 modifier = Modifier
                     .padding(it)
-                    .padding(LocalSYPadding.current.screenHorizontalPadding), username = "Nestor"
+                    .padding(LocalSYPadding.current.screenHorizontalPadding),
+                username = "Nestor",
+                appVersion = MutableStateFlow("1.0.0.500.preview")
             )
         }
     }

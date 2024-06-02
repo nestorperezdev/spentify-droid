@@ -34,12 +34,12 @@ class DashboardViewModel @Inject constructor(
     currencyRepository: CurrencyRepository,
     authRepository: AuthRepository
 ) : ViewModel() {
-    val userDetails: StateFlow<ResponseWrapper<UserDetails>> =
+    val userDetails: StateFlow<com.nestor.schema.utils.ResponseWrapper<UserDetails>> =
         dashboardRepository.fetchDashboardInfo().map {
             it.mapBody { UserDetails(it.userName, it.dailyPhrase) }
-        }.stateIn(viewModelScope, SharingStarted.Lazily, ResponseWrapper.loading())
+        }.stateIn(viewModelScope, SharingStarted.Lazily, com.nestor.schema.utils.ResponseWrapper.loading())
 
-    val summary: StateFlow<ResponseWrapper<DailySummary>> =
+    val summary: StateFlow<com.nestor.schema.utils.ResponseWrapper<DailySummary>> =
         authRepository.userDetails()
             .map { it.body }
             .filterNotNull()
@@ -61,7 +61,7 @@ class DashboardViewModel @Inject constructor(
                     )
                 }
             }
-            .stateIn(viewModelScope, SharingStarted.Lazily, ResponseWrapper.loading())
+            .stateIn(viewModelScope, SharingStarted.Lazily, com.nestor.schema.utils.ResponseWrapper.loading())
 
     init {
         viewModelScope.launch(coroutineContextProvider.io()) {

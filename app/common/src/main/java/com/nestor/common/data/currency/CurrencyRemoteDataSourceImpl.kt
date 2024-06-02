@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class CurrencyRemoteDataSourceImpl @Inject constructor(private val client: ApolloClient) :
     CurrencyRemoteDataSource {
-    override suspend fun fetchCurrencies(): ResponseWrapper<CurrencyInfoQuery.Data> {
-        return safeApiCall { client.query(CurrencyInfoQuery()).execute() }
+    override suspend fun fetchCurrencies(): com.nestor.schema.utils.ResponseWrapper<CurrencyInfoQuery.Data> {
+        return com.nestor.schema.utils.safeApiCall { client.query(CurrencyInfoQuery()).execute() }
     }
 }

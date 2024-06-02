@@ -32,7 +32,7 @@ class ExpenseRepositoryImpl @Inject constructor(
 ) : ExpenseRepository {
 
     override suspend fun createExpense(expenseInput: ExpenseInput) =
-        safeApiCall { remoteDataSource.createExpense(expenseInput) }
+        com.nestor.schema.utils.safeApiCall { remoteDataSource.createExpense(expenseInput) }
 
     override fun getExpenses(
         month: Int,
@@ -60,7 +60,7 @@ class ExpenseRepositoryImpl @Inject constructor(
         month: Int,
         currencyCode: String
     ): Int {
-        val response = safeApiCall {
+        val response = com.nestor.schema.utils.safeApiCall {
             remoteDataSource.getExpenses(
                 month = month,
                 year = year,

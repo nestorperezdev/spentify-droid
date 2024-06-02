@@ -50,7 +50,7 @@ dependencies {
     implementation(libs.hilt)
     kapt(libs.hiltCompiler)
 
-    implementation(project(":app:lib:schema"))
+    implementation(project(":app:schema"))
     implementation(project(":app:database"))
     implementation(project(":app:uikit"))
 

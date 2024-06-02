@@ -42,7 +42,7 @@ class AuthRemoteDataSourceImpl @Inject constructor(val apolloClient: ApolloClien
     }
 
     override suspend fun updateUserCurrency(currencyCode: String) {
-        safeApiCall {
+        com.nestor.schema.utils.safeApiCall {
             this.apolloClient.mutation(
                 UpdateUserDetailsMutation(
                     UserDetailsUpdateDtoInput(

@@ -54,7 +54,7 @@ dependencies {
     implementation(project(":app:uikit"))
     api(project(":app:database"))
     implementation(project(":app:common"))
-    implementation(project(":app:lib:schema"))
+    implementation(project(":app:schema"))
     implementation(libs.compose.ui)
     implementation(libs.compose.graphics)
     implementation(libs.compose.material3)

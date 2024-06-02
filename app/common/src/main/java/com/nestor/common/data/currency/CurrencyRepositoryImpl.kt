@@ -28,23 +28,23 @@ class CurrencyRepositoryImpl @Inject constructor(
     private val authLocalDataSource: AuthLocalDataSource,
     private val authRemoteDataSource: AuthRemoteDataSource
 ) : CurrencyRepository {
-    override fun fetchCurrencies(): Flow<ResponseWrapper<List<CurrencyEntity>>> =
+    override fun fetchCurrencies(): Flow<com.nestor.schema.utils.ResponseWrapper<List<CurrencyEntity>>> =
         localDataSource.fetchCurrencies().map { currencies ->
             currencies.ifEmpty { null }?.let {
-                ResponseWrapper.success(it)
+                com.nestor.schema.utils.ResponseWrapper.success(it)
             } ?: run {
                 updateCurrencies()
-                ResponseWrapper.loading()
+                com.nestor.schema.utils.ResponseWrapper.loading()
             }
         }
 
-    override fun fetchCurrencyByCode(code: String): Flow<ResponseWrapper<CurrencyEntity>> =
+    override fun fetchCurrencyByCode(code: String): Flow<com.nestor.schema.utils.ResponseWrapper<CurrencyEntity>> =
         localDataSource.fetchCurrencyByCode(code).map { currency ->
             currency?.let {
-                ResponseWrapper.success(it)
+                com.nestor.schema.utils.ResponseWrapper.success(it)
             } ?: run {
                 updateCurrencies()
-                ResponseWrapper.loading()
+                com.nestor.schema.utils.ResponseWrapper.loading()
             }
         }
 

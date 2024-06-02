@@ -67,6 +67,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
@@ -96,7 +97,7 @@ dependencies {
     implementation(libs.navigation.compose)
 
     //schema module
-    implementation(project(":app:lib:schema"))
+    implementation(project(":app:schema"))
     implementation(project(":app:uikit"))
     implementation(project(":app:auth"))
     implementation(project(":app:onboarding"))

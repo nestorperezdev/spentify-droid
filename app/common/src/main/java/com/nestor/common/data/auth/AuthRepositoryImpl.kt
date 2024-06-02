@@ -16,41 +16,43 @@ class AuthRepositoryImpl @Inject constructor(
 ) : AuthRepository {
 
     override suspend fun register(username: String, name: String, password: String) =
-        safeApiCall {
+        com.nestor.schema.utils.safeApiCall {
             remoteDataSource.register(username = username, name = name, password = password)
         }
 
     override suspend fun login(
         username: String,
         password: String
-    ) = safeApiCall { remoteDataSource.login(username, password) }
+    ) = com.nestor.schema.utils.safeApiCall { remoteDataSource.login(username, password) }
 
     override suspend fun forgotPassword(username: String) =
-        safeApiCall { this.remoteDataSource.forgotPassword(username) }
+        com.nestor.schema.utils.safeApiCall { this.remoteDataSource.forgotPassword(username) }
 
-    override suspend fun recoverPassword(newPassword: String) = safeApiCall {
-        this.remoteDataSource.recoverPassword(newPassword)
-    }
+    override suspend fun recoverPassword(newPassword: String) =
+        com.nestor.schema.utils.safeApiCall {
+            this.remoteDataSource.recoverPassword(newPassword)
+        }
 
-    override fun userDetails(): Flow<ResponseWrapper<UserEntity?>> =
+    override fun userDetails(): Flow<com.nestor.schema.utils.ResponseWrapper<UserEntity?>> =
         localDatasource.tokenContents()
             .combineTransform(localDatasource.userDetails()) { tokenPayload, userWrapper ->
                 userWrapper?.let { user ->
-                    emit(ResponseWrapper.success(user))
+                    emit(com.nestor.schema.utils.ResponseWrapper.success(user))
                 } ?: run {
                     if (tokenPayload == null) {
-                        emit(ResponseWrapper.success(null))
+                        emit(com.nestor.schema.utils.ResponseWrapper.success(null))
                     } else {
-                        emit(ResponseWrapper.loading())
-                        val result = safeApiCall { remoteDataSource.fetchUserDetails() }
+                        emit(com.nestor.schema.utils.ResponseWrapper.loading())
+                        val result =
+                            com.nestor.schema.utils.safeApiCall { remoteDataSource.fetchUserDetails() }
                         saveUserDetails(result)
-                        emit(ResponseWrapper.success(result.body?.userEntity()))
+                        emit(com.nestor.schema.utils.ResponseWrapper.success(result.body?.userEntity()))
                     }
                 }
             }
 
 
-    private suspend fun saveUserDetails(userResponse: ResponseWrapper<UserDetailsQuery.Data>) {
+    private suspend fun saveUserDetails(userResponse: com.nestor.schema.utils.ResponseWrapper<UserDetailsQuery.Data>) {
         userResponse.body?.let {
             localDatasource.storeUser(it.userEntity())
         } ?: {

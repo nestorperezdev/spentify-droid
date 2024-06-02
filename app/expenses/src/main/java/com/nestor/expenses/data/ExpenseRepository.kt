@@ -10,7 +10,7 @@ import com.nestor.schema.utils.ResponseWrapper
 import kotlinx.coroutines.flow.Flow
 
 interface ExpenseRepository {
-    suspend fun createExpense(expenseInput: ExpenseInput): ResponseWrapper<CreateExpenseMutation.Data>
+    suspend fun createExpense(expenseInput: ExpenseInput): com.nestor.schema.utils.ResponseWrapper<CreateExpenseMutation.Data>
     fun getExpenses(
         month: Int,
         year: Int,
