@@ -1,5 +1,7 @@
 package com.nestor.common.di
 
+import com.nestor.common.data.appinfo.AppInfoRepository
+import com.nestor.common.data.appinfo.AppInfoRepositoryImpl
 import com.nestor.common.data.currency.CurrencyLocalDataSource
 import com.nestor.common.data.currency.CurrencyLocalDataSourceImpl
 import com.nestor.common.data.currency.CurrencyRemoteDataSource
@@ -32,4 +34,8 @@ interface CommonModule {
     @Binds
     @Singleton
     fun bindsStatusBarRepository(statusBarRepository: StatusBarRepositoryImpl): StatusBarRepository
+
+    @Binds
+    @Singleton
+    fun bindsAppInfoRepository(impl: AppInfoRepositoryImpl): AppInfoRepository
 }

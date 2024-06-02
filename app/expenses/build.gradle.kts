@@ -65,7 +65,7 @@ dependencies {
     implementation(project(":app:dashboard"))
 
     //schema module
-    implementation(project(":app:lib:schema"))
+    implementation(project(":app:schema"))
 
     //uikit module
     implementation(project(":app:uikit"))

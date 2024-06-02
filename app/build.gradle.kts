@@ -1,5 +1,3 @@
-import org.apache.commons.logging.LogFactory.release
-
 plugins {
     alias(libs.plugins.androidApp)
     alias(libs.plugins.kotlinAndroid)
@@ -17,8 +15,8 @@ android {
         applicationId = "com.nestor.spentify"
         minSdk = 29
         targetSdk = 34
-        versionCode = 501
-        versionName = "0.0.0.501"
+        versionCode = 503
+        versionName = "0.0.0.503"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -27,25 +25,29 @@ android {
     }
 
     signingConfigs {
-        create("release") {
-            val env = System.getenv()
-            storeFile = file("sign.keystore")
-            storePassword =
-                env.getOrDefault("RELEASE_STORE_PASSWORD", null)
-                    ?: providers.gradleProperty("RELEASE_STORE_PASSWORD").orNull
-                            ?: ""
-            keyAlias = "nessdev"
-            keyPassword =
-                env.getOrDefault("RELEASE_KEY_PASSWORD", null)
-                    ?: providers.gradleProperty("RELEASE_KEY_PASSWORD").orNull
-                            ?: ""
+        if (file("sign.keystore").exists()) {
+            create("release") {
+                val env = System.getenv()
+                storeFile = file("sign.keystore")
+                storePassword =
+                    env.getOrDefault("RELEASE_STORE_PASSWORD", null)
+                        ?: providers.gradleProperty("RELEASE_STORE_PASSWORD").orNull
+                                ?: ""
+                keyAlias = "nessdev"
+                keyPassword =
+                    env.getOrDefault("RELEASE_KEY_PASSWORD", null)
+                        ?: providers.gradleProperty("RELEASE_KEY_PASSWORD").orNull
+                                ?: ""
+            }
         }
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
-            signingConfig = signingConfigs.getByName("release")
+            if (file("sign.keystore").exists()) {
+                signingConfig = signingConfigs.getByName("release")
+            }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -53,6 +55,7 @@ android {
         }
         debug {
             versionNameSuffix = "-debug"
+            applicationIdSuffix = ".debug"
         }
     }
     compileOptions {
@@ -64,6 +67,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
@@ -93,7 +97,7 @@ dependencies {
     implementation(libs.navigation.compose)
 
     //schema module
-    implementation(project(":app:lib:schema"))
+    implementation(project(":app:schema"))
     implementation(project(":app:uikit"))
     implementation(project(":app:auth"))
     implementation(project(":app:onboarding"))

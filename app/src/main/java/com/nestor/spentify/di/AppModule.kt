@@ -26,8 +26,10 @@ import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 import com.apollographql.apollo3.adapter.DateAdapter
+import com.nestor.common.data.appinfo.AppInfoDataSource
 import com.nestor.common.data.monthandyear.MonthAndYear
 import com.nestor.schema.type.DateTime
+import com.nestor.spentify.data.appinfo.AppInfoDataSourceImpl
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -37,6 +39,10 @@ abstract class AppModule {
     abstract fun coroutineContextProvider(
         contextProviderImpl: CoroutineContextProviderImpl
     ): CoroutineContextProvider
+
+    @Binds
+    @Singleton
+    abstract fun bindsAppInfoDataSource(impl: AppInfoDataSourceImpl): AppInfoDataSource
 
     companion object {
         @Provides

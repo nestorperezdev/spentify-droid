@@ -63,7 +63,7 @@ dependencies {
     implementation(project(":app:common"))
     implementation(project(":app:database"))
     implementation(project(":app:dashboard"))
-    implementation(project(":app:lib:schema"))
+    implementation(project(":app:schema"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
