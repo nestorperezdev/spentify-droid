@@ -59,14 +59,12 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch(coroutineContextProvider.io()) {
             val loginResult =
                 authRepository.login(_uiState.value.email.value, _uiState.value.password.value)
-            if (loginResult.error != null) {
+            loginResult.body?.login?.loginToken?.token?.let { token ->
+                authRepository.setRawToken(token)
+                _uiState.update { it.copy(isSuccess = true) }
+            } ?: run {
                 _uiState.update { it.copy(isLoading = false) }
                 _uiState.update { it.copy(loginErrorResource = R.string.incorrect_password_or_email) }
-            } else {
-                loginResult.body?.login?.loginToken?.token?.let {
-                    authRepository.setRawToken(it)
-                }
-                _uiState.update { it.copy(isSuccess = true) }
             }
         }
     }
