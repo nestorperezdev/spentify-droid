@@ -58,17 +58,12 @@ dependencies {
     implementation(libs.compose.toolingPreview)
     implementation(libs.compose.material3)
 
-    //common module
+    //app modules
     implementation(project(":app:common"))
-
-    //dash module
     implementation(project(":app:dashboard"))
-
-    //schema module
     implementation(project(":app:schema"))
-
-    //uikit module
     implementation(project(":app:uikit"))
+    implementation(project(":app:category"))
 
     implementation(libs.androidx.ktx)
     implementation(libs.appcompat)

@@ -25,6 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.nestor.common.util.formatWithDayAndDate
 import com.nestor.dashboard.R
 import com.nestor.database.data.expense.ExpenseEntity
+import com.nestor.database.data.expensewithcategory.ExpenseWithCategoryEntity
 import com.nestor.uikit.list.DragDirection
 import com.nestor.uikit.list.SYListItem
 import com.nestor.uikit.list.SYListItemData
@@ -53,7 +54,7 @@ fun ExpenseListScreen(
 @Composable
 private fun ExpenseListContent(
     modifier: Modifier = Modifier,
-    expenseListState: StateFlow<List<ExpenseEntity>>,
+    expenseListState: StateFlow<List<ExpenseWithCategoryEntity>>,
     userCurrencySymbolState: StateFlow<String>,
     isLoadingState: StateFlow<Boolean>,
     isEndReachedState: StateFlow<Boolean>,
@@ -86,23 +87,23 @@ private fun ExpenseListContent(
         verticalArrangement = Arrangement.spacedBy(20.dp),
         state = scrollState
     ) {
-        items(expenseList, key = { it.id }) { item ->
-            val separator = if (item.description.isEmpty()) "" else " ⦁ "
+        items(expenseList, key = { it.expense.id }) { item ->
+            val separator = if (item.expense.description.isEmpty()) "" else " ⦁ "
             SYListItem(
                 item = SYListItemData(
                     label = stringResource(
                         R.string.currency_format,
                         currencySymbol,
-                        item.amount.formatMoneyAmount()
+                        item.expense.amount.formatMoneyAmount()
                     ),
-                    subtitle = "${item.date.formatWithDayAndDate()}${separator}${item.description}",
+                    subtitle = "${item.expense.date.formatWithDayAndDate()}${separator}${item.expense.description}",
                     contextualActions = contextualActions
                 ),
                 onDragged = {
                     if (it == DragDirection.LEFT) {
-                        onDeleteAction(item)
+                        onDeleteAction(item.expense)
                     } else {
-                        onEditAction(item)
+                        onEditAction(item.expense)
                     }
                     0f
                 },

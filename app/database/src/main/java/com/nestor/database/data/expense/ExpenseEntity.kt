@@ -17,4 +17,5 @@ data class ExpenseEntity(
     @ColumnInfo("usd_value") val usdValue: Double,
     //  TODO: Remove default value
     @ColumnInfo("currency_code", defaultValue = "") val currencyCode: String,
+    val categoryId: String? = null,
 )

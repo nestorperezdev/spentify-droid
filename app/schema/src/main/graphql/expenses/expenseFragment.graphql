@@ -6,5 +6,8 @@ fragment expenseFragment on ExpenseDetail {
     value,
     cursor,
     id,
-    date
+    date,
+    category {
+        ...category
+    }
 }

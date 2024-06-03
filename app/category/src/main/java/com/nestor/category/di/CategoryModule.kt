@@ -26,7 +26,6 @@ interface CategoryModule {
     @Binds
     @Singleton
     fun bindsSubcategoryRemoteDataSource(impl: SubcategoryRemoteDataSourceImpl): SubcategoryRemoteDataSource
-
     @Binds
     @Singleton
     fun bindsCategoryLocalDataSource(impl: CategoryLocalDataSourceImpl): CategoryLocalDataSource

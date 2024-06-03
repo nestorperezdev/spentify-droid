@@ -16,7 +16,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "Spentify"
 include(":app")
-include(":app:lib:schema")
 include(":app:uikit")
 include(":app:auth")
 include(":app:onboarding")
@@ -26,3 +25,4 @@ include(":app:common")
 include(":app:account")
 include(":app:expenses")
 include(":app:schema")
+include(":app:category")
