@@ -10,4 +10,6 @@ data class CategoryEntity(
     @ColumnInfo val name: String,
     @ColumnInfo val icon: String,
     val subcategoryId: String,
-)
+) {
+    fun iconUrl(baseUrl: String) = "$baseUrl/icon/$icon"
+}

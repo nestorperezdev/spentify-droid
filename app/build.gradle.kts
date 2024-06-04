@@ -106,6 +106,11 @@ dependencies {
     implementation(project(":app:account"))
     implementation(project(":app:expenses"))
 
+    //coil
+    implementation(libs.coilBase)
+    implementation(libs.coilSvg)
+    implementation(libs.coil)
+
     implementation(libs.androidx.ktx)
     implementation(libs.androidx.runtimeKtx)
     implementation(libs.activity.compose)

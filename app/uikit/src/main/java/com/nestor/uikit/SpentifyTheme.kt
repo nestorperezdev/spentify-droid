@@ -19,6 +19,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,6 +32,7 @@ import com.nestor.uikit.statusbar.StatusBarType
 import com.nestor.uikit.theme.color.DarkColorScheme
 import com.nestor.uikit.theme.color.LightColorScheme
 import com.nestor.uikit.theme.color.LocalSYColorScheme
+import com.nestor.uikit.theme.image.LocalSYImageServerProvider
 import com.nestor.uikit.theme.spacing.LocalSYPadding
 import com.nestor.uikit.theme.spacing.SYPadding
 import com.nestor.uikit.theme.typography.getTypo
@@ -38,6 +40,7 @@ import com.nestor.uikit.theme.typography.getTypo
 @Composable
 fun SpentifyTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    imageServerUrl: String = "https://dev.nestorperez.dev/3000",
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -54,7 +57,9 @@ fun SpentifyTheme(
     }
     CompositionLocalProvider(
         LocalSYColorScheme provides colorScheme,
-        LocalSYPadding provides SYPadding.SYPaddingDefault
+        LocalSYPadding provides SYPadding.SYPaddingDefault,
+        LocalSYImageServerProvider provides imageServerUrl,
+
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
