@@ -2,4 +2,5 @@ fragment category on Category {
     categoryName
     iconId
     id
+    tint
 }

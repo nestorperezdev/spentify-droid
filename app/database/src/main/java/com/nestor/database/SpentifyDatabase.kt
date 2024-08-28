@@ -31,7 +31,7 @@ import com.nestor.database.util.DateConverter
         CategoryEntity::class,
         SubCategoryEntity::class
     ],
-    version = 12,
+    version = 13,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(
@@ -46,7 +46,8 @@ import com.nestor.database.util.DateConverter
             spec = AutoMigration9to10::class
         ),
         AutoMigration(from = 10, to = 11),
-        AutoMigration(from = 11, to = 12)
+        AutoMigration(from = 11, to = 12),
+        AutoMigration(from = 12, to = 13),
     ]
 )
 @TypeConverters(DateConverter::class)

@@ -55,7 +55,8 @@ private fun CategoryListQuery.Data.toCategoryEntity(): List<SubcategoryWithCateg
                     id = category.id,
                     name = category.categoryName,
                     icon = category.iconId,
-                    subcategoryId = subcategory.id
+                    subcategoryId = subcategory.id,
+                    tint = category.tint?.toInt()
                 )
             }
         )

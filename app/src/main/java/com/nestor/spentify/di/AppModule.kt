@@ -8,14 +8,15 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
-import coil.ImageLoader
-import coil.decode.SvgDecoder
-import coil.disk.DiskCache
-import coil.memory.MemoryCache
 import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.adapter.DateAdapter
 import com.apollographql.apollo3.network.okHttpClient
+import com.nestor.common.data.appinfo.AppInfoDataSource
 import com.nestor.common.data.auth.datasource.AuthTokenInterceptor
+import com.nestor.common.data.monthandyear.MonthAndYear
+import com.nestor.schema.type.DateTime
 import com.nestor.spentify.R
+import com.nestor.spentify.data.appinfo.AppInfoDataSourceImpl
 import com.nestor.uikit.util.CoroutineContextProvider
 import com.nestor.uikit.util.CoroutineContextProviderImpl
 import dagger.Binds
@@ -29,11 +30,6 @@ import kotlinx.coroutines.SupervisorJob
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
-import com.apollographql.apollo3.adapter.DateAdapter
-import com.nestor.common.data.appinfo.AppInfoDataSource
-import com.nestor.common.data.monthandyear.MonthAndYear
-import com.nestor.schema.type.DateTime
-import com.nestor.spentify.data.appinfo.AppInfoDataSourceImpl
 
 @Module
 @InstallIn(SingletonComponent::class)

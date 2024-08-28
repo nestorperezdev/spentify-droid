@@ -1,6 +1,5 @@
 package com.nestor.expenses.ui.expenselist
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -173,23 +173,17 @@ fun LazyItemScope.ExpenseItem(
         modifier = modifier.animateItemPlacement()
     )
 }
-private const val TAG = "ExpenseListScreen"
 
 @Composable
 private fun generateCategoryItem(category: CategoryEntity?): SYListItemData.SYListItemIcon? {
-    val tint = MaterialTheme.colorScheme.primary
-    val baseUrl = LocalSYImageServerProvider.current
-    val painter = rememberAsyncImagePainter(
-        model = category?.iconUrl(baseUrl)
-    )
-    return remember(category?.id ?: "null") {
-        Log.i(TAG, "generateCategoryItem: ${category?.iconUrl(baseUrl)}")
-        category?.let {
-            SYListItemData.SYListItemIcon(
-                icon = painter,
-                tint = tint,
-            )
-        } ?: run { null }
+    return category?.let {
+        SYListItemData.SYListItemIcon(
+            icon = rememberAsyncImagePainter(
+                model = it.iconUrl(LocalSYImageServerProvider.current),
+                imageLoader = LocalContext.current.imageLoader
+            ),
+            tint = it.tint?.let { tintInt -> Color(tintInt) } ?: MaterialTheme.colorScheme.primary,
+        )
     }
 }
 
@@ -233,7 +227,8 @@ private fun ExpenseListContentPreview() {
                                 id = "1",
                                 name = "Categoria",
                                 icon = "icon",
-                                subcategoryId = "1"
+                                subcategoryId = "1",
+                                tint = 0
                             )
                         )
                     )
