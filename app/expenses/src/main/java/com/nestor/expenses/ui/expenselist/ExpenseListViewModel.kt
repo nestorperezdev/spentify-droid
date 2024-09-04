@@ -3,11 +3,13 @@ package com.nestor.expenses.ui.expenselist
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nestor.category.data.subcategory.SubcategoryRepository
 import com.nestor.common.data.auth.AuthRepository
 import com.nestor.common.data.currency.CurrencyRepository
 import com.nestor.common.data.monthandyear.MonthAndYear
 import com.nestor.dashboard.data.DashboardRepository
 import com.nestor.database.data.expense.ExpenseEntity
+import com.nestor.database.data.expensewithcategory.ExpenseWithCategoryEntity
 import com.nestor.expenses.data.ExpenseRepository
 import com.nestor.uikit.util.CoroutineContextProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,7 +40,8 @@ class ExpenseListViewModel @Inject constructor(
     private val coroutineDispatcher: CoroutineContextProvider,
     private val authRepository: AuthRepository,
     private val monthYear: MonthAndYear,
-    private val dashboardRepository: DashboardRepository
+    private val dashboardRepository: DashboardRepository,
+    private val subcategoryRepository: SubcategoryRepository
 ) : ViewModel() {
     private val _userCurrencySymbol = MutableStateFlow("$")
     val userCurrencySymbol = _userCurrencySymbol
@@ -51,7 +54,7 @@ class ExpenseListViewModel @Inject constructor(
     )
     val isLoading: StateFlow<Boolean> =
         _isLoading.stateIn(viewModelScope, SharingStarted.Lazily, false)
-    val expenseItems: StateFlow<List<ExpenseEntity>> =
+    val expenseItems: StateFlow<List<ExpenseWithCategoryEntity>> =
         authRepository.userDetails()
             .map { it.body }
             .filterNotNull()
@@ -70,6 +73,15 @@ class ExpenseListViewModel @Inject constructor(
 
     init {
         fetchUserCurrencyInfo()
+        fetchCategoryListIfNeeded()
+    }
+
+    private fun fetchCategoryListIfNeeded() {
+        viewModelScope.launch(coroutineDispatcher.io()) {
+            subcategoryRepository.getSubcategories().take(1).collect {
+                //  no-op
+            }
+        }
     }
 
     private fun fetchMoreItems() {
@@ -94,7 +106,7 @@ class ExpenseListViewModel @Inject constructor(
                     userUid = userDetails.uuid,
                     currencyCode = userDetails.currencyCode,
                     pageSize = PAGE_SIZE,
-                    cursor = lastExpenseItem?.cursor ?: 0
+                    cursor = lastExpenseItem?.expense?.cursor ?: 0
                 )
                 if (itemsFetched < PAGE_SIZE) {
                     _isEndOfList.update { true }

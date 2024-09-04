@@ -19,7 +19,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalTextInputService
@@ -29,16 +33,24 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
 import com.nestor.common.ui.currencypicker.CurrencyPickerBottomSheet
+import com.nestor.database.data.catergory.CategoryEntity
 import com.nestor.database.data.currency.CurrencyEntity
+import com.nestor.database.data.subcategory.SubcategoryWithCategories
 import com.nestor.expenses.R
+import com.nestor.expenses.ui.category.CategoryPickerSheet
+import com.nestor.schema.utils.ResponseWrapper
 import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.button.SYButton
 import com.nestor.uikit.input.FormFieldData
+import com.nestor.uikit.list.SYListItem
+import com.nestor.uikit.list.SYListItemData
 import com.nestor.uikit.loading.LoadingScreen
 import com.nestor.uikit.statusbar.NavigationIcon
 import com.nestor.uikit.statusbar.SYStatusBar
 import com.nestor.uikit.statusbar.StatusBarType
+import com.nestor.uikit.theme.image.LocalSYImageServerProvider
 import com.nestor.uikit.theme.spacing.LocalSYPadding
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -69,7 +81,10 @@ fun NewExpenseScreen(
         descriptionText = viewModel.description.collectAsState().value,
         onDescriptionChanged = viewModel::onDescriptionChanged,
         selectedCurrencyEntity = viewModel.selectedCurrency,
-        onCurrencyClicked = viewModel::onCurrencyPickerClicked
+        onCurrencyClicked = viewModel::onCurrencyPickerClicked,
+        categories = viewModel.categories,
+        onCategorySelected = viewModel::onCategorySelected,
+        categorySelected = viewModel.categorySelected
     )
     val coroutineScope = rememberCoroutineScope()
     //  TODO: Fix animation
@@ -89,6 +104,7 @@ fun NewExpenseScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NewExpenseScreenContent(
     onNavBack: () -> Unit = {},
@@ -99,9 +115,23 @@ private fun NewExpenseScreenContent(
     onDescriptionChanged: (String) -> Unit,
     selectedCurrencyEntity: StateFlow<CurrencyEntity?>,
     isLoading: StateFlow<Boolean>,
-    onCurrencyClicked: () -> Unit = {}
+    categories: StateFlow<ResponseWrapper<List<SubcategoryWithCategories>>>,
+    onCurrencyClicked: () -> Unit = {},
+    onCategorySelected: (CategoryEntity) -> Unit,
+    categorySelected: StateFlow<CategoryEntity?>
 ) {
+    var isCategoryPickerExpended by remember { mutableStateOf(false) }
     Scaffold(topBar = { NewExpenseToolbar(onNavBack) }) {
+        if (isCategoryPickerExpended) {
+            CategoryPickerSheet(
+                categories = categories,
+                onCategorySelected = {
+                    onCategorySelected(it)
+                },
+            ) {
+                isCategoryPickerExpended = false
+            }
+        }
         if (isLoading.collectAsState().value.not()) {
             Column(
                 modifier = Modifier
@@ -155,6 +185,24 @@ private fun NewExpenseScreenContent(
                     supportingText = { Text("${descriptionText.value.length} / 255") },
                     modifier = Modifier.fillMaxWidth()
                 )
+                Spacer(modifier = Modifier.height(40.dp))
+                val category by categorySelected.collectAsState()
+                val icon = category?.iconUrl(LocalSYImageServerProvider.current)
+                val iconAsync = rememberAsyncImagePainter(model = icon)
+                val iconItem = SYListItemData.SYListItemIcon(
+                    icon = iconAsync,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                val categoryItem = remember(category) {
+                    SYListItemData(
+                        label = category?.name ?: "Pick a category",
+                        leadingIcon = iconItem
+                    )
+                }
+                SYListItem(
+                    item = categoryItem,
+                    modifier = Modifier.clickable { isCategoryPickerExpended = true }
+                )
                 Spacer(modifier = Modifier.weight(1f))
                 SYButton(
                     onClick = onSaveClick,
@@ -188,7 +236,10 @@ private fun NewExpenseScreenContentPreview() {
             isLoading = MutableStateFlow(false),
             descriptionText = FormFieldData(""),
             onDescriptionChanged = {},
-            selectedCurrencyEntity = MutableStateFlow(null)
+            selectedCurrencyEntity = MutableStateFlow(null),
+            categories = MutableStateFlow(ResponseWrapper.loading()),
+            onCategorySelected = {},
+            categorySelected = MutableStateFlow(null)
         )
     }
 }

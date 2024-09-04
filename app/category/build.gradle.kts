@@ -53,7 +53,7 @@ dependencies {
     //modules
     implementation(project(":app:common"))
     implementation(project(":app:database"))
-    implementation(project(":app:lib:schema"))
+    implementation(project(":app:schema"))
 
     //compose
     implementation(libs.activity.compose)

@@ -7,6 +7,7 @@ import java.util.Date
 
 interface ExpenseLocalDataSource {
     suspend fun saveExpenseList(expenseList: List<ExpenseEntity>)
+    @Deprecated("Use getExpensesWithCategory instead")
     fun getExpenses(
         month: Int,
         year: Int,

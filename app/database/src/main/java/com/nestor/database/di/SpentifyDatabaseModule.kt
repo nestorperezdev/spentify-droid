@@ -6,10 +6,13 @@ import androidx.room.Room
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import com.nestor.database.SpentifyDatabase
+import com.nestor.database.data.catergory.CategoryDao
 import com.nestor.database.data.currency.CurrencyDao
 import com.nestor.database.data.dashboard.DashboardDao
 import com.nestor.database.data.encryptedpreferences.EncryptedPreferences
 import com.nestor.database.data.expense.ExpenseDao
+import com.nestor.database.data.expensewithcategory.ExpenseWithCategoryDao
+import com.nestor.database.data.subcategory.SubcategoryDao
 import com.nestor.database.data.user.UserDao
 import com.nestor.database.migrations.Migration5to6
 import com.nestor.database.migrations.Migration6to7
@@ -77,6 +80,24 @@ abstract class SpentifyDatabaseModule {
         @Provides
         fun providesExpenseDao(database: SpentifyDatabase): ExpenseDao {
             return database.expensesDao()
+        }
+
+        @Singleton
+        @Provides
+        fun providesExpenseWithCategoryDao(database: SpentifyDatabase): ExpenseWithCategoryDao {
+            return database.expenseWithCategoryDao()
+        }
+
+        @Singleton
+        @Provides
+        fun providesSubcategoryDao(database: SpentifyDatabase): SubcategoryDao {
+            return database.subcategoryDao()
+        }
+
+        @Singleton
+        @Provides
+        fun providesCategoryDao(database: SpentifyDatabase): CategoryDao {
+            return database.categoryDao()
         }
     }
 }

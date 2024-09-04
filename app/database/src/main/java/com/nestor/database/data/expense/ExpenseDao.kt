@@ -12,6 +12,7 @@ interface ExpenseDao {
     @Upsert
     suspend fun upsertAll(expenses: List<ExpenseEntity>)
 
+    @Deprecated("Use expenseWithCategory.getExpensesWithCategory instead")
     @Query("SELECT * FROM expense WHERE date BETWEEN :from AND :to AND user_uuid = :userUuid AND stored_at > :expirationDate AND currency_code = :currencyCode ORDER BY cursor DESC")
     fun getExpenses(
         from: Date,

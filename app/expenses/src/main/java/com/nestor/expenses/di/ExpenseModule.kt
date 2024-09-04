@@ -6,6 +6,8 @@ import com.nestor.expenses.data.ExpenseRemoteDataSource
 import com.nestor.expenses.data.ExpenseRemoteDataSourceImpl
 import com.nestor.expenses.data.ExpenseRepository
 import com.nestor.expenses.data.ExpenseRepositoryImpl
+import com.nestor.expenses.data.expensewithcategory.ExpenseWithCategoryLocalDataSource
+import com.nestor.expenses.data.expensewithcategory.ExpenseWithCategoryLocalDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -26,4 +28,8 @@ interface ExpenseModule {
     @Binds
     @ViewModelScoped
     fun bindsExpenseRepository(repository: ExpenseRepositoryImpl): ExpenseRepository
+
+    @Binds
+    @ViewModelScoped
+    fun bindsExpenseWithCategoryLocalDataSource(repository: ExpenseWithCategoryLocalDataSourceImpl): ExpenseWithCategoryLocalDataSource
 }

@@ -12,10 +12,12 @@ import com.nestor.database.data.dashboard.DashboardDao
 import com.nestor.database.data.dashboard.DashboardEntity
 import com.nestor.database.data.expense.ExpenseDao
 import com.nestor.database.data.expense.ExpenseEntity
+import com.nestor.database.data.expensewithcategory.ExpenseWithCategoryDao
 import com.nestor.database.data.subcategory.SubCategoryEntity
 import com.nestor.database.data.subcategory.SubcategoryDao
 import com.nestor.database.data.user.UserDao
 import com.nestor.database.data.user.UserEntity
+import com.nestor.database.migrations.AutoMigration11to12
 import com.nestor.database.migrations.AutoMigration7to8
 import com.nestor.database.migrations.AutoMigration9to10
 import com.nestor.database.util.DateConverter
@@ -29,7 +31,7 @@ import com.nestor.database.util.DateConverter
         CategoryEntity::class,
         SubCategoryEntity::class
     ],
-    version = 11,
+    version = 13,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(
@@ -43,7 +45,9 @@ import com.nestor.database.util.DateConverter
             to = 10,
             spec = AutoMigration9to10::class
         ),
-        AutoMigration(from = 10, to = 11)
+        AutoMigration(from = 10, to = 11),
+        AutoMigration(from = 11, to = 12),
+        AutoMigration(from = 12, to = 13),
     ]
 )
 @TypeConverters(DateConverter::class)
@@ -54,4 +58,5 @@ abstract class SpentifyDatabase : RoomDatabase() {
     abstract fun expensesDao(): ExpenseDao
     abstract fun categoryDao(): CategoryDao
     abstract fun subcategoryDao(): SubcategoryDao
+    abstract fun expenseWithCategoryDao(): ExpenseWithCategoryDao
 }

@@ -48,7 +48,6 @@ dependencies {
     //hilt
     implementation(libs.androidx.hilt.navigation)
     implementation(libs.hilt)
-    implementation(project(":app:database"))
     kapt(libs.hiltCompiler)
 
     //compose
@@ -58,17 +57,16 @@ dependencies {
     implementation(libs.compose.toolingPreview)
     implementation(libs.compose.material3)
 
-    //common module
+    //coil
+    implementation(libs.compose.coil)
+
+    //app modules
+    implementation(project(":app:database"))
     implementation(project(":app:common"))
-
-    //dash module
     implementation(project(":app:dashboard"))
-
-    //schema module
     implementation(project(":app:schema"))
-
-    //uikit module
     implementation(project(":app:uikit"))
+    implementation(project(":app:category"))
 
     implementation(libs.androidx.ktx)
     implementation(libs.appcompat)
