@@ -76,13 +76,11 @@ class SignupViewModel @Inject constructor(
                 username = _uiState.value.email.value,
                 password = _uiState.value.password.value
             )
-            if (result.error != null) {
-                _uiState.update { it.copy(signupErrorResource = R.string.unknown_error) }
-            } else {
-                result.body?.register?.loginToken?.token?.let {
-                    authRepository.setRawToken(it)
-                }
+            result.body?.register?.loginToken?.token?.let {
+                authRepository.setRawToken(it)
                 _uiState.update { it.copy(isSuccess = true) }
+            } ?: run {
+                _uiState.update { it.copy(signupErrorResource = R.string.unknown_error) }
             }
         }
     }
