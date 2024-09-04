@@ -2,23 +2,24 @@ package com.nestor.expenses.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.apollographql.apollo3.api.Optional
 import com.nestor.category.data.subcategory.SubcategoryRepository
 import com.nestor.common.data.auth.AuthRepository
 import com.nestor.common.data.currency.CurrencyRepository
 import com.nestor.dashboard.data.DashboardRepository
+import com.nestor.database.data.catergory.CategoryEntity
 import com.nestor.database.data.currency.CurrencyEntity
 import com.nestor.database.data.subcategory.SubcategoryWithCategories
 import com.nestor.expenses.data.ExpenseRepository
 import com.nestor.expenses.data.toEntity
+import com.nestor.schema.type.CategoryInput
 import com.nestor.schema.type.ExpenseInput
 import com.nestor.schema.utils.ResponseWrapper
 import com.nestor.uikit.input.FormFieldData
 import com.nestor.uikit.util.CoroutineContextProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
@@ -52,6 +53,8 @@ class NewExpenseViewModel @Inject constructor(
     val currencyOpenState = _currencyOpenState.asStateFlow()
     private val _categories = MutableStateFlow(ResponseWrapper.loading<List<SubcategoryWithCategories>>())
     val categories = _categories.asStateFlow()
+    private val _categorySelected = MutableStateFlow<CategoryEntity?>(null)
+    val categorySelected = _categorySelected.asStateFlow()
 
     init {
         viewModelScope.launch(coroutineDispatcher.io()) {
@@ -91,13 +94,17 @@ class NewExpenseViewModel @Inject constructor(
 
     fun onSave() {
         if (_amount.value.value.isEmpty()) return
+        if (_categorySelected.value == null) return
         val amount = _amount.value.value.toDouble()
         viewModelScope.launch(coroutineDispatcher.io()) {
             _selectedCurrency.value?.let { currency ->
+                val categoryInput =
+                    if (_categorySelected.value != null) CategoryInput(_categorySelected.value!!.id) else null
                 val expenseInput = ExpenseInput(
                     currentExchangeId = currency.exchangeId,
                     description = _description.value.value,
-                    value = amount
+                    value = amount,
+                    category = Optional.presentIfNotNull(categoryInput)
                 )
                 _loadingState.update { true }
                 val result = expenseRepository.createExpense(expenseInput)
@@ -143,5 +150,9 @@ class NewExpenseViewModel @Inject constructor(
 
     fun onCurrencyPickerDismiss() {
         _currencyOpenState.update { false }
+    }
+
+    fun onCategorySelected(categoryEntity: CategoryEntity) {
+        _categorySelected.update { categoryEntity }
     }
 }

@@ -198,7 +198,7 @@ fun SYListItemContextualAction(
 }
 
 @Composable
-private fun SYItemIcon(
+fun SYItemIcon(
     modifier: Modifier = Modifier,
     icon: SYListItemData.SYListItemIcon,
 ) {
