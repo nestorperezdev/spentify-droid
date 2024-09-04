@@ -2,18 +2,23 @@ package com.nestor.expenses.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nestor.category.data.subcategory.SubcategoryRepository
 import com.nestor.common.data.auth.AuthRepository
 import com.nestor.common.data.currency.CurrencyRepository
 import com.nestor.dashboard.data.DashboardRepository
 import com.nestor.database.data.currency.CurrencyEntity
+import com.nestor.database.data.subcategory.SubcategoryWithCategories
 import com.nestor.expenses.data.ExpenseRepository
 import com.nestor.expenses.data.toEntity
 import com.nestor.schema.type.ExpenseInput
+import com.nestor.schema.utils.ResponseWrapper
 import com.nestor.uikit.input.FormFieldData
 import com.nestor.uikit.util.CoroutineContextProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
@@ -27,6 +32,7 @@ class NewExpenseViewModel @Inject constructor(
     private val expenseRepository: ExpenseRepository,
     private val currencyRepository: CurrencyRepository,
     private val coroutineDispatcher: CoroutineContextProvider,
+    private val subcategoryRepository: SubcategoryRepository,
     private val dashRepo: DashboardRepository,
     private val authRepository: AuthRepository
 ) :
@@ -44,6 +50,8 @@ class NewExpenseViewModel @Inject constructor(
     val selectedCurrency = _selectedCurrency.asStateFlow()
     private val _currencyOpenState = MutableStateFlow(false)
     val currencyOpenState = _currencyOpenState.asStateFlow()
+    private val _categories = MutableStateFlow(ResponseWrapper.loading<List<SubcategoryWithCategories>>())
+    val categories = _categories.asStateFlow()
 
     init {
         viewModelScope.launch(coroutineDispatcher.io()) {
@@ -58,6 +66,15 @@ class NewExpenseViewModel @Inject constructor(
                         .collect { currency ->
                             _selectedCurrency.update { currency }
                         }
+                }
+        }
+        viewModelScope.launch(coroutineDispatcher.io()) {
+            subcategoryRepository
+                .getSubcategories()
+                .filterNotNull()
+                .take(1)
+                .collect { categories ->
+                    _categories.update { categories }
                 }
         }
     }

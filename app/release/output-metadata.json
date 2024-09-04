@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.nestor.spentify",
+  "variantName": "release",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 500,
+      "versionName": "0.0.0.500",
+      "outputFile": "app-release.apk"
+    }
+  ],
+  "elementType": "File"
+}
