@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.google.googleServices) apply false
     alias(libs.plugins.compose) apply false
     alias(libs.plugins.google.devtools.ksp) apply false
+    alias(libs.plugins.screenshot) apply false
 }
 
 buildscript {

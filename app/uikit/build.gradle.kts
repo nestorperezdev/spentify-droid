@@ -5,11 +5,14 @@ plugins {
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.compose)
+    alias(libs.plugins.screenshot)
 }
 
 android {
     namespace = "com.nestor.uikit"
     compileSdk = 34
+    @Suppress("UnstableApiUsage")
+    experimentalProperties["android.experimental.enableScreenshotTest"] = true
 
     defaultConfig {
         minSdk = 29
@@ -64,4 +67,5 @@ dependencies {
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
     debugImplementation(libs.compose.debug.tooling)
+    screenshotTestImplementation(libs.compose.debug.tooling)
 }
