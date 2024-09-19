@@ -17,7 +17,6 @@ import com.nestor.database.data.subcategory.SubCategoryEntity
 import com.nestor.database.data.subcategory.SubcategoryDao
 import com.nestor.database.data.user.UserDao
 import com.nestor.database.data.user.UserEntity
-import com.nestor.database.migrations.AutoMigration11to12
 import com.nestor.database.migrations.AutoMigration7to8
 import com.nestor.database.migrations.AutoMigration9to10
 import com.nestor.database.util.DateConverter

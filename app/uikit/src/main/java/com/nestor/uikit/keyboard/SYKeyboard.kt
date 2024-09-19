@@ -15,6 +15,7 @@ import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -72,7 +73,7 @@ fun SYKeyboard(
     modifier: Modifier = Modifier,
     onKeyPress: (Key) -> Unit
 ) {
-    val rippleEffect = rememberRipple(bounded = false)
+    val rippleEffect = ripple(bounded = false)
     CompositionLocalProvider(LocalIndication provides rippleEffect) {
         Column(modifier = modifier.aspectRatio(3 / 4f)) {
             keyboardSymbols.forEach { keyRow ->

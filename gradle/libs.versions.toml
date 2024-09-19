@@ -26,6 +26,7 @@ googleServices = "4.4.2"
 firebaseBom = "33.3.0"
 mockkVersion = "1.13.10"
 turbineVersion = "1.1.0"
+ksp = "2.0.0-1.0.21"
 
 
 [libraries]
@@ -80,3 +81,4 @@ compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 androidApp = { id = "com.android.application", version.ref = "agp" }
 google-googleServices = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics" }
+google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

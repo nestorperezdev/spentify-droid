@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.hilt)
-    kotlin("kapt")
+    alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.compose)
 }
 
@@ -43,7 +43,6 @@ android {
     composeCompiler {
         enableStrongSkippingMode = true
         reportsDestination = layout.buildDirectory.dir("compose_compiler")
-        stabilityConfigurationFile = rootProject.layout.projectDirectory.file("stability_config.conf")
     }
 }
 
@@ -54,7 +53,7 @@ dependencies {
     //  hilt
     implementation(libs.androidx.hilt.navigation)
     implementation(libs.hilt)
-    kapt(libs.hiltCompiler)
+    ksp(libs.hiltCompiler)
 
     implementation(project(":app:schema"))
     implementation(project(":app:database"))

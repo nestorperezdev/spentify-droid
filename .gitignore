@@ -28,3 +28,6 @@ render.experimental.xml
 
 # Android Profiling
 *.hprof
+
+# Since Kotlin 2.0.0, folder named ".kotlin" is created at compile time
+.kotlin
