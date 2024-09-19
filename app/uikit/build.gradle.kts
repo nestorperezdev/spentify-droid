@@ -46,26 +46,25 @@ android {
     composeCompiler {
         enableStrongSkippingMode = true
         reportsDestination = layout.buildDirectory.dir("compose_compiler")
-        
     }
-}
 
-dependencies {
-    //shimmer loading
-    api(libs.compose.shimmerLoading)
+    dependencies {
+        //shimmer loading
+        api(libs.compose.shimmerLoading)
 
-    implementation(libs.navigation.compose)
-    implementation(libs.hilt)
-    ksp(libs.hiltCompiler)
-    implementation(libs.androidx.ktx)
-    implementation(platform(libs.composeBom))
-    implementation(libs.compose.ui)
-    implementation(libs.compose.graphics)
-    implementation(libs.compose.toolingPreview)
-    implementation(libs.compose.material3)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.espresso.core)
-    debugImplementation(libs.compose.debug.tooling)
-    screenshotTestImplementation(libs.compose.debug.tooling)
+        implementation(libs.navigation.compose)
+        implementation(libs.hilt)
+        ksp(libs.hiltCompiler)
+        implementation(libs.androidx.ktx)
+        implementation(platform(libs.composeBom))
+        implementation(libs.compose.ui)
+        implementation(libs.compose.graphics)
+        implementation(libs.compose.toolingPreview)
+        implementation(libs.compose.material3)
+        testImplementation(libs.junit)
+        androidTestImplementation(libs.androidx.test.ext.junit)
+        androidTestImplementation(libs.espresso.core)
+        debugImplementation(libs.compose.debug.tooling)
+        screenshotTestImplementation(libs.compose.debug.tooling)
+    }
 }
