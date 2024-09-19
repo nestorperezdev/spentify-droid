@@ -32,9 +32,11 @@ import com.nestor.uikit.loading.ShimmerSkeletonBox
 import com.nestor.uikit.statusbar.StatusBarType
 import com.nestor.uikit.statusbar.TopBarTitle
 import com.nestor.uikit.theme.spacing.LocalSYPadding
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun DashboardScreen(
     modifier: Modifier = Modifier,

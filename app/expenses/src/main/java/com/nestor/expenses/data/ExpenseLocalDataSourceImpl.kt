@@ -13,6 +13,7 @@ class ExpenseLocalDataSourceImpl @Inject constructor(private val expenseDao: Exp
         expenseDao.upsertAll(expenseList)
     }
 
+    @Deprecated("Use getExpensesWithCategory instead")
     override fun getExpenses(
         month: Int,
         year: Int,

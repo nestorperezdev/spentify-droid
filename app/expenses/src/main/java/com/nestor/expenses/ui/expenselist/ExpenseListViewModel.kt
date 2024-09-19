@@ -32,7 +32,6 @@ import javax.inject.Inject
 const val PAGE_SIZE = 20
 private const val TAG = "ExpenseListViewModel"
 
-@OptIn(FlowPreview::class)
 @HiltViewModel
 class ExpenseListViewModel @Inject constructor(
     private val expenseRepository: ExpenseRepository,
