@@ -1,13 +1,13 @@
-package com.nestor.uikit
+package com.nestor.uikit.stepperdot
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 
 
-class SpentifyThemeTest {
+class StepperDotTest {
     @Preview
     @Composable
-    fun SpentifyThemePreviewTest() {
-        SpentifyThemePreview()
+    fun StepperDotPreviewTest() {
+        StepperDotPreview()
     }
 }
