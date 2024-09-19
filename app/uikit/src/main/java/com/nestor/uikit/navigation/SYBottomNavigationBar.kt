@@ -82,7 +82,7 @@ private fun SYBottomNavBarItem(
 
 @Preview
 @Composable
-private fun SYBottomNavigationBarPreview() {
+fun SYBottomNavigationBarPreview() {
     val items = listOf(
         SYBottomNavBarData(
             "Home",

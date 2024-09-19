@@ -39,13 +39,6 @@ class SYStatusBarTest {
 
     @Preview
     @Composable
-    fun SYStatusBarPreviewTitleNSubtitleTest() {
-        SYStatusBarPreviewTitleNSubtitle()
-    }
-
-
-    @Preview
-    @Composable
     fun SYStatusBarPreviewTitleTest() {
         SYStatusBarPreviewTitle()
     }

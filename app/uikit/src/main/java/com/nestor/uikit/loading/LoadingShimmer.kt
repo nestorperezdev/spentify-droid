@@ -82,7 +82,7 @@ fun ShimmerSkeletonDoubleLine(
 
 @Preview
 @Composable
-private fun LoadingShimmerContentPreview() {
+fun LoadingShimmerContentPreview() {
     SpentifyTheme {
         Scaffold {
             Column(
