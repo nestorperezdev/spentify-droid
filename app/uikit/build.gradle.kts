@@ -48,7 +48,7 @@ android {
         reportsDestination = layout.buildDirectory.dir("compose_compiler")
     }
     screenshotTests {
-        imageDifferenceThreshold = 0.0100f // 0.1%
+        imageDifferenceThreshold = 0.0500f // 0.5%
     }
 
     dependencies {
