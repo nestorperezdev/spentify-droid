@@ -54,7 +54,7 @@ class SpentifyThemeTest {
                             style = MaterialTheme.typography.titleLarge
                         )
                         Text(
-                            text = "This is an example of how the theme principal elements will look on the UI",
+                            text = "This is an example of how the theme principal elements will look on the UI!",
                             style = MaterialTheme.typography.bodyLarge,
                             modifier = Modifier.widthIn(max = 280.dp)
                         )
