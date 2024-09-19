@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.hilt)
     kotlin("kapt")
+    alias(libs.plugins.compose)
 }
 
 android {
@@ -38,6 +39,11 @@ android {
     }
     buildFeatures {
         compose = true
+    }
+    composeCompiler {
+        enableStrongSkippingMode = true
+        reportsDestination = layout.buildDirectory.dir("compose_compiler")
+        stabilityConfigurationFile = rootProject.layout.projectDirectory.file("stability_config.conf")
     }
 }
 
