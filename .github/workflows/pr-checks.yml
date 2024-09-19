@@ -28,6 +28,7 @@ jobs:
       - name: Validate screenshots
         run: ./gradlew validateDebugScreenshotTest
       - name: Upload results
+        if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: screenshot-results
