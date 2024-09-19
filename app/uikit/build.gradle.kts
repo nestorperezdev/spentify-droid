@@ -47,6 +47,9 @@ android {
         enableStrongSkippingMode = true
         reportsDestination = layout.buildDirectory.dir("compose_compiler")
     }
+    screenshotTests {
+        imageDifferenceThreshold = 0.0010f // 0.1%
+    }
 
     dependencies {
         //shimmer loading
