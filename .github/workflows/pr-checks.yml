@@ -33,6 +33,6 @@ jobs:
         with:
           name: screenshot-results
           path:
-            - app/uikit/build/reports/screenshotTest/preview/debug
-            - app/account/build/reports/screenshotTest/preview/debug
-            - app/auth/build/reports/screenshotTest/preview/debug
+            -app/uikit/build/reports/screenshotTest/preview/debug
+            -app/account/build/reports/screenshotTest/preview/debug
+            -app/auth/build/reports/screenshotTest/preview/debug
