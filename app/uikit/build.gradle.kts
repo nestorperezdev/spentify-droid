@@ -5,11 +5,14 @@ plugins {
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.compose)
+    alias(libs.plugins.screenshot)
 }
 
 android {
     namespace = "com.nestor.uikit"
     compileSdk = 34
+    @Suppress("UnstableApiUsage")
+    experimentalProperties["android.experimental.enableScreenshotTest"] = true
 
     defaultConfig {
         minSdk = 29
@@ -43,25 +46,28 @@ android {
     composeCompiler {
         enableStrongSkippingMode = true
         reportsDestination = layout.buildDirectory.dir("compose_compiler")
-        
     }
-}
+    screenshotTests {
+        imageDifferenceThreshold = 0.0500f // 0.5%
+    }
 
-dependencies {
-    //shimmer loading
-    api(libs.compose.shimmerLoading)
+    dependencies {
+        //shimmer loading
+        api(libs.compose.shimmerLoading)
 
-    implementation(libs.navigation.compose)
-    implementation(libs.hilt)
-    ksp(libs.hiltCompiler)
-    implementation(libs.androidx.ktx)
-    implementation(platform(libs.composeBom))
-    implementation(libs.compose.ui)
-    implementation(libs.compose.graphics)
-    implementation(libs.compose.toolingPreview)
-    implementation(libs.compose.material3)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.espresso.core)
-    debugImplementation(libs.compose.debug.tooling)
+        implementation(libs.navigation.compose)
+        implementation(libs.hilt)
+        ksp(libs.hiltCompiler)
+        implementation(libs.androidx.ktx)
+        implementation(platform(libs.composeBom))
+        implementation(libs.compose.ui)
+        implementation(libs.compose.graphics)
+        implementation(libs.compose.toolingPreview)
+        implementation(libs.compose.material3)
+        testImplementation(libs.junit)
+        androidTestImplementation(libs.androidx.test.ext.junit)
+        androidTestImplementation(libs.espresso.core)
+        debugImplementation(libs.compose.debug.tooling)
+        screenshotTestImplementation(libs.compose.debug.tooling)
+    }
 }

@@ -223,7 +223,7 @@ fun LazyListState.isScrolledToEnd() =
 
 @Preview(showBackground = true)
 @Composable
-private fun SYListItemPreview() {
+fun SYListItemPreview() {
     SpentifyTheme {
         SYListItem(
             modifier = Modifier.padding(16.dp),

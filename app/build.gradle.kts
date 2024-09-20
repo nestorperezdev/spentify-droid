@@ -1,3 +1,15 @@
+import com.android.manifmerger.XmlDocument
+import com.android.manifmerger.XmlNode
+import groovy.namespace.QName
+import groovy.util.IndentPrinter
+import groovy.util.Node
+import groovy.util.NodeList
+import groovy.xml.MarkupBuilder
+import groovy.xml.XmlNodePrinter
+import groovy.xml.XmlParser
+import org.jetbrains.kotlin.backend.common.peek
+import java.io.StringWriter
+
 plugins {
     alias(libs.plugins.androidApp)
     alias(libs.plugins.kotlinAndroid)
@@ -5,12 +17,15 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.google.googleServices)
     alias(libs.plugins.compose)
+    alias(libs.plugins.screenshot)
     id("com.google.firebase.crashlytics")
 }
 
 android {
     namespace = "com.nestor.spentify"
     compileSdk = 34
+    @Suppress("UnstableApiUsage") experimentalProperties["android.experimental.enableScreenshotTest"] =
+        true
 
     defaultConfig {
         applicationId = "com.nestor.spentify"
@@ -30,15 +45,11 @@ android {
             create("release") {
                 val env = System.getenv()
                 storeFile = file("sign.keystore")
-                storePassword =
-                    env.getOrDefault("RELEASE_STORE_PASSWORD", null)
-                        ?: providers.gradleProperty("RELEASE_STORE_PASSWORD").orNull
-                                ?: ""
+                storePassword = env.getOrDefault("RELEASE_STORE_PASSWORD", null)
+                    ?: providers.gradleProperty("RELEASE_STORE_PASSWORD").orNull ?: ""
                 keyAlias = "nessdev"
-                keyPassword =
-                    env.getOrDefault("RELEASE_KEY_PASSWORD", null)
-                        ?: providers.gradleProperty("RELEASE_KEY_PASSWORD").orNull
-                                ?: ""
+                keyPassword = env.getOrDefault("RELEASE_KEY_PASSWORD", null)
+                    ?: providers.gradleProperty("RELEASE_KEY_PASSWORD").orNull ?: ""
             }
         }
     }
@@ -50,8 +61,7 @@ android {
                 signingConfig = signingConfigs.getByName("release")
             }
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
         }
         debug {
@@ -131,6 +141,11 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation(libs.compose.debug.tooling)
     debugImplementation(libs.compose.debug.uiTestManifest)
+    screenshotTestImplementation(libs.compose.debug.tooling)
+
+    screenshotTests {
+        imageDifferenceThreshold = 0.0500f // 0.5%
+    }
 }
 
 tasks.create("bumpVersionCode") {
@@ -156,3 +171,70 @@ tasks.create("bumpVersionCode") {
         )
     }
 }
+
+tasks.register<Copy>("moveScreenshotsTestToOutput") {
+    val files = subprojects.map {
+        it.file("build/outputs/screenshotTest-results/preview/debug/results/TEST-results.xml")
+    }.filter { it.exists() }.map { it.readText() }.map { XmlParser().parseText(it) }
+    val imageFiles = files.flatMap { file ->
+        (file.get("testcase") as NodeList).flatMap { testcase ->
+            ((testcase as Node).get("properties") as NodeList)
+                .getAt("property")
+                .map { it as Node }
+                .map { it.attribute("name") as String to it.attribute("value") as String }
+                .filter { File(it.second).exists() }
+        }
+    }
+    listOf("reference", "actual", "diff").forEach { scope ->
+        copy {
+            from(imageFiles.filter { it.first == scope }.map { it.second })
+            into(file("${project.rootDir}/build/outputs/screenshotTest-results/xml/images/${scope}/"))
+        }
+    }
+}
+
+tasks.register("mergeScreenshotsXmlReport") {
+    val files = subprojects.map {
+        it.file("build/outputs/screenshotTest-results/preview/debug/results/TEST-results.xml")
+    }.filter { it.exists() }.map { it.readText() }.map { XmlParser().parseText(it) }
+    doLast {
+        val outputDir = file("${project.rootDir}/build/outputs/screenshotTest-results/xml/")
+        if (!outputDir.exists()) {
+            outputDir.mkdirs()
+        }
+        val outputFile = File(outputDir, "merged.xml")
+        outputFile.createNewFile()
+        val writer = outputFile.writer()
+        val xml = MarkupBuilder(writer)
+        XmlNodePrinter()
+        xml.mkp.xmlDeclaration(mapOf("version" to "1.0", "encoding" to "UTF-8"))
+        xml.withGroovyBuilder {
+            "testsuite" {
+                files.forEach { file ->
+                    (file.get("testcase") as NodeList).forEach { node ->
+                        val testCase = node as Node
+                        "testcase"(testCase.attributes()) {
+                            "properties" {
+                                (testCase.get("properties") as NodeList)
+                                    .getAt("property")
+                                    .forEach { property ->
+                                        val prop = property as Node
+                                        val attrs = prop.attributes() as MutableMap<String, String>
+                                        val fileName = attrs["value"]
+                                        if (File(fileName.toString()).exists()) {
+                                            //get file name
+                                            val name = fileName.toString().substringAfterLast("/")
+                                            attrs["value"] = "images/${attrs["name"]}/$name"
+                                        }
+                                        "property"(attrs)
+                                    }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        writer.flush()
+    }
+}
+

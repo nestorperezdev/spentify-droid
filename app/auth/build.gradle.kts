@@ -5,11 +5,18 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.compose)
     alias(libs.plugins.google.devtools.ksp)
+    alias(libs.plugins.screenshot)
 }
 
 android {
     namespace = "com.nestor.auth"
     compileSdk = 34
+    @Suppress("UnstableApiUsage")
+    experimentalProperties["android.experimental.enableScreenshotTest"] = true
+
+    screenshotTests {
+        imageDifferenceThreshold = 0.0500f // 0.5%
+    }
 
     defaultConfig {
         minSdk = 29
@@ -71,4 +78,5 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     debugImplementation(libs.compose.debug.tooling)
     debugImplementation(libs.compose.debug.uiTestManifest)
+    screenshotTestImplementation(libs.compose.debug.tooling)
 }

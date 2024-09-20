@@ -187,7 +187,7 @@ private fun ForgotPasswordEmailSent() {
 
 @Preview
 @Composable
-private fun ForgotPasswordPreview() {
+fun ForgotPasswordPreview() {
     SpentifyTheme {
         ForgotPasswordScreenContent()
     }
@@ -195,7 +195,7 @@ private fun ForgotPasswordPreview() {
 
 @Preview
 @Composable
-private fun ForgotPasswordEmailSentPreview() {
+fun ForgotPasswordEmailSentPreview() {
     SpentifyTheme {
         ForgotPasswordEmailSent()
     }
