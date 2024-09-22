@@ -189,7 +189,7 @@ private fun generateCategoryItem(category: CategoryEntity?): SYListItemData.SYLi
 
 @Preview
 @Composable
-private fun ExpenseListContentPreview() {
+fun ExpenseListContentPreview() {
     SpentifyTheme {
         Scaffold {
             ExpenseListContent(
