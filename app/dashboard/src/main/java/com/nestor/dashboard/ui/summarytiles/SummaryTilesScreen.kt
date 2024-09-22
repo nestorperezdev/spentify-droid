@@ -1,6 +1,5 @@
 package com.nestor.dashboard.ui.summarytiles
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,7 +29,6 @@ import com.nestor.uikit.stepperdot.SYStepperDot
 import com.nestor.uikit.stepperdot.rememberStepperDotState
 import com.nestor.uikit.util.formatMoneyAmount
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SummaryTilesScreen(
     modifier: Modifier = Modifier,

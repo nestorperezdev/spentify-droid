@@ -228,7 +228,7 @@ private fun NewExpenseToolbar(onNavBack: () -> Unit) {
 
 @Preview
 @Composable
-private fun NewExpenseScreenContentPreview() {
+fun NewExpenseScreenContentPreview() {
     SpentifyTheme {
         NewExpenseScreenContent(
             amountField = FormFieldData(""),

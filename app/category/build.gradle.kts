@@ -4,11 +4,14 @@ plugins {
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.compose)
+    alias(libs.plugins.screenshot)
 }
 
 android {
     namespace = "com.nestor.category"
     compileSdk = 34
+    @Suppress("UnstableApiUsage")
+    experimentalProperties["android.experimental.enableScreenshotTest"] = true
 
     defaultConfig {
         minSdk = 29
@@ -42,7 +45,9 @@ android {
     composeCompiler {
         enableStrongSkippingMode = true
         reportsDestination = layout.buildDirectory.dir("compose_compiler")
-        
+    }
+    screenshotTests {
+        imageDifferenceThreshold = 0.0500f // 0.5%
     }
 }
 
@@ -72,4 +77,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    screenshotTestImplementation(libs.compose.debug.tooling)
 }

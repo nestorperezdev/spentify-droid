@@ -194,7 +194,7 @@ private fun DashboardScreenContentPrev() {
 
 @Preview
 @Composable
-private fun DashboardScreenContentLoadingPrev() {
+fun DashboardScreenContentLoadingPrev() {
     SpentifyTheme {
         Scaffold {
             DashboardScreenContent(

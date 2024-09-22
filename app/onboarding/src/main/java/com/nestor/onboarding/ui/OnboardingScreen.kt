@@ -1,6 +1,5 @@
 package com.nestor.onboarding.ui
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -46,7 +45,6 @@ fun OnboardingScreen(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun OnboardScreenContent(
     modifier: Modifier = Modifier,
@@ -166,7 +164,7 @@ private fun OnboardScreenContent(
 
 @Preview
 @Composable
-private fun OnboardScreenContentPreview() {
+fun OnboardScreenContentPreview() {
     SpentifyTheme {
         OnboardScreenContent(
             onSkipClick = {},
