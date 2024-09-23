@@ -138,12 +138,17 @@ fun GroupedChartBarViewPreview() {
                                 ChartSeries(
                                     color = 0xFFD0BCFF.toInt(),
                                     tag = "Tag 1",
-                                    value = 10f * idx + 1,
+                                    value = 1f * idx + 1,
                                 ),
                                 ChartSeries(
                                     color = 0xFFCCC2DC.toInt(),
                                     tag = "Tag 2",
-                                    value = 15f * idx + 1,
+                                    value = 1.5f * idx + 1,
+                                ),
+                                ChartSeries(
+                                    color = 0xFFEFB8C8.toInt(),
+                                    tag = "Tag 3",
+                                    value = 1.2f * idx + 1,
                                 ),
                             )
                         )
