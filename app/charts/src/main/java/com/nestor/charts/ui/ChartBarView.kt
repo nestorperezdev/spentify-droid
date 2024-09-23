@@ -1,7 +1,6 @@
 package com.nestor.charts.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
@@ -23,42 +22,23 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import com.nestor.charts.data.bar.BarData
+import com.nestor.charts.data.bar.ChartBarHeader
 import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.theme.spacing.LocalSYPadding
 
 @Composable
 fun ChartBarView(modifier: Modifier = Modifier, data: BarData) {
     Column(modifier = modifier, verticalArrangement = spacedBy(24.dp)) {
-        Column(verticalArrangement = spacedBy(12.dp)) {
-            Text(text = data.chartName, style = MaterialTheme.typography.titleLarge)
-            Text(text = data.chartDescription, style = MaterialTheme.typography.titleSmall)
-        }
-        if (data.hint != null || data.total != null) {
-            Column(verticalArrangement = spacedBy(8.dp)) {
-                if (data.total != null) {
-                    Text(text = data.total, style = MaterialTheme.typography.bodyLarge)
-                }
-                if (data.hint != null) {
-                    Text(text = data.hint, style = MaterialTheme.typography.bodySmall)
-                }
-            }
-        }
+        ChartHeader(data.header)
         //  Canvas here ->
         ChartBarContent(
             modifier = Modifier
@@ -67,17 +47,40 @@ fun ChartBarView(modifier: Modifier = Modifier, data: BarData) {
                 .heightIn(max = 320.dp),
             data = data
         )
-        Row {
-            data.groupSeriesByTagAbdColor().forEach { (tagColor: Pair<String, Int>, _) ->
-                Box(
-                    modifier = Modifier
-                        .size(12.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(color = Color(tagColor.second))
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(text = tagColor.first, style = MaterialTheme.typography.labelMedium)
-                Spacer(modifier = Modifier.width(12.dp))
+        CharBarFooter(data)
+    }
+}
+
+@Composable
+private fun CharBarFooter(data: BarData) {
+    Row {
+        data.groupSeriesByTagAndColor().forEach { (tagColor: Pair<String, Int>, _) ->
+            Box(
+                modifier = Modifier
+                    .size(12.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(color = Color(tagColor.second))
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(text = tagColor.first, style = MaterialTheme.typography.labelMedium)
+            Spacer(modifier = Modifier.width(12.dp))
+        }
+    }
+}
+
+@Composable
+internal fun ChartHeader(data: ChartBarHeader) {
+    Column(verticalArrangement = spacedBy(12.dp)) {
+        Text(text = data.chartName, style = MaterialTheme.typography.titleLarge)
+        Text(text = data.chartDescription, style = MaterialTheme.typography.titleSmall)
+    }
+    if (data.hint != null || data.total != null) {
+        Column(verticalArrangement = spacedBy(8.dp)) {
+            data.total?.let {
+                Text(text = it, style = MaterialTheme.typography.bodyLarge)
+            }
+            data.hint?.let {
+                Text(text = it, style = MaterialTheme.typography.bodySmall)
             }
         }
     }
@@ -87,25 +90,7 @@ fun ChartBarView(modifier: Modifier = Modifier, data: BarData) {
 private fun ChartBarContent(modifier: Modifier, data: BarData) {
     Box(modifier = modifier.fillMaxSize()) {
         // Background
-        Column(
-            verticalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            repeat(4) { i ->
-                Box(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .run {
-                        if (i == 3) {
-                            background(Color.Gray)
-                        } else {
-                            //  TODO: dashed border line:
-                            background(Color.Gray.copy(alpha = 0.4f))
-                        }
-                    }
-                )
-            }
-        }
+        ChartBackground()
         // Bars
         Row(
             modifier = Modifier.fillMaxSize(),
@@ -141,6 +126,29 @@ private fun ChartBarContent(modifier: Modifier, data: BarData) {
     }
 }
 
+@Composable
+fun ChartBackground() {
+    Column(
+        verticalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        repeat(4) { i ->
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .run {
+                    if (i == 3) {
+                        background(Color.Gray)
+                    } else {
+                        //  TODO: dashed border line:
+                        background(Color.Gray.copy(alpha = 0.4f))
+                    }
+                }
+            )
+        }
+    }
+}
+
 @Preview
 @Composable
 fun ChartBarViewPreview() {
@@ -151,10 +159,12 @@ fun ChartBarViewPreview() {
                     .fillMaxWidth()
                     .padding(LocalSYPadding.current.screenHorizontalPadding),
                 data = BarData(
-                    hint = "Hint",
-                    total = "Total",
-                    chartName = "Bar Chart",
-                    chartDescription = "This is a bar chart",
+                    header = ChartBarHeader(
+                        hint = "Hint",
+                        total = "Total",
+                        chartName = "Bar Chart",
+                        chartDescription = "This is a bar chart"
+                    ),
                     series = listOf(
                         BarData.BarSeries(
                             color = 0xFFD0BCFF.toInt(),

@@ -1,6 +1,8 @@
 package com.nestor.charts.data
 
+import com.nestor.charts.data.common.ChartHeader
+
 open class ChartData(
-    open val chartName: String,
-    open val chartDescription: String
+    open val header: ChartHeader,
+    open val series: List<ChartSeries>
 )
