@@ -26,7 +26,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nestor.charts.data.ChartSeries
@@ -126,10 +131,20 @@ fun GroupedChartBarViewPreview() {
                     .padding(LocalSYPadding.current.screenHorizontalPadding),
                 data = GroupedBarData(
                     header = ChartBarHeader(
-                        hint = "Hint",
-                        total = "Total",
-                        chartName = "Bar Chart",
-                        chartDescription = "This is a bar chart"
+                        hint = buildAnnotatedString {
+                            withStyle(
+                                style = SpanStyle(
+                                    color = MaterialTheme.colorScheme.error,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            ) {
+                                append("↓ 3.5% ")
+                            }
+                            append("vs last week")
+                        },
+                        total = AnnotatedString("$ 1,278"),
+                        chartName = AnnotatedString("Bar Chart"),
+                        chartDescription = AnnotatedString("This is a bar chart")
                     ),
                     series = List(3) { idx ->
                         GroupedBarData.GroupedSeries(

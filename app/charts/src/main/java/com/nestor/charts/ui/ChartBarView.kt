@@ -19,6 +19,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,11 +29,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.nestor.charts.data.bar.BarData
 import com.nestor.charts.data.bar.ChartBarHeader
+import com.nestor.charts.util.Line
 import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.theme.spacing.LocalSYPadding
 
@@ -77,10 +86,15 @@ internal fun ChartHeader(data: ChartBarHeader) {
     if (data.hint != null || data.total != null) {
         Column(verticalArrangement = spacedBy(8.dp)) {
             data.total?.let {
-                Text(text = it, style = MaterialTheme.typography.bodyLarge)
+                Text(text = it, style = MaterialTheme.typography.labelLarge.copy(fontSize = 32.sp))
             }
             data.hint?.let {
-                Text(text = it, style = MaterialTheme.typography.bodySmall)
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        color = LocalContentColor.current.copy(alpha = 0.8f)
+                    )
+                )
             }
         }
     }
@@ -133,18 +147,7 @@ fun ChartBackground() {
         modifier = Modifier.fillMaxSize()
     ) {
         repeat(4) { i ->
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .run {
-                    if (i == 3) {
-                        background(Color.Gray)
-                    } else {
-                        //  TODO: dashed border line:
-                        background(Color.Gray.copy(alpha = 0.4f))
-                    }
-                }
-            )
+            Line(dashed = i != 3)
         }
     }
 }
@@ -160,10 +163,20 @@ fun ChartBarViewPreview() {
                     .padding(LocalSYPadding.current.screenHorizontalPadding),
                 data = BarData(
                     header = ChartBarHeader(
-                        hint = "Hint",
-                        total = "Total",
-                        chartName = "Bar Chart",
-                        chartDescription = "This is a bar chart"
+                        hint = buildAnnotatedString {
+                            withStyle(
+                                style = SpanStyle(
+                                    color = MaterialTheme.colorScheme.onTertiary,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            ) {
+                                append("↑ 2.1% ")
+                            }
+                            append("vs last week")
+                        },
+                        total = AnnotatedString("$ 1,278"),
+                        chartName = buildAnnotatedString { append("Bar Chart") },
+                        chartDescription = AnnotatedString("This is a bar chart")
                     ),
                     series = listOf(
                         BarData.BarSeries(

@@ -1,14 +1,15 @@
 package com.nestor.charts.data.bar
 
+import androidx.compose.ui.text.AnnotatedString
 import com.nestor.charts.data.ChartData
 import com.nestor.charts.data.ChartSeries
 import com.nestor.charts.data.common.ChartHeader
 
 class ChartBarHeader(
-    override val chartName: String,
-    override val chartDescription: String,
-    val hint: String? = null,
-    val total: String? = null,
+    override val chartName: AnnotatedString,
+    override val chartDescription: AnnotatedString,
+    val hint: AnnotatedString? = null,
+    val total: AnnotatedString? = null,
 ) : ChartHeader(chartName, chartDescription)
 
 open class BarData(
