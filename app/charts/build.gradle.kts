@@ -56,6 +56,9 @@ dependencies {
     //modules
     implementation(project(":app:uikit"))
 
+    //constraint
+    implementation(libs.androidx.compose.constraintlayout)
+
     //compose
     implementation(libs.activity.compose)
     implementation(platform(libs.composeBom))

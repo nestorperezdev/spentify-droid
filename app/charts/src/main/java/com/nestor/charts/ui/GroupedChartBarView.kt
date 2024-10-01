@@ -1,6 +1,7 @@
 package com.nestor.charts.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
@@ -10,12 +11,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
@@ -42,28 +44,30 @@ import com.nestor.uikit.theme.spacing.LocalSYPadding
 
 @Composable
 fun GroupedChartBarView(modifier: Modifier = Modifier, data: GroupedBarData) {
-    Column(modifier = modifier, verticalArrangement = spacedBy(24.dp)) {
-        ChartHeader(data.header)
-        GroupedChartContent(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(16 / 9f)
-                .heightIn(max = 320.dp),
-            data = data
-        )
-        CharBarFooter(data)
-    }
+    ChartBarLayout(
+        header = { ChartHeader(modifier = it, data = data.header) },
+        background = { ChartBackground(modifier = it) },
+        bars = listOf(),
+        modifier = modifier
+    )
 }
 
 @Composable
 fun GroupedChartContent(modifier: Modifier = Modifier, data: GroupedBarData) {
-    Box(modifier = modifier.fillMaxSize()) {
+    Box(
+        modifier = modifier
+            .fillMaxHeight()
+            .wrapContentWidth()
+    ) {
         // Background
         ChartBackground()
         // Bars
         Row(
-            modifier = Modifier.fillMaxSize(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier
+                .fillMaxHeight()
+                .wrapContentWidth()
+                .horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.Absolute.SpaceEvenly,
             verticalAlignment = Alignment.Bottom
         ) {
             val maxValue =
@@ -71,7 +75,8 @@ fun GroupedChartContent(modifier: Modifier = Modifier, data: GroupedBarData) {
             data.series.forEach { series ->
                 Row(
                     horizontalArrangement = spacedBy(8.dp),
-                    verticalAlignment = Alignment.Bottom
+                    verticalAlignment = Alignment.Bottom,
+                    modifier = Modifier.wrapContentWidth()
                 ) {
                     series.series.forEach { serie ->
                         val correspondingHeight = (serie.value / maxValue)
@@ -124,52 +129,50 @@ private fun CharBarFooter(data: GroupedBarData) {
 @Composable
 fun GroupedChartBarViewPreview() {
     SpentifyTheme {
-        Card(onClick = { /*TODO*/ }) {
-            GroupedChartBarView(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(LocalSYPadding.current.screenHorizontalPadding),
-                data = GroupedBarData(
-                    header = ChartBarHeader(
-                        hint = buildAnnotatedString {
-                            withStyle(
-                                style = SpanStyle(
-                                    color = MaterialTheme.colorScheme.error,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            ) {
-                                append("↓ 3.5% ")
-                            }
-                            append("vs last week")
-                        },
-                        total = AnnotatedString("$ 1,278"),
-                        chartName = AnnotatedString("Bar Chart"),
-                        chartDescription = AnnotatedString("This is a bar chart")
-                    ),
-                    series = List(3) { idx ->
-                        GroupedBarData.GroupedSeries(
-                            seriesTitle = "Series $idx",
-                            series = listOf(
-                                ChartSeries(
-                                    color = 0xFFD0BCFF.toInt(),
-                                    tag = "Tag 1",
-                                    value = 1f * idx + 1,
-                                ),
-                                ChartSeries(
-                                    color = 0xFFCCC2DC.toInt(),
-                                    tag = "Tag 2",
-                                    value = 1.5f * idx + 1,
-                                ),
-                                ChartSeries(
-                                    color = 0xFFEFB8C8.toInt(),
-                                    tag = "Tag 3",
-                                    value = 1.2f * idx + 1,
-                                ),
+        GroupedChartBarView(
+            modifier = Modifier
+                .wrapContentWidth()
+                .padding(LocalSYPadding.current.screenHorizontalPadding),
+            data = GroupedBarData(
+                header = ChartBarHeader(
+                    hint = buildAnnotatedString {
+                        withStyle(
+                            style = SpanStyle(
+                                color = MaterialTheme.colorScheme.error,
+                                fontWeight = FontWeight.Bold
                             )
-                        )
+                        ) {
+                            append("↓ 3.5% ")
+                        }
+                        append("vs last week")
                     },
-                )
+                    total = AnnotatedString("$ 1,278"),
+                    chartName = AnnotatedString("Bar Chart"),
+                    chartDescription = AnnotatedString("This is a bar chart")
+                ),
+                series = List(7) { idx ->
+                    GroupedBarData.GroupedSeries(
+                        seriesTitle = "Series $idx",
+                        series = listOf(
+                            ChartSeries(
+                                color = 0xFFD0BCFF.toInt(),
+                                tag = "Tag 1",
+                                value = 1f * idx + 1,
+                            ),
+                            ChartSeries(
+                                color = 0xFFCCC2DC.toInt(),
+                                tag = "Tag 2",
+                                value = 1.5f * idx + 1,
+                            ),
+                            ChartSeries(
+                                color = 0xFFEFB8C8.toInt(),
+                                tag = "Tag 3",
+                                value = 1.2f * idx + 1,
+                            ),
+                        )
+                    )
+                },
             )
-        }
+        )
     }
 }

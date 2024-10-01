@@ -47,7 +47,7 @@ import com.nestor.uikit.theme.spacing.LocalSYPadding
 @Composable
 fun ChartBarView(modifier: Modifier = Modifier, data: BarData) {
     Column(modifier = modifier, verticalArrangement = spacedBy(24.dp)) {
-        ChartHeader(data.header)
+        ChartHeader(data = data.header)
         //  Canvas here ->
         ChartBarContent(
             modifier = Modifier
@@ -78,23 +78,26 @@ private fun CharBarFooter(data: BarData) {
 }
 
 @Composable
-internal fun ChartHeader(data: ChartBarHeader) {
-    Column(verticalArrangement = spacedBy(12.dp)) {
+internal fun ChartHeader(modifier: Modifier = Modifier, data: ChartBarHeader) {
+    Column(verticalArrangement = spacedBy(12.dp), modifier = modifier) {
         Text(text = data.chartName, style = MaterialTheme.typography.titleLarge)
         Text(text = data.chartDescription, style = MaterialTheme.typography.titleSmall)
-    }
-    if (data.hint != null || data.total != null) {
-        Column(verticalArrangement = spacedBy(8.dp)) {
-            data.total?.let {
-                Text(text = it, style = MaterialTheme.typography.labelLarge.copy(fontSize = 32.sp))
-            }
-            data.hint?.let {
-                Text(
-                    text = it,
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        color = LocalContentColor.current.copy(alpha = 0.8f)
+        if (data.hint != null || data.total != null) {
+            Column(verticalArrangement = spacedBy(8.dp)) {
+                data.total?.let {
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.labelLarge.copy(fontSize = 32.sp)
                     )
-                )
+                }
+                data.hint?.let {
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            color = LocalContentColor.current.copy(alpha = 0.8f)
+                        )
+                    )
+                }
             }
         }
     }
@@ -141,10 +144,10 @@ private fun ChartBarContent(modifier: Modifier, data: BarData) {
 }
 
 @Composable
-fun ChartBackground() {
+fun ChartBackground(modifier: Modifier = Modifier) {
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         repeat(4) { i ->
             Line(dashed = i != 3)
