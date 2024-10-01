@@ -1,15 +1,15 @@
 package com.nestor.schema.utils
 
-import com.apollographql.apollo3.api.ApolloResponse
-import com.apollographql.apollo3.api.Operation
-import com.apollographql.apollo3.exception.ApolloHttpException
-import com.apollographql.apollo3.exception.ApolloNetworkException
+import com.apollographql.apollo.api.ApolloResponse
+import com.apollographql.apollo.api.Operation
+import com.apollographql.apollo.exception.ApolloHttpException
+import com.apollographql.apollo.exception.ApolloNetworkException
 import java.net.SocketTimeoutException
 
 suspend fun <T : Operation.Data> safeApiCall(call: suspend () -> ApolloResponse<T>): ResponseWrapper<T> {
     try {
         val response = call()
-        if (response.hasErrors()) {
+        response.exception?.let {
             return ResponseWrapper.error(response.errors?.firstOrNull()?.message ?: "Unknown error")
         }
         response.data?.let {

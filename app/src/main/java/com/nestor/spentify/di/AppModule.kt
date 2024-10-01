@@ -8,9 +8,9 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.apollographql.apollo3.ApolloClient
-import com.apollographql.apollo3.adapter.DateAdapter
-import com.apollographql.apollo3.network.okHttpClient
+import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.adapter.DateAdapter
+import com.apollographql.apollo.network.okHttpClient
 import com.nestor.common.data.appinfo.AppInfoDataSource
 import com.nestor.common.data.auth.datasource.AuthTokenInterceptor
 import com.nestor.common.data.monthandyear.MonthAndYear

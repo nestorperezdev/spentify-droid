@@ -1,8 +1,8 @@
 package com.nestor.common.data.auth.datasource
 
-import com.apollographql.apollo3.ApolloClient
-import com.apollographql.apollo3.api.ApolloResponse
-import com.apollographql.apollo3.api.Optional
+import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.api.ApolloResponse
+import com.apollographql.apollo.api.Optional
 import com.nestor.schema.ForgotPasswordMutation
 import com.nestor.schema.LoginMutation
 import com.nestor.schema.RecoverPasswordMutation

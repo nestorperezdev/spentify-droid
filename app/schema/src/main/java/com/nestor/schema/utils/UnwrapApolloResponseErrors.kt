@@ -1,6 +1,6 @@
 package com.nestor.schema.utils
 
-import com.apollographql.apollo3.api.ApolloResponse
+import com.apollographql.apollo.api.ApolloResponse
 
 fun ApolloResponse<*>.unwrapErrors(): List<String> {
     return errors

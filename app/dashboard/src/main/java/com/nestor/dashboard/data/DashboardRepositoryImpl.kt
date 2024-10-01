@@ -1,6 +1,6 @@
 package com.nestor.dashboard.data
 
-import com.apollographql.apollo3.exception.ApolloNetworkException
+import com.apollographql.apollo.exception.ApolloNetworkException
 import com.nestor.common.data.auth.AuthRepository
 import com.nestor.common.data.auth.datasource.AuthLocalDataSource
 import com.nestor.database.data.dashboard.DashboardEntity
