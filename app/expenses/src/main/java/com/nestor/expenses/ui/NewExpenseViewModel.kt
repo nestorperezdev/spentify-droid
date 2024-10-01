@@ -2,7 +2,7 @@ package com.nestor.expenses.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.apollographql.apollo3.api.Optional
+import com.apollographql.apollo.api.Optional
 import com.nestor.category.data.subcategory.SubcategoryRepository
 import com.nestor.common.data.auth.AuthRepository
 import com.nestor.common.data.currency.CurrencyRepository

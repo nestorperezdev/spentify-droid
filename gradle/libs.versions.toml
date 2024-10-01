@@ -3,7 +3,7 @@ ktx = "1.13.1"
 runtimeKtx = "2.8.6"
 compose = "1.9.2"
 compose-compiler = "1.5.1"
-apollo = "3.8.2"
+apollo = "4.0.0"
 hilt = "2.51.1"
 agp = "8.6.1"
 kotlin = "2.0.0"
@@ -34,7 +34,7 @@ screenshot = "0.0.1-alpha07"
 androidx-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
 androidx-runtimeKtx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "runtimeKtx" }
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "compose" }
-apollo-runtime = { group = "com.apollographql.apollo3", name = "apollo-runtime", version.ref = "apollo" }
+apollo-runtime = { group = "com.apollographql.apollo", name = "apollo-runtime", version.ref = "apollo" }
 hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hiltCompiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -67,13 +67,13 @@ firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashly
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockkVersion" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbineVersion" }
-apollo-adapters = { group = "com.apollographql.apollo3", name = "apollo-adapters", version.ref = "apollo" }
+apollo-adapters = { group = "com.apollographql.apollo", name = "apollo-adapters", version.ref = "apollo" }
 coilBase = { group = "io.coil-kt", name = "coil-base", version.ref = "composeCoil" }
 coil = { group = "io.coil-kt", name = "coil", version.ref = "composeCoil" }
 coilSvg = { group = "io.coil-kt", name = "coil-svg", version.ref = "composeCoil" }
 
 [plugins]
-apolloGraphql = { id = "com.apollographql.apollo3", version.ref = "apollo" }
+apolloGraphql = { id = "com.apollographql.apollo", version.ref = "apollo" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

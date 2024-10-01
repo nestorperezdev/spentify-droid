@@ -1,6 +1,6 @@
 package com.nestor.dashboard.data
 
-import com.apollographql.apollo3.api.ApolloResponse
+import com.apollographql.apollo.api.ApolloResponse
 import com.nestor.schema.DashboardQuery
 import com.nestor.schema.type.SummaryDashboardInput
 

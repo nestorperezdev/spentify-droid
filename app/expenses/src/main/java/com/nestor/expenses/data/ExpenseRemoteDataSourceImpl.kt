@@ -1,8 +1,8 @@
 package com.nestor.expenses.data
 
-import com.apollographql.apollo3.ApolloClient
-import com.apollographql.apollo3.api.ApolloResponse
-import com.apollographql.apollo3.api.Optional
+import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.api.ApolloResponse
+import com.apollographql.apollo.api.Optional
 import com.nestor.schema.CreateExpenseMutation
 import com.nestor.schema.DeleteExpenseMutation
 import com.nestor.schema.ExpensesListQuery

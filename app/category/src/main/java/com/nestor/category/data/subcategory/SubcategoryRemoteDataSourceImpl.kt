@@ -1,6 +1,6 @@
 package com.nestor.category.data.subcategory
 
-import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo.ApolloClient
 import com.nestor.schema.CategoryListQuery
 import com.nestor.schema.utils.ResponseWrapper
 import com.nestor.schema.utils.safeApiCall

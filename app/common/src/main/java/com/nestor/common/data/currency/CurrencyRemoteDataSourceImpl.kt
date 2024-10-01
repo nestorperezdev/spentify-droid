@@ -1,6 +1,6 @@
 package com.nestor.common.data.currency
 
-import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo.ApolloClient
 import com.nestor.schema.CurrencyInfoQuery
 import com.nestor.schema.utils.ResponseWrapper
 import com.nestor.schema.utils.safeApiCall

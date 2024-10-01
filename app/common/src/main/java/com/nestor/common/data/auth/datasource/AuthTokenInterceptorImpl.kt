@@ -1,9 +1,9 @@
 package com.nestor.common.data.auth.datasource
 
-import com.apollographql.apollo3.api.http.HttpRequest
-import com.apollographql.apollo3.api.http.HttpResponse
-import com.apollographql.apollo3.exception.ApolloNetworkException
-import com.apollographql.apollo3.network.http.HttpInterceptorChain
+import com.apollographql.apollo.api.http.HttpRequest
+import com.apollographql.apollo.api.http.HttpResponse
+import com.apollographql.apollo.exception.ApolloNetworkException
+import com.apollographql.apollo.network.http.HttpInterceptorChain
 import okio.IOException
 import java.net.SocketTimeoutException
 import javax.inject.Inject
