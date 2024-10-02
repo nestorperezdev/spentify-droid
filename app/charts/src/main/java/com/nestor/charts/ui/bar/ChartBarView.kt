@@ -52,7 +52,6 @@ fun ChartBarView(modifier: Modifier = Modifier, data: BarData) {
                     .aspectRatio(4 / 3f),
                 data = data
             )
-            ChartBarFooter(data)
         }
     }
 }

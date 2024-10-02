@@ -16,15 +16,11 @@ class ChartBarHeader(
 open class BarData(
     override val header: ChartBarHeader,
     override val series: List<BarSeries>,
-) : ChartData(header, series), GroupableByTagAndColor {
+) : ChartData(header, series) {
     data class BarSeries(
         override val color: Int,
         override val tag: String,
         override val value: Float,
         val seriesTitle: String
     ) : ChartSeries(color, tag, value)
-
-    override fun groupByTagAndColor(): Map<Pair<String, Int>, List<ChartSeries>> {
-        return series.groupBy { Pair(it.tag, it.color) }
-    }
 }
