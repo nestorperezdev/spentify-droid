@@ -1,13 +1,16 @@
 package com.nestor.charts.ui.bar
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
@@ -67,6 +70,7 @@ fun GroupedChartContent(modifier: Modifier = Modifier, data: GroupedBarData) {
             .wrapContentWidth()
     ) {
         var labelHeight by remember { mutableStateOf(0) }
+        var maxHeight by remember { mutableStateOf(0) }
         // Background
         ChartBackground(
             modifier = Modifier.padding(bottom = with(LocalDensity.current) { labelHeight.toDp() })
@@ -76,30 +80,44 @@ fun GroupedChartContent(modifier: Modifier = Modifier, data: GroupedBarData) {
             modifier = Modifier
                 .fillMaxHeight()
                 .wrapContentWidth()
-                .horizontalScroll(rememberScrollState()),
+                .horizontalScroll(rememberScrollState())
+                .onGloballyPositioned { maxHeight = it.size.height },
             horizontalArrangement = spacedBy(20.dp),
-            verticalAlignment = Alignment.Bottom
+            verticalAlignment = Alignment.Bottom,
         ) {
-            val maxValue =
-                remember(data.series) { data.series.flatMap { it.series }.maxOf { it.value } }
+            val maxValue = remember(data.series) { data.calculateMaxValue() }
             data.series.forEach { series ->
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Row(
-                        horizontalArrangement = spacedBy(6.dp),
-                        verticalAlignment = Alignment.Bottom,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        series.series.forEach { serie ->
-                            val correspondingHeight = (serie.value / maxValue)
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxHeight(correspondingHeight)
-                                    .width(12.dp)
-                                    .clip(MaterialTheme.shapes.small)
-                                    .background(Color(serie.color))
-                            )
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    if (data.style == GroupedBarData.Companion.GroupedBarStyle.GROUPED) {
+                        Row(
+                            horizontalArrangement = spacedBy(6.dp),
+                            verticalAlignment = Alignment.Bottom,
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            series.series.forEach { serie ->
+                                val correspondingHeight = serie.value / maxValue
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxHeight(correspondingHeight)
+                                        .width(12.dp)
+                                        .background(Color(serie.color))
+                                )
+                            }
+                        }
+                    } else if (data.style == GroupedBarData.Companion.GroupedBarStyle.STACKED) {
+                        Column(
+                            modifier = Modifier.weight(1f),
+                            verticalArrangement = Arrangement.Bottom
+                        ) {
+                            series.series.forEach { serie ->
+                                val correspondingHeight = serie.value / maxValue
+                                Box(
+                                    modifier = Modifier
+                                        .width(12.dp)
+                                        .height(with(LocalDensity.current) { maxHeight.toDp() * correspondingHeight })
+                                        .background(Color(serie.color))
+                                )
+                            }
                         }
                     }
                     Text(
@@ -122,6 +140,59 @@ fun GroupedChartBarViewPreview() {
                 .wrapContentWidth()
                 .padding(LocalSYPadding.current.screenHorizontalPadding),
             data = GroupedBarData(
+                header = ChartBarHeader(
+                    hint = buildAnnotatedString {
+                        withStyle(
+                            style = SpanStyle(
+                                color = MaterialTheme.colorScheme.error,
+                                fontWeight = FontWeight.Bold
+                            )
+                        ) {
+                            append("↓ 3.5% ")
+                        }
+                        append("vs last week")
+                    },
+                    total = AnnotatedString("$ 1,278"),
+                    chartName = AnnotatedString("Bar Chart"),
+                    chartDescription = AnnotatedString("This is a bar chart")
+                ),
+                series = List(7) { idx ->
+                    GroupedBarData.GroupedSeries(
+                        seriesTitle = "Series $idx",
+                        series = listOf(
+                            ChartSeries(
+                                color = 0xFFD0BCFF.toInt(),
+                                tag = "Tag 1",
+                                value = 1f * idx + 1,
+                            ),
+                            ChartSeries(
+                                color = 0xFFCCC2DC.toInt(),
+                                tag = "Tag 2",
+                                value = 1.5f * idx + 1,
+                            ),
+                            ChartSeries(
+                                color = 0xFFEFB8C8.toInt(),
+                                tag = "Tag 3",
+                                value = 1.2f * idx + 1,
+                            ),
+                        )
+                    )
+                },
+            )
+        )
+    }
+}
+
+@Preview
+@Composable
+fun StackedChartBarViewPreview() {
+    SpentifyTheme {
+        GroupedChartBarView(
+            modifier = Modifier
+                .wrapContentWidth()
+                .padding(LocalSYPadding.current.screenHorizontalPadding),
+            data = GroupedBarData(
+                style = GroupedBarData.Companion.GroupedBarStyle.STACKED,
                 header = ChartBarHeader(
                     hint = buildAnnotatedString {
                         withStyle(
