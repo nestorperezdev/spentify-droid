@@ -1,4 +1,4 @@
-package com.nestor.charts.ui
+package com.nestor.charts.ui.bar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
@@ -6,16 +6,13 @@ import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -55,9 +52,9 @@ private fun GroupedBarContent(modifier: Modifier = Modifier, data: GroupedBarDat
         modifier = modifier.wrapContentSize()
     ) {
         Column(modifier = Modifier.padding(LocalSYPadding.current.screenHorizontalPadding)) {
-            ChartHeader(modifier = Modifier, data = data.header)
+            ChartBarHeader(modifier = Modifier, data = data.header)
             GroupedChartContent(modifier = modifier.aspectRatio(4 / 3f), data = data)
-            CharBarFooter(data = data)
+            ChartBarFooter(data = data)
         }
     }
 }
@@ -112,23 +109,6 @@ fun GroupedChartContent(modifier: Modifier = Modifier, data: GroupedBarData) {
                     )
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun CharBarFooter(data: GroupedBarData) {
-    Row {
-        data.groupSeriesByTagAndColor().forEach { (tagColor: Pair<String, Int>, _) ->
-            Box(
-                modifier = Modifier
-                    .size(12.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(color = Color(tagColor.second))
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Text(text = tagColor.first, style = MaterialTheme.typography.labelMedium)
-            Spacer(modifier = Modifier.width(12.dp))
         }
     }
 }

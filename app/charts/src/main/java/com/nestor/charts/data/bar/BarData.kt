@@ -4,6 +4,7 @@ import androidx.compose.ui.text.AnnotatedString
 import com.nestor.charts.data.ChartData
 import com.nestor.charts.data.ChartSeries
 import com.nestor.charts.data.common.ChartHeader
+import com.nestor.charts.data.common.GroupableByTagAndColor
 
 class ChartBarHeader(
     override val chartName: AnnotatedString,
@@ -15,7 +16,7 @@ class ChartBarHeader(
 open class BarData(
     override val header: ChartBarHeader,
     override val series: List<BarSeries>,
-) : ChartData(header, series) {
+) : ChartData(header, series), GroupableByTagAndColor {
     data class BarSeries(
         override val color: Int,
         override val tag: String,
@@ -23,7 +24,7 @@ open class BarData(
         val seriesTitle: String
     ) : ChartSeries(color, tag, value)
 
-    internal fun groupSeriesByTagAndColor(): Map<Pair<String, Int>, List<ChartSeries>> {
+    override fun groupByTagAndColor(): Map<Pair<String, Int>, List<ChartSeries>> {
         return series.groupBy { Pair(it.tag, it.color) }
     }
 }
