@@ -1,6 +1,5 @@
 package com.nestor.spentify.ui
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -20,7 +19,6 @@ import com.nestor.uikit.statusbar.StatusBarType
 import com.nestor.uikit.theme.spacing.LocalSYPadding
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
     statusBarType: StatusBarType?,

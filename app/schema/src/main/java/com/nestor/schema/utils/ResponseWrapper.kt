@@ -1,7 +1,5 @@
 package com.nestor.schema.utils
 
-import okhttp3.ResponseBody
-
 data class ResponseWrapper<T>(
     val isLoading: Boolean = false,
     val error: String? = null,

@@ -12,7 +12,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -25,14 +24,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.nestor.database.data.catergory.CategoryEntity
-import com.nestor.database.data.subcategory.SubCategoryEntity
 import com.nestor.database.data.subcategory.SubcategoryWithCategories
 import com.nestor.schema.utils.ResponseWrapper
-import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.list.SYItemIcon
 import com.nestor.uikit.list.SYListItemData
 import com.nestor.uikit.theme.image.LocalSYImageServerProvider
@@ -63,7 +59,7 @@ internal fun CategoryPickerSheet(
 }
 
 @Composable
-private fun CategoryPickerDialogContent(
+internal fun CategoryPickerDialogContent(
     modifier: Modifier = Modifier,
     categories: ResponseWrapper<List<SubcategoryWithCategories>>,
     onCategorySelected: (CategoryEntity) -> Unit,
@@ -122,45 +118,5 @@ private fun CategoryView(
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
-    }
-}
-
-@Preview
-@Composable
-fun CategoryPickerSheetPreview() {
-    SpentifyTheme {
-        Scaffold {
-            CategoryPickerDialogContent(
-                modifier = Modifier.padding(it),
-                categories = ResponseWrapper.success(
-                    List(2) {
-                        SubcategoryWithCategories(
-                            subCategory = SubCategoryEntity(
-                                id = "id",
-                                name = "Subcategory",
-                                icon = "icon"
-                            ),
-                            categories = listOf(
-                                CategoryEntity(
-                                    id = "id",
-                                    name = "Category",
-                                    icon = "icon",
-                                    tint = null,
-                                    subcategoryId = "id"
-                                ),
-                                CategoryEntity(
-                                    id = "id",
-                                    name = "Category",
-                                    icon = "icon",
-                                    tint = null,
-                                    subcategoryId = "id"
-                                ),
-                            )
-                        )
-                    }
-                ),
-                onCategorySelected = {}
-            )
-        }
     }
 }

@@ -1,6 +1,5 @@
 package com.nestor.category.data.subcategory
 
-import com.nestor.database.data.catergory.CategoryDao
 import com.nestor.database.data.subcategory.SubCategoryEntity
 import com.nestor.database.data.subcategory.SubcategoryDao
 import com.nestor.database.data.subcategory.SubcategoryWithCategories

@@ -28,11 +28,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nestor.auth.R
-import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.button.SYButton
 import com.nestor.uikit.input.FormFieldData
 import com.nestor.uikit.input.SYInputField
@@ -67,7 +65,7 @@ fun ForgotPasswordScreen(
 }
 
 @Composable
-private fun ForgotPasswordScreenContent(
+internal fun ForgotPasswordScreenContent(
     email: FormFieldData = FormFieldData(""),
     onEmailChange: (String) -> Unit = {},
     onNavigationBackClick: () -> Unit = {},
@@ -149,7 +147,7 @@ private fun ForgotPasswordScreenContent(
 }
 
 @Composable
-private fun ForgotPasswordEmailSent() {
+internal fun ForgotPasswordEmailSent() {
     Scaffold {
         Column(
             modifier = Modifier
@@ -182,21 +180,5 @@ private fun ForgotPasswordEmailSent() {
             )
             Spacer(modifier = Modifier.height(LocalSYPadding.current.screenBottomPadding))
         }
-    }
-}
-
-@Preview
-@Composable
-fun ForgotPasswordPreview() {
-    SpentifyTheme {
-        ForgotPasswordScreenContent()
-    }
-}
-
-@Preview
-@Composable
-fun ForgotPasswordEmailSentPreview() {
-    SpentifyTheme {
-        ForgotPasswordEmailSent()
     }
 }

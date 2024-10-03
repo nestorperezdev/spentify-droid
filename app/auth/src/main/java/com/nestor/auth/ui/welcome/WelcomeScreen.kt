@@ -14,10 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nestor.auth.R
-import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.button.SYButton
 import com.nestor.uikit.button.SYOutlinedButton
 import com.nestor.uikit.theme.spacing.LocalSYPadding
@@ -31,7 +29,7 @@ fun WelcomeScreen(
 }
 
 @Composable
-private fun WelcomeScreenContent(
+internal fun WelcomeScreenContent(
     onLoginClick: () -> Unit,
     onSignupClick: () -> Unit
 ) {
@@ -70,13 +68,5 @@ private fun WelcomeScreenContent(
                 modifier = Modifier.fillMaxWidth()
             )
         }
-    }
-}
-
-@Preview
-@Composable
-fun LoginScreenPreview() {
-    SpentifyTheme {
-        WelcomeScreenContent({}, {})
     }
 }
