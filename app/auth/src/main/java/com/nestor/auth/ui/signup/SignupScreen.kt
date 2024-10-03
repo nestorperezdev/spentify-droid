@@ -43,11 +43,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withAnnotation
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nestor.auth.R
-import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.button.SYButton
 import com.nestor.uikit.input.FormFieldData
 import com.nestor.uikit.input.SYInputField
@@ -99,7 +97,7 @@ fun SignupScreen(
 }
 
 @Composable
-private fun SignupScreenContent(
+internal fun SignupScreenContent(
     onNavigationBackClick: () -> Unit,
     onLoginClick: (String?) -> Unit,
     onRecoverPasswordClick: (String?) -> Unit,
@@ -312,32 +310,5 @@ private fun AlreadyRegisteredUserView(
                 onRecoverPasswordClick()
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun SignupScreenContentPreview() {
-    SpentifyTheme {
-        var name by remember { mutableStateOf(FormFieldData("")) }
-        var email by remember { mutableStateOf(FormFieldData("")) }
-        var password by remember { mutableStateOf(FormFieldData("")) }
-        var repeatPassword by remember { mutableStateOf(FormFieldData("")) }
-        SignupScreenContent(
-            onLoginClick = {},
-            onNavigationBackClick = {},
-            name = name,
-            onNameChange = { name = name.copy(value = it) },
-            email = email,
-            onEmailChange = { email = email.copy(value = it) },
-            password = password,
-            onPasswordChanged = { password = password.copy(value = it) },
-            repeatPassword = repeatPassword,
-            onRecoverPasswordClick = {},
-            alreadyRegistered = true,
-            showFormInvalidToast = false,
-            onShowFormInvalidToastDismissed = {},
-            onRepeatPasswordChanged = { repeatPassword = repeatPassword.copy(value = it) }
-        )
     }
 }

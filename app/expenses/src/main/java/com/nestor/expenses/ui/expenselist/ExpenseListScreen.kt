@@ -4,14 +4,12 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,7 +23,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
@@ -35,17 +32,13 @@ import com.nestor.dashboard.R
 import com.nestor.database.data.catergory.CategoryEntity
 import com.nestor.database.data.expense.ExpenseEntity
 import com.nestor.database.data.expensewithcategory.ExpenseWithCategoryEntity
-import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.list.DragDirection
 import com.nestor.uikit.list.SYListItem
 import com.nestor.uikit.list.SYListItemData
 import com.nestor.uikit.list.isScrolledToEnd
 import com.nestor.uikit.theme.image.LocalSYImageServerProvider
-import com.nestor.uikit.theme.spacing.LocalSYPadding
 import com.nestor.uikit.util.formatMoneyAmount
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import java.util.Date
 
 @Composable
 fun ExpenseListScreen(
@@ -65,7 +58,7 @@ fun ExpenseListScreen(
 }
 
 @Composable
-private fun ExpenseListContent(
+internal fun ExpenseListContent(
     modifier: Modifier = Modifier,
     expenseListState: StateFlow<List<ExpenseWithCategoryEntity>>,
     userCurrencySymbolState: StateFlow<String>,
@@ -184,62 +177,5 @@ private fun generateCategoryItem(category: CategoryEntity?): SYListItemData.SYLi
             ),
             tint = it.tint?.let { tintInt -> Color(tintInt) } ?: MaterialTheme.colorScheme.primary,
         )
-    }
-}
-
-@Preview
-@Composable
-fun ExpenseListContentPreview() {
-    SpentifyTheme {
-        Scaffold {
-            ExpenseListContent(
-                expenseListState = MutableStateFlow(
-                    listOf(
-                        ExpenseWithCategoryEntity(
-                            expense = ExpenseEntity(
-                                id = "1",
-                                amount = 100.0,
-                                date = Date(),
-                                cursor = 0,
-                                storedAt = Date(),
-                                currencyCode = "EUR",
-                                userUuid = "",
-                                usdValue = 100.0,
-                                categoryId = "",
-                                description = "Un burrito"
-                            ),
-                            category = null
-                        ),
-                        ExpenseWithCategoryEntity(
-                            expense = ExpenseEntity(
-                                id = "2",
-                                amount = 3500.0,
-                                date = Date(),
-                                cursor = 0,
-                                storedAt = Date(),
-                                currencyCode = "EUR",
-                                userUuid = "",
-                                usdValue = 100.0,
-                                categoryId = "",
-                                description = ""
-                            ),
-                            category = CategoryEntity(
-                                id = "1",
-                                name = "Categoria",
-                                icon = "icon",
-                                subcategoryId = "1",
-                                tint = 0
-                            )
-                        )
-                    )
-                ),
-                userCurrencySymbolState = MutableStateFlow("€"),
-                isLoadingState = MutableStateFlow(false),
-                isEndReachedState = MutableStateFlow(true),
-                modifier = Modifier
-                    .padding(it)
-                    .padding(LocalSYPadding.current.screenHorizontalPadding),
-            )
-        }
     }
 }

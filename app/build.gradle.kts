@@ -128,12 +128,15 @@ dependencies {
 
     implementation(libs.androidx.ktx)
     implementation(libs.androidx.runtimeKtx)
+
+    //compose
     implementation(libs.activity.compose)
     implementation(platform(libs.composeBom))
     implementation(libs.compose.ui)
     implementation(libs.compose.graphics)
-    implementation(libs.compose.toolingPreview)
     implementation(libs.compose.material3)
+    debugImplementation(libs.compose.toolingPreview)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)

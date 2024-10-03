@@ -34,11 +34,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nestor.auth.R
-import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.button.SYButton
 import com.nestor.uikit.input.FormFieldData
 import com.nestor.uikit.input.SYInputField
@@ -78,7 +76,7 @@ fun RecoverPasswordScreen(
 }
 
 @Composable
-private fun RecoverPasswordScreenContent(
+internal fun RecoverPasswordScreenContent(
     onNavigationBackClick: () -> Unit,
     password: FormFieldData,
     onPasswordChanged: (String) -> Unit,
@@ -183,7 +181,7 @@ private fun RecoverPasswordScreenContent(
 }
 
 @Composable
-private fun RecoverPasswordSuccessScreen(
+internal fun RecoverPasswordSuccessScreen(
     onGetStartedClick: () -> Unit
 ) {
     Scaffold {
@@ -213,31 +211,5 @@ private fun RecoverPasswordSuccessScreen(
             )
             Spacer(modifier = Modifier.height(LocalSYPadding.current.screenBottomPadding))
         }
-    }
-}
-
-@Preview
-@Composable
-fun RecoverPasswordScreenContentPreview() {
-    SpentifyTheme {
-        var password by remember { mutableStateOf(FormFieldData("")) }
-        var repeatPassword by remember { mutableStateOf(FormFieldData("")) }
-        RecoverPasswordScreenContent(
-            onNavigationBackClick = {},
-            password = password,
-            onPasswordChanged = { password = password.copy(value = it) },
-            repeatPassword = repeatPassword,
-            showFormInvalidToast = false,
-            onShowFormInvalidToastDismissed = {},
-            onRepeatPasswordChanged = { repeatPassword = repeatPassword.copy(value = it) }
-        )
-    }
-}
-
-@Preview
-@Composable
-fun RecoverPasswordContentPreview() {
-    SpentifyTheme {
-        RecoverPasswordSuccessScreen(onGetStartedClick = {})
     }
 }

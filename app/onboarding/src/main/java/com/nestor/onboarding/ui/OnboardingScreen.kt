@@ -21,11 +21,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.nestor.onboarding.R
-import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.button.SYButton
 import com.nestor.uikit.statusbar.SYStatusBar
 import com.nestor.uikit.statusbar.StatusBarAction
@@ -46,7 +44,7 @@ fun OnboardingScreen(
 }
 
 @Composable
-private fun OnboardScreenContent(
+internal fun OnboardScreenContent(
     modifier: Modifier = Modifier,
     onSkipClick: () -> Unit,
     onLastStepClick: () -> Unit
@@ -158,17 +156,6 @@ private fun OnboardScreenContent(
         Text(
             text = stringResource(content.description),
             modifier = Modifier.padding(top = 12.dp)
-        )
-    }
-}
-
-@Preview
-@Composable
-fun OnboardScreenContentPreview() {
-    SpentifyTheme {
-        OnboardScreenContent(
-            onSkipClick = {},
-            onLastStepClick = {}
         )
     }
 }

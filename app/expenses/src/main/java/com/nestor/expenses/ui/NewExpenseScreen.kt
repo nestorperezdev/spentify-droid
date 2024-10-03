@@ -30,7 +30,6 @@ import androidx.compose.ui.platform.LocalTextInputService
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
@@ -41,7 +40,6 @@ import com.nestor.database.data.subcategory.SubcategoryWithCategories
 import com.nestor.expenses.R
 import com.nestor.expenses.ui.category.CategoryPickerSheet
 import com.nestor.schema.utils.ResponseWrapper
-import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.button.SYButton
 import com.nestor.uikit.input.FormFieldData
 import com.nestor.uikit.list.SYListItem
@@ -52,7 +50,6 @@ import com.nestor.uikit.statusbar.SYStatusBar
 import com.nestor.uikit.statusbar.StatusBarType
 import com.nestor.uikit.theme.image.LocalSYImageServerProvider
 import com.nestor.uikit.theme.spacing.LocalSYPadding
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -106,7 +103,7 @@ fun NewExpenseScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun NewExpenseScreenContent(
+internal fun NewExpenseScreenContent(
     onNavBack: () -> Unit = {},
     onSaveClick: () -> Unit = {},
     amountField: FormFieldData,
@@ -224,22 +221,4 @@ private fun NewExpenseToolbar(onNavBack: () -> Unit) {
             navigation = NavigationIcon.Close { onNavBack() }
         )
     )
-}
-
-@Preview
-@Composable
-fun NewExpenseScreenContentPreview() {
-    SpentifyTheme {
-        NewExpenseScreenContent(
-            amountField = FormFieldData(""),
-            onAmountChanged = {},
-            isLoading = MutableStateFlow(false),
-            descriptionText = FormFieldData(""),
-            onDescriptionChanged = {},
-            selectedCurrencyEntity = MutableStateFlow(null),
-            categories = MutableStateFlow(ResponseWrapper.loading()),
-            onCategorySelected = {},
-            categorySelected = MutableStateFlow(null)
-        )
-    }
 }

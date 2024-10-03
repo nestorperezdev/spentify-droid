@@ -39,11 +39,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nestor.auth.R
-import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.button.SYButton
 import com.nestor.uikit.input.FormFieldData
 import com.nestor.uikit.input.SYInputField
@@ -96,7 +94,7 @@ fun LoginScreen(
 }
 
 @Composable
-private fun LoginScreenContent(
+internal fun LoginScreenContent(
     email: FormFieldData = FormFieldData(""),
     onEmailChange: (String) -> Unit = {},
     password: FormFieldData = FormFieldData(""),
@@ -226,13 +224,5 @@ private fun LoginScreenContent(
                 onShowFormInvalidToastDismissed()
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun LoginScreenContentPreview() {
-    SpentifyTheme {
-        LoginScreenContent {}
     }
 }

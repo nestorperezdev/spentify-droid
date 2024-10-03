@@ -40,8 +40,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import com.nestor.uikit.R as UIR
 
-private const val TAG = "CurrencyPickerBottomShe"
-
 @Composable
 fun CurrencyPickerBottomSheet(
     bottomSheetState: SheetState = rememberModalBottomSheetState(),

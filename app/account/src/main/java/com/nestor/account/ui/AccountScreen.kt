@@ -13,7 +13,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -29,16 +28,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nestor.common.ui.currencypicker.CurrencyPickerBottomSheet
-import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.list.SYList
 import com.nestor.uikit.list.SYListItemData
 import com.nestor.uikit.theme.color.Blue50
-import com.nestor.uikit.theme.spacing.LocalSYPadding
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import com.nestor.uikit.R as UIKitR
 
@@ -74,7 +69,7 @@ fun AccountScreen(
 }
 
 @Composable
-private fun AccountScreenContent(
+internal fun AccountScreenContent(
     modifier: Modifier = Modifier,
     username: String,
     appVersion: StateFlow<String>,
@@ -236,22 +231,5 @@ private fun AccountIcon(
             style = MaterialTheme.typography.titleLarge,
             color = Color.White
         )
-    }
-}
-
-
-@Preview
-@Composable
-fun AccountScreenPreview() {
-    SpentifyTheme {
-        Scaffold {
-            AccountScreenContent(
-                modifier = Modifier
-                    .padding(it)
-                    .padding(LocalSYPadding.current.screenHorizontalPadding),
-                username = "Nestor",
-                appVersion = MutableStateFlow("1.0.0.500.preview")
-            )
-        }
     }
 }

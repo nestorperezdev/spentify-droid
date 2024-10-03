@@ -3,15 +3,11 @@ plugins {
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.hilt)
-    alias(libs.plugins.compose)
-    alias(libs.plugins.screenshot)
 }
 
 android {
     namespace = "com.nestor.category"
     compileSdk = 34
-    @Suppress("UnstableApiUsage")
-    experimentalProperties["android.experimental.enableScreenshotTest"] = true
 
     defaultConfig {
         minSdk = 29
@@ -35,19 +31,6 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-    buildFeatures {
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
-    composeCompiler {
-        enableStrongSkippingMode = true
-        reportsDestination = layout.buildDirectory.dir("compose_compiler")
-    }
-    screenshotTests {
-        imageDifferenceThreshold = 0.0500f // 0.5%
-    }
 }
 
 dependencies {
@@ -65,16 +48,7 @@ dependencies {
     implementation(project(":app:database"))
     implementation(project(":app:schema"))
 
-    //compose
-    implementation(libs.activity.compose)
-    implementation(platform(libs.composeBom))
-    implementation(libs.compose.ui)
-    implementation(libs.compose.graphics)
-    implementation(libs.compose.toolingPreview)
-    implementation(libs.compose.material3)
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    screenshotTestImplementation(libs.compose.debug.tooling)
 }

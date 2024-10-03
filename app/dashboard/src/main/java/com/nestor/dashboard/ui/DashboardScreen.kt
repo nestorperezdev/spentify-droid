@@ -10,20 +10,17 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nestor.dashboard.R
 import com.nestor.dashboard.ui.summarytiles.SummaryTilesScreen
 import com.nestor.schema.utils.ResponseWrapper
-import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.button.SYAlternativeButton
 import com.nestor.uikit.list.SYList
 import com.nestor.uikit.list.SYListItem
@@ -31,9 +28,7 @@ import com.nestor.uikit.list.SYListItemData
 import com.nestor.uikit.loading.ShimmerSkeletonBox
 import com.nestor.uikit.statusbar.StatusBarType
 import com.nestor.uikit.statusbar.TopBarTitle
-import com.nestor.uikit.theme.spacing.LocalSYPadding
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -52,7 +47,7 @@ fun DashboardScreen(
 }
 
 @Composable
-private fun DashboardScreenContent(
+internal fun DashboardScreenContent(
     modifier: Modifier = Modifier,
     summaryState: StateFlow<ResponseWrapper<DailySummary>>,
     userDetailsState: StateFlow<ResponseWrapper<UserDetails>>,
@@ -156,54 +151,5 @@ private fun DashboardScreenContent(
                 )
             )
         )
-    }
-}
-
-
-@Preview
-@Composable
-private fun DashboardScreenContentPrev() {
-    SpentifyTheme {
-        Scaffold {
-            DashboardScreenContent(
-                modifier = Modifier
-                    .padding(it)
-                    .padding(LocalSYPadding.current.screenHorizontalPadding),
-                summaryState = MutableStateFlow(
-                    ResponseWrapper.success(
-                        DailySummary(
-                            totalExpenses = 1723.50,
-                            minimalExpense = 500.0,
-                            maximalExpense = 501.76,
-                            dailyAverageExpense = 123.10,
-                        )
-                    )
-                ),
-                userDetailsState = MutableStateFlow(
-                    ResponseWrapper.success(
-                        UserDetails(
-                            userName = "Nestor",
-                            dailyPhrase = "You are doing great!"
-                        )
-                    )
-                )
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-fun DashboardScreenContentLoadingPrev() {
-    SpentifyTheme {
-        Scaffold {
-            DashboardScreenContent(
-                summaryState = MutableStateFlow(ResponseWrapper.loading()),
-                modifier = Modifier
-                    .padding(it)
-                    .padding(LocalSYPadding.current.screenHorizontalPadding),
-                userDetailsState = MutableStateFlow(ResponseWrapper.loading())
-            )
-        }
     }
 }
