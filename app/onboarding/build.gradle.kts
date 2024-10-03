@@ -63,8 +63,9 @@ dependencies {
     implementation(libs.compose.ui)
     implementation(libs.compose.graphics)
     implementation(libs.compose.material3)
-    implementation(libs.compose.toolingPreview)
     implementation(project(":app:uikit"))
+    debugImplementation(libs.compose.toolingPreview)
+
     implementation(libs.androidx.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)

@@ -10,10 +10,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nestor.account.R
-import com.nestor.uikit.SpentifyTheme
 
 @Composable
 fun PrivacyDialog(onDismissRequest: () -> Unit = {}) {
@@ -36,13 +34,5 @@ fun PrivacyDialog(onDismissRequest: () -> Unit = {}) {
                 color = MaterialTheme.colorScheme.secondary
             )
         }
-    }
-}
-
-@Preview
-@Composable
-private fun PrivacyDialogPreview() {
-    SpentifyTheme {
-        PrivacyDialog()
     }
 }

@@ -26,19 +26,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nestor.charts.data.bar.BarData
-import com.nestor.charts.data.bar.ChartBarHeader
 import com.nestor.charts.util.Line
-import com.nestor.uikit.SpentifyTheme
-import com.nestor.uikit.theme.spacing.LocalSYPadding
 
 @Composable
 fun ChartBarView(modifier: Modifier = Modifier, data: BarData) {
@@ -103,55 +94,5 @@ fun ChartBackground(modifier: Modifier = Modifier) {
         repeat(4) { i ->
             Line(dashed = i != 3)
         }
-    }
-}
-
-@Preview
-@Composable
-fun ChartBarViewPreview() {
-    SpentifyTheme {
-        ChartBarView(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(LocalSYPadding.current.screenHorizontalPadding),
-            data = BarData(
-                header = ChartBarHeader(
-                    hint = buildAnnotatedString {
-                        withStyle(
-                            style = SpanStyle(
-                                color = MaterialTheme.colorScheme.onTertiary,
-                                fontWeight = FontWeight.Bold
-                            )
-                        ) {
-                            append("↑ 2.1% ")
-                        }
-                        append("vs last week")
-                    },
-                    total = AnnotatedString("$ 1,278"),
-                    chartName = buildAnnotatedString { append("Bar Chart") },
-                    chartDescription = AnnotatedString("This is a bar chart")
-                ),
-                series = listOf(
-                    BarData.BarSeries(
-                        color = 0xFFD0BCFF.toInt(),
-                        tag = "Tag 1",
-                        value = 10f,
-                        seriesTitle = "Series 1"
-                    ),
-                    BarData.BarSeries(
-                        color = 0xFFEFB8C8.toInt(),
-                        tag = "Tag 2",
-                        value = 20f,
-                        seriesTitle = "Series 2"
-                    ),
-                    BarData.BarSeries(
-                        color = 0xFFCCC2DC.toInt(),
-                        tag = "Tag 3",
-                        value = 30f,
-                        seriesTitle = "Series 3"
-                    )
-                )
-            )
-        )
     }
 }

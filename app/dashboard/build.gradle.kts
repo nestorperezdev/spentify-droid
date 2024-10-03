@@ -70,7 +70,8 @@ dependencies {
     implementation(project(":app:auth"))
     implementation(libs.compose.graphics)
     implementation(libs.compose.material3)
-    implementation(libs.compose.toolingPreview)
+
+    debugImplementation(libs.compose.toolingPreview)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)

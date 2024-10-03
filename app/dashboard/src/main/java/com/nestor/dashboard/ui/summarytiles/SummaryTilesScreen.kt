@@ -20,11 +20,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nestor.dashboard.R
 import com.nestor.dashboard.ui.DailySummary
-import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.stepperdot.SYStepperDot
 import com.nestor.uikit.stepperdot.rememberStepperDotState
 import com.nestor.uikit.util.formatMoneyAmount
@@ -160,19 +158,3 @@ val tileList = listOf(
     summaryTileScreen2,
     summaryTileScreen3
 )
-
-
-@Preview
-@Composable
-fun SummaryTilesScreenPrev() {
-    SpentifyTheme {
-        SummaryTilesScreen(
-            summary = DailySummary(
-                maximalExpense = 100.0,
-                dailyAverageExpense = 20.0,
-                minimalExpense = 10.0,
-                totalExpenses = 155.0
-            )
-        )
-    }
-}
