@@ -117,6 +117,14 @@ type ExpenseDetail {
   value: Float!
 }
 
+type ExpenseGrouped {
+  categoryName: String!
+
+  date: String!
+
+  total: Float!
+}
+
 input ExpenseInput {
   category: CategoryInput
 
@@ -196,11 +204,21 @@ type Query {
 
   iconList(cursor: Int, filter: String = null, limit: Int! = 50): IconList!
 
+  stackedExpenseReport(currencyCode: String, month: Int!, year: Int!): StackedExpenseReport!
+
   userDetails: User!
 }
 
 type RecoverPasswordStatus {
   success: Boolean!
+}
+
+type StackedExpenseReport {
+  groupedExpenses: [ExpenseGrouped!]!
+
+  header: String!
+
+  subtitle: String!
 }
 
 """

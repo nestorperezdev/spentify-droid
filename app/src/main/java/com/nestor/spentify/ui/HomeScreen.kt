@@ -1,6 +1,5 @@
 package com.nestor.spentify.ui
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -15,25 +14,26 @@ import androidx.compose.ui.Modifier
 import com.nestor.account.ui.AccountScreen
 import com.nestor.dashboard.ui.DashboardScreen
 import com.nestor.expenses.ui.expenselist.ExpenseListScreen
+import com.nestor.reports.ui.ReportsScreen
 import com.nestor.uikit.statusbar.SYStatusBar
 import com.nestor.uikit.statusbar.StatusBarType
 import com.nestor.uikit.theme.spacing.LocalSYPadding
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
     statusBarType: StatusBarType?,
     onNewExpenseClick: () -> Unit = {}
 ) {
     val currentItem = remember { mutableStateOf(NavItems.Home) }
-    val pagerState = rememberPagerState { 3 }
+    val pagerState = rememberPagerState { 4 }
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(pagerState.currentPage) {
         currentItem.value = when (pagerState.currentPage) {
             0 -> NavItems.Home
             1 -> NavItems.Expenses
-            2 -> NavItems.Account
+            2 -> NavItems.Reports
+            3 -> NavItems.Account
             else -> NavItems.Home
         }
     }
@@ -68,7 +68,14 @@ fun HomeScreen(
                             .padding(LocalSYPadding.current.screenHorizontalPadding)
                     )
 
-                2 -> AccountScreen(
+                2 -> ReportsScreen(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .padding(LocalSYPadding.current.screenHorizontalPadding)
+                )
+
+                3 -> AccountScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues)

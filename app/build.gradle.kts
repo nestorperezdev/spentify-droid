@@ -1,14 +1,8 @@
-import com.android.manifmerger.XmlDocument
-import com.android.manifmerger.XmlNode
-import groovy.namespace.QName
-import groovy.util.IndentPrinter
 import groovy.util.Node
 import groovy.util.NodeList
 import groovy.xml.MarkupBuilder
 import groovy.xml.XmlNodePrinter
 import groovy.xml.XmlParser
-import org.jetbrains.kotlin.backend.common.peek
-import java.io.StringWriter
 
 plugins {
     alias(libs.plugins.androidApp)
@@ -120,6 +114,7 @@ dependencies {
     implementation(project(":app:dashboard"))
     implementation(project(":app:account"))
     implementation(project(":app:expenses"))
+    implementation(project(":app:reports"))
 
     //coil
     implementation(libs.coilBase)
