@@ -1,14 +1,12 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlinAndroid)
-    alias(libs.plugins.google.devtools.ksp)
-    alias(libs.plugins.hilt)
     alias(libs.plugins.compose)
     alias(libs.plugins.screenshot)
 }
 
 android {
-    namespace = "com.nestor.category"
+    namespace = "com.nestor.charts"
     compileSdk = 34
     @Suppress("UnstableApiUsage")
     experimentalProperties["android.experimental.enableScreenshotTest"] = true
@@ -51,19 +49,15 @@ android {
 }
 
 dependencies {
-    //hilt
-    implementation(libs.androidx.hilt.navigation)
-    implementation(libs.hilt)
-    ksp(libs.hiltCompiler)
-
     //ktx
     implementation(libs.androidx.ktx)
     implementation(libs.androidx.runtimeKtx)
 
     //modules
-    implementation(project(":app:common"))
-    implementation(project(":app:database"))
-    implementation(project(":app:schema"))
+    implementation(project(":app:uikit"))
+
+    //constraint
+    implementation(libs.androidx.compose.constraintlayout)
 
     //compose
     implementation(libs.activity.compose)
@@ -73,6 +67,7 @@ dependencies {
     implementation(libs.compose.toolingPreview)
     implementation(libs.compose.material3)
 
+    implementation(libs.androidx.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
