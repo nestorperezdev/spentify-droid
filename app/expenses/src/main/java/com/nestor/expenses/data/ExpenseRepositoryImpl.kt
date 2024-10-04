@@ -1,7 +1,9 @@
 package com.nestor.expenses.data
 
 import android.util.Log
+import com.nestor.common.util.getStartAndEndOfDate
 import com.nestor.database.data.expense.ExpenseEntity
+import com.nestor.database.data.expense.ExpenseWithCategoryAndSubcategory
 import com.nestor.database.data.expensewithcategory.ExpenseWithCategoryEntity
 import com.nestor.expenses.data.expensewithcategory.ExpenseWithCategoryLocalDataSource
 import com.nestor.schema.fragment.ExpenseFragment
@@ -60,6 +62,15 @@ class ExpenseRepositoryImpl @Inject constructor(
         ).onEach { expenses ->
             Log.i(TAG, "getExpenses: $expenses")
         }
+    }
+
+    override fun getExpensesWithCategoryAndSubcategory(baseMonthDate: Date): Flow<List<ExpenseWithCategoryAndSubcategory>> {
+        //  todo: if data is empty on this month, fetch from api
+        val (start, end) = getStartAndEndOfDate(baseMonthDate)
+        return this.localDataSource.getExpensesWithCategoryAndSubcategory(
+            from = start,
+            to = end
+        )
     }
 
     override suspend fun fetchMoreExpenses(

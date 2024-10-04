@@ -8,8 +8,12 @@ import com.nestor.charts.data.ChartSeries
 import com.nestor.charts.data.bar.ChartBarHeader
 import com.nestor.charts.data.bar.grouped.GroupedBarData
 import com.nestor.common.data.auth.AuthRepository
+import com.nestor.database.data.catergory.CategoryEntity
+import com.nestor.database.data.expense.ExpenseEntity
+import com.nestor.database.data.expense.ExpenseWithCategoryAndSubcategory
 import com.nestor.database.data.expensewithcategory.ExpenseWithCategoryDao
 import com.nestor.database.data.expensewithcategory.ExpenseWithCategoryEntity
+import com.nestor.database.data.subcategory.SubCategoryEntity
 import com.nestor.database.data.user.UserEntity
 import com.nestor.expenses.data.ExpenseRepository
 import com.nestor.schema.utils.ResponseWrapper
@@ -31,27 +35,21 @@ import javax.inject.Inject
 @HiltViewModel
 class ReportsViewModel @Inject constructor(
     private val expenseRepository: ExpenseRepository,
-    private val authRepository: AuthRepository
+    authRepository: AuthRepository
 ) :
     ViewModel() {
     private val _selectedDate = MutableStateFlow(Date())
     val stackedChartState: StateFlow<ResponseWrapper<GroupedBarData>> =
         _selectedDate
-            .combineTransform<Date, ResponseWrapper<UserEntity?>, ResponseWrapper<List<ExpenseWithCategoryEntity>>>(
+            .combineTransform<Date, ResponseWrapper<UserEntity?>, ResponseWrapper<List<ExpenseWithCategoryAndSubcategory>>>(
                 authRepository.userDetails()
             ) { date, userWrapper ->
-                val calendar = Calendar.getInstance()
-                calendar.time = date
                 if (userWrapper.isLoading) emit(ResponseWrapper.loading(null))
                 userWrapper.error?.let { emit(ResponseWrapper.error(it)) }
                 userWrapper.body?.let { user ->
                     emitAll(
-                        expenseRepository.getExpenses(
-                            month = calendar.get(Calendar.MONTH) + 1,
-                            year = calendar.get(Calendar.YEAR),
-                            userUid = user.uuid,
-                            currencyCode = user.currencyCode
-                        ).map { ResponseWrapper.success(it) }
+                        expenseRepository.getExpensesWithCategoryAndSubcategory(date)
+                            .map { ResponseWrapper.success(it) }
                     )
                 }
             }
@@ -75,19 +73,32 @@ class ReportsViewModel @Inject constructor(
                 initialValue = ResponseWrapper.loading(null)
             )
 
-    private fun groupExpenses(list: List<ExpenseWithCategoryEntity>): List<GroupedBarData.GroupedSeries> {
-        return list.groupBy { it.category?.name }
-            .map { (category, expenses) ->
-                GroupedBarData.GroupedSeries(
-                    seriesTitle = category ?: "Unknown",
-                    series = expenses.map {
-                        ChartSeries(
-                            value = it.expense.usdValue.toFloat(),
-                            tag = it.category?.name ?: "Unknown",
-                            color = it.category?.tint ?: 0xFFEFB8C8.toInt()
-                        )
-                    },
-                )
-            }
+    private fun groupExpenses(list: List<ExpenseWithCategoryAndSubcategory>): List<GroupedBarData.GroupedSeries> {
+        val groupedSeries =
+            mutableMapOf<SubCategoryEntity, MutableMap<CategoryEntity, MutableList<ExpenseEntity>>>()
+        list.forEach { expWCatAndSubcat ->
+            val categoryMap = groupedSeries.getOrDefault(
+                expWCatAndSubcat.category.subcategoryEntity,
+                mutableMapOf()
+            )
+            groupedSeries[expWCatAndSubcat.category.subcategoryEntity] = categoryMap
+            categoryMap.getOrDefault(expWCatAndSubcat.category.categoryEntity, mutableListOf())
+                .apply {
+                    add(expWCatAndSubcat.expense)
+                    categoryMap[expWCatAndSubcat.category.categoryEntity] = this
+                }
+        }
+        return groupedSeries.map { (subcategory, categoryExpenseMap) ->
+            GroupedBarData.GroupedSeries(
+                seriesTitle = subcategory.name,
+                series = categoryExpenseMap.map { (category, expenses) ->
+                    ChartSeries(
+                        tag = category.name,
+                        color = category.tint ?: 0xFF000000.toInt(),
+                        value = expenses.sumOf { it.amount }.toFloat()
+                    )
+                }
+            )
+        }
     }
 }

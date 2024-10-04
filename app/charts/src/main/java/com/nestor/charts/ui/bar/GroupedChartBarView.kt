@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
@@ -54,7 +55,9 @@ private fun GroupedBarContent(modifier: Modifier = Modifier, data: GroupedBarDat
     ) {
         Column(modifier = Modifier.padding(LocalSYPadding.current.screenHorizontalPadding)) {
             ChartBarHeader(modifier = Modifier, data = data.header)
+            Spacer(modifier = Modifier.height(16.dp))
             GroupedChartContent(modifier = modifier.aspectRatio(4 / 3f), data = data)
+            Spacer(modifier = Modifier.height(16.dp))
             ChartBarFooter(data = data)
         }
     }

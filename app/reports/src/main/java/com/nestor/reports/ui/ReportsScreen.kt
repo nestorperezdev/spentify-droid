@@ -32,7 +32,6 @@ fun ReportsScreenContent(
     stackedChart: StateFlow<ResponseWrapper<GroupedBarData>>
 ) {
     Column(modifier = modifier) {
-        Text(text = "Reports Screen")
         StackedReportContainer(
             modifier = Modifier.fillMaxWidth(),
             data = stackedChart
@@ -57,7 +56,7 @@ private fun StackedReportContainer(
             response.isSuccessful() -> {
                 response.body?.let {
                     GroupedChartBarView(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier.fillMaxWidth(),
                         data = it
                     )
                 }

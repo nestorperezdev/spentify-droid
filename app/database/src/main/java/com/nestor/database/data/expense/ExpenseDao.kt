@@ -25,7 +25,10 @@ interface ExpenseDao {
 
     @Transaction
     @Query("SELECT * FROM expense WHERE date BETWEEN :from AND :to")
-    suspend fun getExpenseWithCategoryAndSubcategory(from: Date, to: Date): List<ExpenseWithCategoryAndSubcategory>
+    fun getExpenseWithCategoryAndSubcategory(
+        from: Date,
+        to: Date
+    ): Flow<List<ExpenseWithCategoryAndSubcategory>>
 
     @Delete
     suspend fun delete(expense: ExpenseEntity)
