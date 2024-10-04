@@ -11,8 +11,7 @@ class GroupedBarData(
 ) : GroupableByTagAndColor {
     data class GroupedSeries(
         val seriesTitle: String,
-        val series: List<ChartSeries>,
-        val style: GroupedBarStyle = GroupedBarStyle.GROUPED
+        val series: List<ChartSeries>
     )
 
     override fun groupByTagAndColor(): Map<Pair<String, Int>, List<ChartSeries>> {
@@ -21,9 +20,9 @@ class GroupedBarData(
 
     fun calculateMaxValue(): Float {
         if (style == GroupedBarStyle.GROUPED) {
-            return series.flatMap { it.series }.maxOf { it.value }
+            return series.flatMap { it.series }.maxOfOrNull { it.value } ?: 0f
         } else {
-            return series.map { it.series.map { it.value }.sum() }.max()
+            return series.map { it.series.map { it.value }.sum() }.maxOrNull() ?: 0f
         }
     }
 

@@ -66,6 +66,9 @@ dependencies {
     implementation(project(":app:schema"))
     implementation(project(":app:uikit"))
     implementation(project(":app:charts"))
+    implementation(project(":app:database"))
+    implementation(project(":app:expenses"))
+    implementation(project(":app:common"))
 
     implementation(libs.androidx.ktx)
     implementation(libs.appcompat)

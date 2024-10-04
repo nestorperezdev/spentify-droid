@@ -18,17 +18,17 @@ fun ExpenseFragment.toEntity(
     storedAt: Date = Date()
 ): ExpenseEntity {
     return ExpenseEntity(
-            userUuid = userUid,
-            description = description,
-            date = date,
-            storedAt = storedAt,
-            amount = value,
-            cursor = cursor,
-            usdValue = usdValue,
-            id = id,
-            currencyCode = selectedCurrency.currencyInfo.code,
-            categoryId = category?.category?.id
-        )
+        userUuid = userUid,
+        description = description,
+        date = date,
+        storedAt = storedAt,
+        amount = value,
+        cursor = cursor,
+        usdValue = usdValue,
+        id = id,
+        currencyCode = selectedCurrency.currencyInfo.code,
+        categoryId = category?.category?.id
+    )
 }
 
 private const val TAG = "ExpenseRepositoryImpl"

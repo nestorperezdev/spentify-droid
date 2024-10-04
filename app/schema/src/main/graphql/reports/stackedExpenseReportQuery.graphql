@@ -1,0 +1,9 @@
+query stackedExpenseReportQuery($month: Int!, $year: Int!, $currencyCode: String) {
+    stackedExpenseReport(month: $month, year: $year, currencyCode: $currencyCode) {
+        header
+        subtitle
+        groupedExpenses {
+            ...groupedExpenseFragment
+        }
+    }
+}
