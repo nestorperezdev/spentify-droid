@@ -3,6 +3,7 @@ package com.nestor.database.data.expense
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 import java.util.Date
@@ -21,6 +22,10 @@ interface ExpenseDao {
         expirationDate: Date,
         currencyCode: String
     ): Flow<List<ExpenseEntity>>
+
+    @Transaction
+    @Query("SELECT * FROM expense WHERE date BETWEEN :from AND :to")
+    suspend fun getExpenseWithCategoryAndSubcategory(from: Date, to: Date): List<ExpenseWithCategoryAndSubcategory>
 
     @Delete
     suspend fun delete(expense: ExpenseEntity)
