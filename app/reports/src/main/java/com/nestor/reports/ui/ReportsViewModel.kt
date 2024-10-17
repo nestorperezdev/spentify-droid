@@ -16,7 +16,9 @@ import com.nestor.database.data.expensewithcategory.ExpenseWithCategoryEntity
 import com.nestor.database.data.subcategory.SubCategoryEntity
 import com.nestor.database.data.user.UserEntity
 import com.nestor.expenses.data.ExpenseRepository
+import com.nestor.schema.type.User
 import com.nestor.schema.utils.ResponseWrapper
+import com.nestor.schema.utils.combineTransformNonWrapper
 import com.nestor.schema.utils.mapBody
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -53,25 +55,27 @@ class ReportsViewModel @Inject constructor(
                     )
                 }
             }
-            .map {
-                it.mapBody { list ->
-                    GroupedBarData(
-                        header = ChartBarHeader(
-                            chartName = AnnotatedString("Chart Name"),
-                            hint = AnnotatedString("Hint"),
-                            chartDescription = AnnotatedString("Description"),
-                            total = AnnotatedString("$100")
-                        ),
-                        style = GroupedBarData.Companion.GroupedBarStyle.STACKED,
-                        series = groupExpenses(list)
-                    )
-                }
-            }
+            .map { it.toGroupedBarData() }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.Lazily,
                 initialValue = ResponseWrapper.loading(null)
             )
+
+    private fun ResponseWrapper<List<ExpenseWithCategoryAndSubcategory>>.toGroupedBarData(): ResponseWrapper<GroupedBarData> {
+        return mapBody { list ->
+            GroupedBarData(
+                header = ChartBarHeader(
+                    chartName = AnnotatedString("Chart Name"),
+                    hint = AnnotatedString("Hint"),
+                    chartDescription = AnnotatedString("Description"),
+                    total = AnnotatedString("$100")
+                ),
+                style = GroupedBarData.Companion.GroupedBarStyle.STACKED,
+                series = groupExpenses(list)
+            )
+        }
+    }
 
     private fun groupExpenses(list: List<ExpenseWithCategoryAndSubcategory>): List<GroupedBarData.GroupedSeries> {
         val groupedSeries =
@@ -94,7 +98,7 @@ class ReportsViewModel @Inject constructor(
                 series = categoryExpenseMap.map { (category, expenses) ->
                     ChartSeries(
                         tag = category.name,
-                        color = category.tint ?: 0xFF000000.toInt(),
+                        color = category.tint?.or(0xFF000000.toInt()) ?: 0xFF000000.toInt(),
                         value = expenses.sumOf { it.amount }.toFloat()
                     )
                 }

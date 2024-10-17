@@ -38,3 +38,15 @@ fun <R, T, Z> ResponseWrapper<T>.combineTransform(
         else -> ResponseWrapper.success(transform(body, other.body))
     }
 }
+
+fun <R, T, Z> ResponseWrapper<T>.combineTransformNonWrapper(
+    other: R,
+    transform: (T, R) -> Z
+): ResponseWrapper<Z> {
+    return when {
+        isLoading -> ResponseWrapper.loading()
+        error != null -> ResponseWrapper.error(error)
+        body == null -> ResponseWrapper.error("Null body")
+        else -> ResponseWrapper.success(transform(body, other))
+    }
+}
