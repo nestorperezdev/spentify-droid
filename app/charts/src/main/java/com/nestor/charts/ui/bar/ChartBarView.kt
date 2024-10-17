@@ -29,13 +29,14 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.nestor.charts.data.bar.BarData
+import com.nestor.charts.ui.common.ChartHeaderView
 import com.nestor.charts.util.Line
 
 @Composable
 fun ChartBarView(modifier: Modifier = Modifier, data: BarData) {
     Card(onClick = { /*TODO*/ }) {
         Column(modifier = modifier, verticalArrangement = spacedBy(24.dp)) {
-            ChartBarHeader(data = data.header)
+            ChartHeaderView(data = data.header)
             ChartBarContent(
                 modifier = Modifier
                     .fillMaxWidth()

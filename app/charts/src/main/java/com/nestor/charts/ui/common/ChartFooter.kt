@@ -1,4 +1,4 @@
-package com.nestor.charts.ui.bar
+package com.nestor.charts.ui.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.nestor.charts.data.common.GroupableByTagAndColor
 
 @Composable
-internal fun ChartBarFooter(data: GroupableByTagAndColor) {
+internal fun ChartFooter(data: GroupableByTagAndColor) {
     Row {
         data.groupByTagAndColor().forEach { (tagColor: Pair<String, Int>, _) ->
             Box(
