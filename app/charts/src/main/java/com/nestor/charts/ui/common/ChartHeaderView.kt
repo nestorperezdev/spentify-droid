@@ -1,4 +1,4 @@
-package com.nestor.charts.ui.bar
+package com.nestor.charts.ui.common
 
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
@@ -9,12 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.nestor.charts.data.bar.ChartBarHeader
+import com.nestor.charts.data.common.ChartHeaderData
 
 @Composable
-internal fun ChartBarHeader(
+internal fun ChartHeaderView(
     modifier: Modifier = Modifier,
-    data: ChartBarHeader
+    data: ChartHeaderData
 ) {
     Column(verticalArrangement = spacedBy(12.dp), modifier = modifier) {
         Text(text = data.chartName, style = MaterialTheme.typography.titleLarge)

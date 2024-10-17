@@ -1,4 +1,4 @@
-package com.nestor.charts.ui.bar
+package com.nestor.charts.ui.circle
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,19 +12,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import com.nestor.charts.data.bar.BarData
+import com.nestor.charts.data.circle.CircleChartData
 import com.nestor.charts.data.common.ChartHeaderData
 import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.theme.spacing.LocalSYPadding
 
 @Preview
 @Composable
-fun ChartBarViewPreview() {
+fun CircleChartViewPreview() {
     SpentifyTheme {
-        ChartBarView(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(LocalSYPadding.current.screenHorizontalPadding),
-            data = BarData(
+        CircleChartView(modifier = Modifier
+            .fillMaxWidth()
+            .padding(LocalSYPadding.current.screenHorizontalPadding),
+            data = CircleChartData(
                 header = ChartHeaderData(
                     hint = buildAnnotatedString {
                         withStyle(
@@ -38,7 +38,7 @@ fun ChartBarViewPreview() {
                         append("vs last week")
                     },
                     total = AnnotatedString("$ 1,278"),
-                    chartName = buildAnnotatedString { append("Bar Chart") },
+                    chartName = buildAnnotatedString { append("Circle Chart") },
                     chartDescription = AnnotatedString("This is a bar chart")
                 ),
                 series = listOf(

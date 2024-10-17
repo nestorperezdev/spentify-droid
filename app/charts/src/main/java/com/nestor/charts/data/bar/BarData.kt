@@ -1,20 +1,11 @@
 package com.nestor.charts.data.bar
 
-import androidx.compose.ui.text.AnnotatedString
 import com.nestor.charts.data.ChartData
 import com.nestor.charts.data.ChartSeries
-import com.nestor.charts.data.common.ChartHeader
-import com.nestor.charts.data.common.GroupableByTagAndColor
-
-class ChartBarHeader(
-    override val chartName: AnnotatedString,
-    override val chartDescription: AnnotatedString,
-    val hint: AnnotatedString? = null,
-    val total: AnnotatedString? = null,
-) : ChartHeader(chartName, chartDescription)
+import com.nestor.charts.data.common.ChartHeaderData
 
 open class BarData(
-    override val header: ChartBarHeader,
+    override val header: ChartHeaderData,
     override val series: List<BarSeries>,
 ) : ChartData(header, series) {
     data class BarSeries(

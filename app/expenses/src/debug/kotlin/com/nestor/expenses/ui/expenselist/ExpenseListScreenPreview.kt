@@ -25,9 +25,9 @@ fun ExpenseListContentPreview() {
                             expense = ExpenseEntity(
                                 id = "1",
                                 amount = 100.0,
-                                date = Date(),
+                                date = Date(1729197805495),
                                 cursor = 0,
-                                storedAt = Date(),
+                                storedAt = Date(1729197805495),
                                 currencyCode = "EUR",
                                 userUuid = "",
                                 usdValue = 100.0,
@@ -40,9 +40,9 @@ fun ExpenseListContentPreview() {
                             expense = ExpenseEntity(
                                 id = "2",
                                 amount = 3500.0,
-                                date = Date(),
+                                date = Date(1729197805495),
                                 cursor = 0,
-                                storedAt = Date(),
+                                storedAt = Date(1729197805495),
                                 currencyCode = "EUR",
                                 userUuid = "",
                                 usdValue = 100.0,

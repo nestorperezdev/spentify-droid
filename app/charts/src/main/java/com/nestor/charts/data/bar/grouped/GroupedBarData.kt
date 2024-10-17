@@ -1,11 +1,11 @@
 package com.nestor.charts.data.bar.grouped
 
 import com.nestor.charts.data.ChartSeries
-import com.nestor.charts.data.bar.ChartBarHeader
+import com.nestor.charts.data.common.ChartHeaderData
 import com.nestor.charts.data.common.GroupableByTagAndColor
 
 class GroupedBarData(
-    val header: ChartBarHeader,
+    val header: ChartHeaderData,
     val series: List<GroupedSeries>,
     val style: GroupedBarStyle = GroupedBarStyle.GROUPED
 ) : GroupableByTagAndColor {

@@ -1,4 +1,4 @@
-package com.nestor.charts.ui.bar
+package com.nestor.charts.ui.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -20,8 +20,8 @@ import com.nestor.charts.data.common.GroupableByTagAndColor
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-internal fun ChartBarFooter(data: GroupableByTagAndColor) {
-    FlowRow {
+internal fun ChartFooter(data: GroupableByTagAndColor) {
+    Row {
         data.groupByTagAndColor().forEach { (tagColor: Pair<String, Int>, _) ->
             Row {
                 Box(
