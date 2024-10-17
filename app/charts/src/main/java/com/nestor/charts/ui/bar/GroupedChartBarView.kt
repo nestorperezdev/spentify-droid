@@ -1,6 +1,5 @@
 package com.nestor.charts.ui.bar
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -26,7 +25,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
@@ -39,8 +37,10 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nestor.charts.data.ChartSeries
-import com.nestor.charts.data.bar.ChartBarHeader
 import com.nestor.charts.data.bar.grouped.GroupedBarData
+import com.nestor.charts.data.common.ChartHeaderData
+import com.nestor.charts.ui.common.ChartFooter
+import com.nestor.charts.ui.common.ChartHeaderView
 import com.nestor.uikit.SpentifyTheme
 import com.nestor.uikit.theme.spacing.LocalSYPadding
 
@@ -55,9 +55,9 @@ private fun GroupedBarContent(modifier: Modifier = Modifier, data: GroupedBarDat
         modifier = modifier.wrapContentSize()
     ) {
         Column(modifier = Modifier.padding(LocalSYPadding.current.screenHorizontalPadding)) {
-            ChartBarHeader(modifier = Modifier, data = data.header)
+            ChartHeaderView(modifier = Modifier, data = data.header)
             GroupedChartContent(modifier = modifier.aspectRatio(4 / 3f), data = data)
-            ChartBarFooter(data = data)
+            ChartFooter(data = data)
         }
     }
 }
@@ -140,7 +140,7 @@ fun GroupedChartBarViewPreview() {
                 .wrapContentWidth()
                 .padding(LocalSYPadding.current.screenHorizontalPadding),
             data = GroupedBarData(
-                header = ChartBarHeader(
+                header = ChartHeaderData(
                     hint = buildAnnotatedString {
                         withStyle(
                             style = SpanStyle(
@@ -193,7 +193,7 @@ fun StackedChartBarViewPreview() {
                 .padding(LocalSYPadding.current.screenHorizontalPadding),
             data = GroupedBarData(
                 style = GroupedBarData.Companion.GroupedBarStyle.STACKED,
-                header = ChartBarHeader(
+                header = ChartHeaderData(
                     hint = buildAnnotatedString {
                         withStyle(
                             style = SpanStyle(
