@@ -1,17 +1,23 @@
 package com.nestor.reports.ui
 
+import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nestor.charts.data.bar.grouped.GroupedBarData
+import com.nestor.charts.data.circle.CircleChartData
 import com.nestor.charts.ui.bar.GroupedChartBarView
+import com.nestor.charts.ui.circle.CircleChartView
 import com.nestor.schema.utils.ResponseWrapper
 import kotlinx.coroutines.flow.StateFlow
 
@@ -22,20 +28,76 @@ fun ReportsScreen(
 ) {
     ReportsScreenContent(
         modifier = modifier,
-        stackedChart = viewModel.stackedChartState
+        stackedChart = viewModel.stackedChartState,
+        circleChartData = viewModel.circleChartDataState,
+        categorizedCircleChartData = viewModel.categorizedCircleChartDataState
     )
 }
 
 @Composable
 fun ReportsScreenContent(
     modifier: Modifier = Modifier,
-    stackedChart: StateFlow<ResponseWrapper<GroupedBarData>>
+    stackedChart: StateFlow<ResponseWrapper<GroupedBarData>>,
+    circleChartData: StateFlow<ResponseWrapper<CircleChartData>>,
+    categorizedCircleChartData: StateFlow<List<ResponseWrapper<CircleChartData>>>
 ) {
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier.verticalScroll(rememberScrollState()),
+        verticalArrangement = spacedBy(16.dp)
+    ) {
         StackedReportContainer(
             modifier = Modifier.fillMaxWidth(),
             data = stackedChart
         )
+        DonutCategoryReport(
+            modifier = Modifier.fillMaxWidth(),
+            data = circleChartData
+        )
+        categorizedCircleChartData.collectAsState().value.forEach { data ->
+            DonutCategoryReportContent(
+                modifier = Modifier.fillMaxWidth(),
+                response = data
+            )
+        }
+    }
+}
+
+@Composable
+private fun DonutCategoryReport(
+    modifier: Modifier,
+    data: StateFlow<ResponseWrapper<CircleChartData>>
+) {
+    val response = data.collectAsState().value
+    DonutCategoryReportContent(modifier = modifier, response = response)
+}
+
+@Composable
+private fun DonutCategoryReportContent(
+    modifier: Modifier,
+    response: ResponseWrapper<CircleChartData>
+) {
+    when {
+        response.isLoading -> {
+            Box(modifier = modifier.fillMaxSize()) {
+                CircularProgressIndicator()
+            }
+        }
+
+        response.isSuccessful() -> {
+            response.body?.let {
+                CircleChartView(
+                    modifier = modifier.fillMaxWidth(),
+                    data = it
+                )
+            }
+        }
+
+        else -> {
+            Text(
+                text = response.error ?: "Error fetching data",
+                modifier = modifier.fillMaxSize()
+            )
+        }
     }
 }
 
@@ -45,29 +107,27 @@ private fun StackedReportContainer(
     data: StateFlow<ResponseWrapper<GroupedBarData>>
 ) {
     val response = data.collectAsState().value
-    Column(modifier = modifier) {
-        when {
-            response.isLoading -> {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    CircularProgressIndicator()
-                }
+    when {
+        response.isLoading -> {
+            Box(modifier = modifier.fillMaxSize()) {
+                CircularProgressIndicator()
             }
+        }
 
-            response.isSuccessful() -> {
-                response.body?.let {
-                    GroupedChartBarView(
-                        modifier = Modifier.fillMaxWidth(),
-                        data = it
-                    )
-                }
-            }
-
-            else -> {
-                Text(
-                    text = response.error ?: "Error fetching data",
-                    modifier = Modifier.fillMaxSize()
+        response.isSuccessful() -> {
+            response.body?.let {
+                GroupedChartBarView(
+                    modifier = modifier.fillMaxWidth(),
+                    data = it
                 )
             }
+        }
+
+        else -> {
+            Text(
+                text = response.error ?: "Error fetching data",
+                modifier = modifier.fillMaxSize()
+            )
         }
     }
 }

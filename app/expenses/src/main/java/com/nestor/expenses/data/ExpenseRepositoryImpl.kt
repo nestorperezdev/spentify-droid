@@ -5,13 +5,11 @@ import com.nestor.common.util.getStartAndEndOfDate
 import com.nestor.database.data.expense.ExpenseEntity
 import com.nestor.database.data.expense.ExpenseWithCategoryAndSubcategory
 import com.nestor.database.data.expensewithcategory.ExpenseWithCategoryEntity
-import com.nestor.expenses.data.expensewithcategory.ExpenseWithCategoryLocalDataSource
 import com.nestor.schema.fragment.ExpenseFragment
 import com.nestor.schema.type.ExpenseInput
 import com.nestor.schema.utils.safeApiCall
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
-import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
 
@@ -38,27 +36,18 @@ private const val TAG = "ExpenseRepositoryImpl"
 class ExpenseRepositoryImpl @Inject constructor(
     private val remoteDataSource: ExpenseRemoteDataSource,
     private val localDataSource: ExpenseLocalDataSource,
-    private val expenseWithCategoryLocalDataSource: ExpenseWithCategoryLocalDataSource
 ) : ExpenseRepository {
 
     override suspend fun createExpense(expenseInput: ExpenseInput) =
         safeApiCall { remoteDataSource.createExpense(expenseInput) }
 
     override fun getExpenses(
-        month: Int,
-        year: Int,
-        userUid: String,
-        currencyCode: String
+        baseMonthDate: Date
     ): Flow<List<ExpenseWithCategoryEntity>> {
-        val calendar = Calendar.getInstance()
-        calendar.time = Date()
-        calendar.add(Calendar.DATE, -1)
-        return expenseWithCategoryLocalDataSource.getExpensesWithCategory(
-            month = month,
-            year = year,
-            userUuid = userUid,
-            expirationDate = calendar.time,
-            currencyCode = currencyCode
+        val (start, end) = getStartAndEndOfDate(baseMonthDate)
+        return localDataSource.getExpensesWithCategory(
+            from = start,
+            to = end
         ).onEach { expenses ->
             Log.i(TAG, "getExpenses: $expenses")
         }

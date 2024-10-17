@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.nestor.charts.data.circle.CircleChartData
 import com.nestor.charts.ui.common.ChartFooter
 import com.nestor.charts.ui.common.ChartHeaderView
+import com.nestor.uikit.theme.spacing.LocalSYPadding
 
 @Composable
 fun CircleChartView(
@@ -24,7 +26,10 @@ fun CircleChartView(
     data: CircleChartData
 ) {
     Card(onClick = { /*TODO*/ }) {
-        Column(modifier = modifier, verticalArrangement = spacedBy(24.dp)) {
+        Column(
+            modifier = modifier.padding(LocalSYPadding.current.screenHorizontalPadding),
+            verticalArrangement = spacedBy(24.dp)
+        ) {
             ChartHeaderView(data = data.header)
             CircleChartContentView(
                 modifier = Modifier

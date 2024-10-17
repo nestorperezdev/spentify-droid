@@ -11,13 +11,7 @@ import java.util.Date
 
 interface ExpenseRepository {
     suspend fun createExpense(expenseInput: ExpenseInput): ResponseWrapper<CreateExpenseMutation.Data>
-    fun getExpenses(
-        month: Int,
-        year: Int,
-        userUid: String,
-        currencyCode: String
-    ): Flow<List<ExpenseWithCategoryEntity>>
-
+    fun getExpenses(baseMonthDate: Date): Flow<List<ExpenseWithCategoryEntity>>
     fun getExpensesWithCategoryAndSubcategory(baseMonthDate: Date): Flow<List<ExpenseWithCategoryAndSubcategory>>
 
     /**
@@ -31,6 +25,7 @@ interface ExpenseRepository {
         month: Int,
         currencyCode: String
     ): Int
+
     suspend fun saveExpenses(expense: ExpenseEntity)
     suspend fun deleteExpense(expense: ExpenseEntity)
 }

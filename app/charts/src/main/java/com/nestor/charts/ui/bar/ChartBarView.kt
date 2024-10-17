@@ -31,11 +31,15 @@ import androidx.compose.ui.unit.dp
 import com.nestor.charts.data.bar.BarData
 import com.nestor.charts.ui.common.ChartHeaderView
 import com.nestor.charts.util.Line
+import com.nestor.uikit.theme.spacing.LocalSYPadding
 
 @Composable
 fun ChartBarView(modifier: Modifier = Modifier, data: BarData) {
     Card(onClick = { /*TODO*/ }) {
-        Column(modifier = modifier, verticalArrangement = spacedBy(24.dp)) {
+        Column(
+            modifier = modifier.padding(LocalSYPadding.current.screenHorizontalPadding),
+            verticalArrangement = spacedBy(24.dp)
+        ) {
             ChartHeaderView(data = data.header)
             ChartBarContent(
                 modifier = Modifier

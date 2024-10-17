@@ -4,6 +4,7 @@ import android.icu.util.Calendar
 import com.nestor.database.data.expense.ExpenseDao
 import com.nestor.database.data.expense.ExpenseEntity
 import com.nestor.database.data.expense.ExpenseWithCategoryAndSubcategory
+import com.nestor.database.data.expensewithcategory.ExpenseWithCategoryEntity
 import kotlinx.coroutines.flow.Flow
 import java.util.Date
 import javax.inject.Inject
@@ -48,5 +49,12 @@ class ExpenseLocalDataSourceImpl @Inject constructor(private val expenseDao: Exp
         to: Date
     ): Flow<List<ExpenseWithCategoryAndSubcategory>> {
         return expenseDao.getExpenseWithCategoryAndSubcategory(from, to)
+    }
+
+    override fun getExpensesWithCategory(
+        from: Date,
+        to: Date
+    ): Flow<List<ExpenseWithCategoryEntity>> {
+        return expenseDao.getExpenseWithCategory(from, to)
     }
 }

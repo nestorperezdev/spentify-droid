@@ -13,7 +13,6 @@ import com.nestor.database.data.expensewithcategory.ExpenseWithCategoryEntity
 import com.nestor.expenses.data.ExpenseRepository
 import com.nestor.uikit.util.CoroutineContextProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -27,6 +26,7 @@ import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Date
 import javax.inject.Inject
 
 const val PAGE_SIZE = 20
@@ -59,12 +59,7 @@ class ExpenseListViewModel @Inject constructor(
             .filterNotNull()
             .transform {
                 emitAll(
-                    expenseRepository.getExpenses(
-                        month = monthYear.month,
-                        year = monthYear.year,
-                        userUid = it.uuid,
-                        currencyCode = it.currencyCode,
-                    )
+                    expenseRepository.getExpenses(Date())
                 )
             }
             .onEach { if (it.isEmpty()) fetchMoreItems() }
