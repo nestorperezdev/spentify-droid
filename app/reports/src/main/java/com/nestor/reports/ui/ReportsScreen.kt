@@ -3,6 +3,7 @@ package com.nestor.reports.ui
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
@@ -10,8 +11,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nestor.charts.data.bar.grouped.GroupedBarData
@@ -39,7 +42,7 @@ fun ReportsScreenContent(
     modifier: Modifier = Modifier,
     stackedChart: StateFlow<ResponseWrapper<GroupedBarData>>,
     circleChartData: StateFlow<ResponseWrapper<CircleChartData>>,
-    categorizedCircleChartData: StateFlow<List<ResponseWrapper<CircleChartData>>>
+    categorizedCircleChartData: StateFlow<ResponseWrapper<List<CircleChartData>>>
 ) {
     Column(
         modifier = modifier.verticalScroll(rememberScrollState()),
@@ -53,10 +56,33 @@ fun ReportsScreenContent(
             modifier = Modifier.fillMaxWidth(),
             data = circleChartData
         )
-        categorizedCircleChartData.collectAsState().value.forEach { data ->
-            DonutCategoryReportContent(
-                modifier = Modifier.fillMaxWidth(),
-                response = data
+        DonutCategoriesReport(categorizedCircleChartData)
+    }
+}
+
+@Composable
+private fun ColumnScope.DonutCategoriesReport(response: StateFlow<ResponseWrapper<List<CircleChartData>>>) {
+    val state = response.collectAsState().value
+    when {
+        state.isLoading -> {
+            Box(modifier = Modifier.fillMaxSize()) {
+                CircularProgressIndicator()
+            }
+        }
+
+        state.isSuccessful() -> {
+            state.body?.forEach { report ->
+                DonutCategoryReportContent(
+                    modifier = Modifier.fillMaxWidth(),
+                    response = ResponseWrapper.success(report)
+                )
+            }
+        }
+
+        else -> {
+            Text(
+                text = state.error ?: "Error fetching data",
+                modifier = Modifier.fillMaxSize()
             )
         }
     }
@@ -64,7 +90,7 @@ fun ReportsScreenContent(
 
 @Composable
 private fun DonutCategoryReport(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     data: StateFlow<ResponseWrapper<CircleChartData>>
 ) {
     val response = data.collectAsState().value

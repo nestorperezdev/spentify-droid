@@ -9,6 +9,7 @@ import com.nestor.charts.data.circle.CircleChartData
 import com.nestor.charts.data.common.ChartHeaderData
 import com.nestor.common.data.auth.AuthRepository
 import com.nestor.database.data.catergory.CategoryEntity
+import com.nestor.database.data.catergory.CategoryWithSubcategory
 import com.nestor.database.data.expense.ExpenseEntity
 import com.nestor.database.data.expense.ExpenseWithCategoryAndSubcategory
 import com.nestor.database.data.expensewithcategory.ExpenseWithCategoryEntity
@@ -21,8 +22,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import java.util.Date
@@ -52,15 +56,12 @@ class ReportsViewModel @Inject constructor(
                 )
             }
         }
-    val categorizedCircleChartDataState: StateFlow<List<CircleChartData>> =
-        _expenseWithCatAndSubInMonth
-            .map { list ->
-                list.map { it.toCircleChartData() }
-            }
+    val categorizedCircleChartDataState: StateFlow<ResponseWrapper<List<CircleChartData>>> =
+        flow<ResponseWrapper<List<CircleChartData>>> { emit(ResponseWrapper.loading()) }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.Lazily,
-                initialValue = emptyList()
+                initialValue = ResponseWrapper.loading()
             )
     val stackedChartState: StateFlow<ResponseWrapper<GroupedBarData>> =
         _expenseWithCatAndSubInMonth
