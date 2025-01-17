@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.nestor.schema"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 29
@@ -36,6 +36,7 @@ android {
 dependencies {
     api(libs.apollo.runtime)
     api(libs.apollo.adapters)
+    testImplementation(libs.junit)
 }
 
 apollo {
