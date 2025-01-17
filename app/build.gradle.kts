@@ -23,14 +23,14 @@ plugins {
 
 android {
     namespace = "com.nestor.spentify"
-    compileSdk = 34
+    compileSdk = 35
     @Suppress("UnstableApiUsage") experimentalProperties["android.experimental.enableScreenshotTest"] =
         true
 
     defaultConfig {
         applicationId = "com.nestor.spentify"
         minSdk = 29
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 503
         versionName = "0.0.0.503"
 

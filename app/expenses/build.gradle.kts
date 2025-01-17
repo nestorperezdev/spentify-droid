@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.nestor.expenses"
-    compileSdk = 34
+    compileSdk = 35
     @Suppress("UnstableApiUsage")
     experimentalProperties["android.experimental.enableScreenshotTest"] = true
 
